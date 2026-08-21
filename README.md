@@ -17,7 +17,11 @@ School extracurricular activity management
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[ssi_school_extracurricular](ssi_school_extracurricular/) | 14.0.1.1.0 |  | School Extracurricular
 
 [//]: # (end addons)
 
