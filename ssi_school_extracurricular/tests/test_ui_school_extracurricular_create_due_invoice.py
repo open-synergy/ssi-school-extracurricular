@@ -165,6 +165,14 @@ class TestUiSchoolExtracurricularCreateDueInvoice(HttpSavepointCase):
             }
         )
         participant.action_confirm()
+        # approve_ok is a non-stored compute that only depends on
+        # policy_template_id (see mixin.policy._compute_policy) --
+        # not on the approval_ids that action_confirm() just created
+        # -- so its cached (pre-confirm, False) value must be
+        # invalidated here or action_approve_approval() below raises
+        # "Document is not allowed to approve" even though admin is a
+        # genuine approver.
+        participant.invalidate_cache()
         participant.action_approve_approval()
 
         term = cls.env["school_extracurricular_payment_term"].create(

@@ -151,12 +151,23 @@ class TestUiSchoolExtracurricularOffering(HttpSavepointCase):
             cls._create_teacher("TOUR-OFFERING-FINISH")
         )
         cls.offering_finish.action_confirm()
+        # approve_ok is a non-stored compute that only depends on
+        # policy_template_id (see mixin.policy._compute_policy) --
+        # not on the approval_ids that action_confirm() just created
+        # -- so its cached (pre-confirm, False) value must be
+        # invalidated here or action_approve_approval() below raises
+        # "Document is not allowed to approve" even though admin is a
+        # genuine approver.
+        cls.offering_finish.invalidate_cache()
         cls.offering_finish.action_approve_approval()
 
         cls.offering_restart = cls._create_offering(
             cls._create_teacher("TOUR-OFFERING-RESTART")
         )
         cls.offering_restart.action_confirm()
+        # reject_ok is subject to the same non-stored, confirm-blind
+        # compute as approve_ok above -- invalidate before rejecting.
+        cls.offering_restart.invalidate_cache()
         cls.offering_restart.action_reject_approval()
 
     def test_create(self):

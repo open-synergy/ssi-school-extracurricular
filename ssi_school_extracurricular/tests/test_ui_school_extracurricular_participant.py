@@ -253,6 +253,14 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         )
         cls._allocate_to_enrollment(cls.participant_finish, finish_enrollment)
         cls.participant_finish.action_confirm()
+        # approve_ok is a non-stored compute that only depends on
+        # policy_template_id (see mixin.policy._compute_policy) --
+        # not on the approval_ids that action_confirm() just created
+        # -- so its cached (pre-confirm, False) value must be
+        # invalidated here or action_approve_approval() below raises
+        # "Document is not allowed to approve" even though admin is a
+        # genuine approver.
+        cls.participant_finish.invalidate_cache()
         cls.participant_finish.action_approve_approval()
 
         cancel_student = cls._create_student("TOUR-PARTICIPANT-CANCEL")
@@ -262,6 +270,9 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         )
         cls._allocate_to_enrollment(cls.participant_cancel, cancel_enrollment)
         cls.participant_cancel.action_confirm()
+        # approve_ok is subject to the same non-stored, confirm-blind
+        # compute as above -- invalidate before approving.
+        cls.participant_cancel.invalidate_cache()
         cls.participant_cancel.action_approve_approval()
 
         restart_student = cls._create_student("TOUR-PARTICIPANT-RESTART")
@@ -271,6 +282,9 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         )
         cls._allocate_to_enrollment(cls.participant_restart, restart_enrollment)
         cls.participant_restart.action_confirm()
+        # reject_ok is subject to the same non-stored, confirm-blind
+        # compute as approve_ok above -- invalidate before rejecting.
+        cls.participant_restart.invalidate_cache()
         cls.participant_restart.action_reject_approval()
 
     def test_create(self):
