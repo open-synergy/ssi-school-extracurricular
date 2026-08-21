@@ -73,6 +73,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t1.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -342,6 +343,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t2.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -592,6 +594,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t3.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -876,6 +879,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t4.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1035,6 +1039,26 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_t4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_t4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
       - step: "Create the customer invoice from the payment term"
         action: "call"
         target: "term_t4"
@@ -1132,6 +1156,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t5.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1372,6 +1397,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t6.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1636,6 +1662,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t7.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1879,6 +1906,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t8.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -2073,6 +2101,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_t9.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
