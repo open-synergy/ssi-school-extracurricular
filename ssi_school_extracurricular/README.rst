@@ -19,6 +19,27 @@ Work Instruction
 * `Create Extracurricular <docs/school_extracurricular/index.html>`_
 * `Edit Extracurricular <docs/school_extracurricular/index.html>`_
 * `Delete Extracurricular <docs/school_extracurricular/index.html>`_
+* `Create Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Edit Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Delete Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Confirm Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Approve Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Reject Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Finish Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Cancel Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Restart Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Reset Document Number - Extracurricular Offering <docs/school_extracurricular_offering/index.html>`_
+* `Create Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Edit Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Delete Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Confirm Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Approve Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Reject Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Finish Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Cancel Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Restart Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Reset Document Number - Extracurricular Participant <docs/school_extracurricular_participant/index.html>`_
+* `Create Due Invoice - Extracurricular <docs/school_extracurricular_create_due_invoice/index.html>`_
 
 
 Installation
