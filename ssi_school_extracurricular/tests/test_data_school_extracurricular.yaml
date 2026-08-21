@@ -178,4 +178,4 @@ scenarios:
         values:
           name: "No Category"
           code: "EXT-004"
-          school_id: "REC: school_4.id"
+          school_id: "REC: school_4"
