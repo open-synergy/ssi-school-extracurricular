@@ -100,6 +100,21 @@
                         <field name="billing_frequency" />
                     </group>
                 </page>
+                <page name="participant" string="Participants">
+                    <field
+                            name="participant_ids"
+                            context="{'form_view_ref': 'ssi_school_extracurricular.school_extracurricular_participant_view_form'}"
+                        >
+                        <tree>
+                            <field name="student_id" />
+                            <field name="enrollment_id" />
+                            <field name="date_join" />
+                            <field name="date_leave" />
+                            <field name="amount_total" />
+                            <field name="state" />
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </data>
     </field>

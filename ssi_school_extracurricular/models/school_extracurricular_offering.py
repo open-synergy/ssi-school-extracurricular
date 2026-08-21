@@ -319,6 +319,36 @@ class SchoolExtracurricularOffering(models.Model):
         ),
     )
 
+    participant_ids = fields.One2many(
+        string="Participants",
+        comodel_name="school_extracurricular_participant",
+        inverse_name="offering_id",
+        help="The students who have joined this offering.",
+    )
+    participant_count = fields.Integer(
+        string="Participant Count",
+        compute="_compute_participant_count",
+        store=True,
+        compute_sudo=True,
+        help="Number of participants currently in ``open`` state.",
+    )
+
+    @api.depends(
+        "participant_ids.state",
+    )
+    def _compute_participant_count(self):
+        """Count this offering's participants currently in ``open`` state.
+
+        :return: nothing; assigns ``participant_count``
+        """
+        for record in self:
+            result = len(
+                record.participant_ids.filtered(
+                    lambda participant: participant.state == "open"
+                )
+            )
+            record.participant_count = result
+
     @api.onchange(
         "extracurricular_id",
     )

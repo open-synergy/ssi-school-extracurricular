@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_extracurricular_participant_view_search" model="ir.ui.view">
+    <field name="name">school_extracurricular_participant - search</field>
+    <field name="model">school_extracurricular_participant</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="offering_id" />
+                <field name="student_id" />
+                <field name="school_id" />
+                <field name="academic_term_id" />
+                <field name="enrollment_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_offering_id"
+                            string="Offering"
+                            context="{'group_by': 'offering_id'}"
+                        />
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_participant_view_tree" model="ir.ui.view">
+    <field name="name">school_extracurricular_participant - tree</field>
+    <field name="model">school_extracurricular_participant</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="offering_id" />
+                <field name="student_id" />
+                <field name="school_id" />
+                <field name="academic_term_id" />
+                <field name="date_join" />
+                <field name="amount_total" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_participant_view_form" model="ir.ui.view">
+    <field name="name">school_extracurricular_participant - form</field>
+    <field name="model">school_extracurricular_participant</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="offering_id" />
+                <field name="extracurricular_id" />
+                <field name="school_id" />
+                <field name="student_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="enrollment_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="date_join" />
+                <field name="date_leave" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="billing" string="Billing">
+                    <group name="billing_group_1" string="Fee">
+                        <field name="currency_id" />
+                        <field name="billing_mode" />
+                        <field name="product_id" />
+                        <field name="uom_quantity" />
+                        <field name="price_unit" />
+                        <field name="tax_ids" widget="many2many_tags" />
+                        <field name="amount_untaxed" />
+                        <field name="amount_tax" />
+                        <field name="amount_total" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_participant_action" model="ir.actions.act_window">
+    <field name="name">Extracurricular Participants</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_extracurricular_participant</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="menu_extracurricular_participant"
+        name="Extracurricular Participants"
+        parent="menu_extracurricular_root"
+        action="school_extracurricular_participant_action"
+        groups="school_extracurricular_participant_user_group"
+        sequence="20"
+    />
+
+</odoo>

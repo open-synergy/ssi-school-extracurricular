@@ -5,3 +5,4 @@
 from . import school_extracurricular_category  # noqa: F401
 from . import school_extracurricular  # noqa: F401
 from . import school_extracurricular_offering  # noqa: F401
+from . import school_extracurricular_participant  # noqa: F401
