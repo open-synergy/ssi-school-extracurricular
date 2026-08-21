@@ -10,6 +10,17 @@ Master data for extracurricular activities offered by a school: categories
 and the extracurricular catalog itself.
 
 
+Work Instruction
+================
+
+* `Create Extracurricular Category <docs/school_extracurricular_category/index.html>`_
+* `Edit Extracurricular Category <docs/school_extracurricular_category/index.html>`_
+* `Delete Extracurricular Category <docs/school_extracurricular_category/index.html>`_
+* `Create Extracurricular <docs/school_extracurricular/index.html>`_
+* `Edit Extracurricular <docs/school_extracurricular/index.html>`_
+* `Delete Extracurricular <docs/school_extracurricular/index.html>`_
+
+
 Installation
 ============
 
