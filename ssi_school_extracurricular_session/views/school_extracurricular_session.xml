@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_extracurricular_session_view_search" model="ir.ui.view">
+    <field name="name">school_extracurricular_session - search</field>
+    <field name="model">school_extracurricular_session</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="offering_id" />
+            <field name="extracurricular_id" />
+            <field name="teacher_id" />
+            <field name="date" />
+            <filter
+                    name="filter_planned"
+                    string="Planned"
+                    domain="[('state', '=', 'planned')]"
+                />
+            <filter
+                    name="filter_done"
+                    string="Done"
+                    domain="[('state', '=', 'done')]"
+                />
+            <filter
+                    name="filter_cancelled"
+                    string="Cancelled"
+                    domain="[('state', '=', 'cancelled')]"
+                />
+            <group name="group_by" string="Group By">
+                <filter
+                        name="grp_offering_id"
+                        string="Offering"
+                        context="{'group_by': 'offering_id'}"
+                    />
+                <filter
+                        name="grp_teacher_id"
+                        string="Teacher"
+                        context="{'group_by': 'teacher_id'}"
+                    />
+                <filter
+                        name="grp_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"
+                    />
+                <filter name="grp_date" string="Date" context="{'group_by': 'date'}" />
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="school_extracurricular_session_view_tree" model="ir.ui.view">
+    <field name="name">school_extracurricular_session - tree</field>
+    <field name="model">school_extracurricular_session</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="date" />
+            <field name="offering_id" />
+            <field name="extracurricular_id" />
+            <field name="teacher_id" />
+            <field name="time_start" widget="float_time" optional="hide" />
+            <field name="time_end" widget="float_time" optional="hide" />
+            <field name="location" optional="hide" />
+            <field name="state" />
+        </tree>
+    </field>
+</record>
+
+<record id="school_extracurricular_session_view_form" model="ir.ui.view">
+    <field name="name">school_extracurricular_session - form</field>
+    <field name="model">school_extracurricular_session</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button
+                        name="action_done"
+                        type="object"
+                        string="Done"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'planned')]}"
+                    />
+                <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        class="oe_highlight ml-2"
+                        attrs="{'invisible': [('state', '!=', 'planned')]}"
+                    />
+                <button
+                        name="action_restart"
+                        type="object"
+                        string="Restart"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', 'not in', ('done', 'cancelled'))]}"
+                    />
+                <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="planned,done,cancelled"
+                    />
+            </header>
+            <sheet>
+                <group name="group_1" col="2">
+                    <field name="offering_id" />
+                    <field name="extracurricular_id" />
+                    <field name="school_id" />
+                    <field name="academic_term_id" />
+                    <field name="teacher_id" />
+                    <field name="date" />
+                    <field name="time_start" widget="float_time" />
+                    <field name="time_end" widget="float_time" />
+                    <field name="location" />
+                    <field name="topic" />
+                </group>
+                <notebook>
+                    <page name="attendance" string="Attendance">
+                        <field name="attendance_ids">
+                            <tree editable="bottom">
+                                <field
+                                        name="participant_id"
+                                        domain="[('offering_id', '=', parent.offering_id)]"
+                                    />
+                                <field name="student_id" />
+                                <field name="attendance_state" />
+                                <field name="note" />
+                            </tree>
+                            <form>
+                                <group name="attendance_group_1">
+                                    <field
+                                            name="participant_id"
+                                            domain="[('offering_id', '=', parent.offering_id)]"
+                                        />
+                                    <field name="student_id" />
+                                    <field name="attendance_state" />
+                                    <field name="note" />
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                    <page name="description" string="Description">
+                        <field name="description" />
+                        <field
+                                name="cancel_reason"
+                                attrs="{'invisible': [('cancel_reason', '=', False)]}"
+                            />
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="school_extracurricular_session_action" model="ir.actions.act_window">
+    <field name="name">Extracurricular Sessions</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_extracurricular_session</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="menu_extracurricular_session"
+        name="Extracurricular Sessions"
+        parent="menu_extracurricular_session_root"
+        action="school_extracurricular_session_action"
+        groups="school_extracurricular_session_user_group"
+        sequence="10"
+    />
+</odoo>
