@@ -492,6 +492,10 @@ scenarios:
         target: "participant_t2"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve participant, opening it and creating the addendum line"
         action: "call"
@@ -693,7 +697,9 @@ scenarios:
           name: "Term Billing T3 B"
           sequence: 20
 
-      - step: "Create participant billed to enrollment"
+      - step:
+          "Create participant billed to enrollment, with both allocation lines created
+          in the same write so the total-match constraint sees the full batch at once"
         action: "create"
         model: "school_extracurricular_participant"
         save_as: "participant_t3"
@@ -705,38 +711,33 @@ scenarios:
           product_id: "REC: product_offering_t3.id"
           uom_quantity: 1.0
           price_unit: 600000.0
-
-      - step: "Create allocation on the first term"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation_t3_a"
-        values:
-          participant_id: "REC: participant_t3.id"
-          payment_term_id: "REC: term_t3_a.id"
-          product_id: "REC: product_offering_t3.id"
-          name: "Extracurricular Fee Billing T3 A"
-          account_id: "REC: income_account_t3.id"
-          uom_quantity: 1.0
-          price_unit: 400000.0
-
-      - step: "Create allocation on the second term"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation_t3_b"
-        values:
-          participant_id: "REC: participant_t3.id"
-          payment_term_id: "REC: term_t3_b.id"
-          product_id: "REC: product_offering_t3.id"
-          name: "Extracurricular Fee Billing T3 B"
-          account_id: "REC: income_account_t3.id"
-          uom_quantity: 1.0
-          price_unit: 200000.0
+          allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_t3_a.id"
+                product_id: "REC: product_offering_t3.id"
+                name: "Extracurricular Fee Billing T3 A"
+                account_id: "REC: income_account_t3.id"
+                uom_quantity: 1.0
+                price_unit: 400000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_t3_b.id"
+                product_id: "REC: product_offering_t3.id"
+                name: "Extracurricular Fee Billing T3 B"
+                account_id: "REC: income_account_t3.id"
+                uom_quantity: 1.0
+                price_unit: 200000.0
 
       - step: "Confirm participant"
         action: "call"
         target: "participant_t3"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve participant, opening it and creating both addendum lines"
         action: "call"
@@ -1019,6 +1020,10 @@ scenarios:
         target: "participant_t4"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve participant, opening it and creating the addendum line"
         action: "call"
@@ -1253,6 +1258,10 @@ scenarios:
         target: "participant_t5"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve participant, opening it and creating the addendum line"
         action: "call"
@@ -1746,6 +1755,10 @@ scenarios:
         target: "enrollment_t7"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve the enrollment"
         action: "call"
@@ -2186,6 +2199,10 @@ scenarios:
         target: "participant_t9"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve participant, opening it and creating the addendum line"
         action: "call"
@@ -2202,6 +2219,10 @@ scenarios:
         target: "enrollment_t9"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve the enrollment, locking the payment term and its addendum line"
         action: "call"

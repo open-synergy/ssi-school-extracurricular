@@ -1450,4 +1450,4 @@ scenarios:
         as_user: "base.user_admin"
         expect_error:
           type: "UserError"
-          message_contains: "no Allocation line is set"
+          message_contains: "but no Allocation"
