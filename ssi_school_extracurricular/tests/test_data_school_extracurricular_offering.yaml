@@ -1,0 +1,552 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Extracurricular Offering full workflow and defaults"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_wf"
+        values:
+          name: "Grade Type Offering WF"
+          code: "EXTOFF-GT-WF"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_wf"
+        values:
+          name: "School Offering WF"
+          code: "EXTOFF-SCH-WF"
+          grade_type_id: "REC: grade_type_wf.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_wf"
+        values:
+          name: "Category Offering WF"
+          code: "EXTOFF-CAT-WF"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_wf"
+        values:
+          name: "Futsal Club WF"
+          code: "EXTOFF-EXT-WF"
+          category_id: "REC: category_wf.id"
+          school_id: "REC: school_wf.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_wf"
+        values:
+          name: "AY Offering WF"
+          code: "EXTOFF-AY-WF"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_wf"
+        values:
+          name: "Term Offering WF"
+          code: "EXTOFF-TERM-WF"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_wf.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_wf"
+        values:
+          name: "Teacher Employee Offering WF"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_wf"
+        values:
+          name: "Teacher Offering WF"
+          code: "EXTOFF-TCH-WF"
+          employee_id: "REC: employee_wf.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_wf"
+        values:
+          name: "Extracurricular Fee Offering WF"
+
+      - step: "Create extracurricular offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_wf"
+        values:
+          extracurricular_id: "REC: extracurricular_wf.id"
+          academic_year_id: "REC: academic_year_wf.id"
+          academic_term_id: "REC: academic_term_wf.id"
+          teacher_id: "REC: teacher_wf.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_wf.id"
+          price_unit: 150000.0
+
+      - step: "Assert offering created in draft with defaults"
+        action: "assert"
+        target: "offering_wf"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+          billing_mode:
+            type: "value"
+            expected: "enrollment"
+          billing_frequency:
+            type: "value"
+            expected: "one_time"
+
+      - step: "Assert school_id populated from extracurricular"
+        action: "assert"
+        target: "offering_wf"
+        asserts:
+          school_id:
+            type: "m2o"
+            expected: "REC: school_wf"
+
+      - step: "Assert category_id populated from extracurricular"
+        action: "assert"
+        target: "offering_wf"
+        asserts:
+          category_id:
+            type: "m2o"
+            expected: "REC: category_wf"
+
+      - step: "Confirm offering"
+        action: "call"
+        target: "offering_wf"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve offering"
+        action: "call"
+        target: "offering_wf"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert document number generated"
+        action: "assert"
+        target: "offering_wf"
+        asserts:
+          name:
+            type: "value"
+            operator: "not_equals"
+            expected: "/"
+
+      - step: "Done offering"
+        action: "call"
+        target: "offering_wf"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Extracurricular Offering rejects end date before start date"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_date"
+        values:
+          name: "Grade Type Offering Date"
+          code: "EXTOFF-GT-DT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_date"
+        values:
+          name: "School Offering Date"
+          code: "EXTOFF-SCH-DT"
+          grade_type_id: "REC: grade_type_date.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_date"
+        values:
+          name: "Category Offering Date"
+          code: "EXTOFF-CAT-DT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_date"
+        values:
+          name: "Futsal Club Date"
+          code: "EXTOFF-EXT-DT"
+          category_id: "REC: category_date.id"
+          school_id: "REC: school_date.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_date"
+        values:
+          name: "AY Offering Date"
+          code: "EXTOFF-AY-DT"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_date"
+        values:
+          name: "Term Offering Date"
+          code: "EXTOFF-TERM-DT"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_date.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_date"
+        values:
+          name: "Teacher Employee Offering Date"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_date"
+        values:
+          name: "Teacher Offering Date"
+          code: "EXTOFF-TCH-DT"
+          employee_id: "REC: employee_date.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_date"
+        values:
+          name: "Extracurricular Fee Offering Date"
+
+      - step: "Create offering with end date before start date must fail"
+        action: "create"
+        model: "school_extracurricular_offering"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "earlier than Start Date"
+        values:
+          extracurricular_id: "REC: extracurricular_date.id"
+          academic_year_id: "REC: academic_year_date.id"
+          academic_term_id: "REC: academic_term_date.id"
+          teacher_id: "REC: teacher_date.id"
+          date_start: 2026-12-31
+          date_end: 2026-07-01
+          product_id: "REC: product_date.id"
+          price_unit: 150000.0
+
+  - name: "Extracurricular Offering rejects academic term/year mismatch"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_term"
+        values:
+          name: "Grade Type Offering Term"
+          code: "EXTOFF-GT-TM"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_term"
+        values:
+          name: "School Offering Term"
+          code: "EXTOFF-SCH-TM"
+          grade_type_id: "REC: grade_type_term.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_term"
+        values:
+          name: "Category Offering Term"
+          code: "EXTOFF-CAT-TM"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_term"
+        values:
+          name: "Futsal Club Term"
+          code: "EXTOFF-EXT-TM"
+          category_id: "REC: category_term.id"
+          school_id: "REC: school_term.id"
+
+      - step: "Setup - create academic year A"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_term_a"
+        values:
+          name: "AY Offering Term A"
+          code: "EXTOFF-AY-TM-A"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic year B"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_term_b"
+        values:
+          name: "AY Offering Term B"
+          code: "EXTOFF-AY-TM-B"
+          date_start: 2027-07-01
+          date_end: 2028-06-30
+
+      - step: "Setup - create academic term under year A"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_term_a"
+        values:
+          name: "Term Offering Term A"
+          code: "EXTOFF-TERM-TM-A"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_term_a.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_term"
+        values:
+          name: "Teacher Employee Offering Term"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_term"
+        values:
+          name: "Teacher Offering Term"
+          code: "EXTOFF-TCH-TM"
+          employee_id: "REC: employee_term.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_term"
+        values:
+          name: "Extracurricular Fee Offering Term"
+
+      - step: "Create offering with mismatched academic year must fail"
+        action: "create"
+        model: "school_extracurricular_offering"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not belong to Academic Year"
+        values:
+          extracurricular_id: "REC: extracurricular_term.id"
+          academic_year_id: "REC: academic_year_term_b.id"
+          academic_term_id: "REC: academic_term_term_a.id"
+          teacher_id: "REC: teacher_term.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_term.id"
+          price_unit: 150000.0
+
+  - name: "Extracurricular Offering rejects maximum quota below minimum"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_quota"
+        values:
+          name: "Grade Type Offering Quota"
+          code: "EXTOFF-GT-QT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_quota"
+        values:
+          name: "School Offering Quota"
+          code: "EXTOFF-SCH-QT"
+          grade_type_id: "REC: grade_type_quota.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_quota"
+        values:
+          name: "Category Offering Quota"
+          code: "EXTOFF-CAT-QT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_quota"
+        values:
+          name: "Futsal Club Quota"
+          code: "EXTOFF-EXT-QT"
+          category_id: "REC: category_quota.id"
+          school_id: "REC: school_quota.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_quota"
+        values:
+          name: "AY Offering Quota"
+          code: "EXTOFF-AY-QT"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_quota"
+        values:
+          name: "Term Offering Quota"
+          code: "EXTOFF-TERM-QT"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_quota.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_quota"
+        values:
+          name: "Teacher Employee Offering Quota"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_quota"
+        values:
+          name: "Teacher Offering Quota"
+          code: "EXTOFF-TCH-QT"
+          employee_id: "REC: employee_quota.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_quota"
+        values:
+          name: "Extracurricular Fee Offering Quota"
+
+      - step: "Create offering with quota_max below quota_min must fail"
+        action: "create"
+        model: "school_extracurricular_offering"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "is lower than Minimum Quota"
+        values:
+          extracurricular_id: "REC: extracurricular_quota.id"
+          academic_year_id: "REC: academic_year_quota.id"
+          academic_term_id: "REC: academic_term_quota.id"
+          teacher_id: "REC: teacher_quota.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_quota.id"
+          price_unit: 150000.0
+          quota_min: 10
+          quota_max: 5
+
+  - name: "Extracurricular Offering rejects missing teacher"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_notch"
+        values:
+          name: "Grade Type Offering No Teacher"
+          code: "EXTOFF-GT-NT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_notch"
+        values:
+          name: "School Offering No Teacher"
+          code: "EXTOFF-SCH-NT"
+          grade_type_id: "REC: grade_type_notch.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_notch"
+        values:
+          name: "Category Offering No Teacher"
+          code: "EXTOFF-CAT-NT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_notch"
+        values:
+          name: "Futsal Club No Teacher"
+          code: "EXTOFF-EXT-NT"
+          category_id: "REC: category_notch.id"
+          school_id: "REC: school_notch.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_notch"
+        values:
+          name: "AY Offering No Teacher"
+          code: "EXTOFF-AY-NT"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_notch"
+        values:
+          name: "Term Offering No Teacher"
+          code: "EXTOFF-TERM-NT"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_notch.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_notch"
+        values:
+          name: "Extracurricular Fee Offering No Teacher"
+
+      - step: "Create offering without teacher_id must fail"
+        action: "form"
+        model: "school_extracurricular_offering"
+        expect_error:
+          type: "AssertionError"
+          message_contains: "is a required field"
+        values:
+          extracurricular_id: "REC: extracurricular_notch"
+          academic_year_id: "REC: academic_year_notch"
+          academic_term_id: "REC: academic_term_notch"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_notch"

@@ -11,4 +11,20 @@
     <field name="parent_id" ref="ssi_school.school_configurator_module_category" />
 </record>
 
+<record
+        id="school_extracurricular_offering_workflow_module_category"
+        model="ir.module.category"
+    >
+    <field name="name">Extracurricular Offering - Workflow</field>
+    <field name="parent_id" ref="ssi_school.school_workflow_module_category" />
+</record>
+
+<record
+        id="school_extracurricular_offering_data_ownership_module_category"
+        model="ir.module.category"
+    >
+    <field name="name">Extracurricular Offering - Data Ownership</field>
+    <field name="parent_id" ref="ssi_school.school_data_ownership_module_category" />
+</record>
+
 </odoo>
