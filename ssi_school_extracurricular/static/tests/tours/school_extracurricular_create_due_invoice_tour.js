@@ -60,7 +60,7 @@ odoo.define(
                 {
                     content: "The due payment term is listed",
                     trigger:
-                        ".o_field_widget[name='term_ids'] .o_tag:contains(TOUR-WIZARD-TERM)",
+                        ".o_field_widget[name='term_ids'] .o_badge_text:contains(TOUR-WIZARD-TERM)",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },

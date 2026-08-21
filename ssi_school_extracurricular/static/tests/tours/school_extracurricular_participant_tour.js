@@ -164,7 +164,7 @@ odoo.define(
                 // Flow 3 — Change the required fields.
                 {
                     content: "Change Price Unit",
-                    trigger: ".o_field_widget[name='price_unit'] input",
+                    trigger: "input.o_field_widget[name='price_unit']",
                     extra_trigger: ".o_form_view.o_form_editable",
                     run: "text 250000.0",
                 },
@@ -604,7 +604,7 @@ odoo.define(
                 // Flow 3 — Click the Cancel button.
                 {
                     content: "Click the Cancel button",
-                    trigger: ".o_statusbar_buttons button[name='action_cancel']",
+                    trigger: ".o_statusbar_buttons button:contains(Cancel)",
                     extra_trigger: ".o_form_view",
                 },
 
