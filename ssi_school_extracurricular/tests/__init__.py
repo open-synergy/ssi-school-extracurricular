@@ -4,3 +4,4 @@
 
 from . import test_school_extracurricular_category
 from . import test_school_extracurricular
+from . import test_school_extracurricular_offering
