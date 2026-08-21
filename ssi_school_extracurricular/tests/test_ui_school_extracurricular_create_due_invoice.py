@@ -26,6 +26,14 @@ class TestUiSchoolExtracurricularCreateDueInvoice(HttpSavepointCase):
         domain (``state = 'uninvoiced'``) picks up.
         """
         super().setUpClass()
+        # ``approve_ok`` is only granted to users listed in
+        # ``active_approver_user_ids`` (policy_template/
+        # school_extracurricular_participant.xml, Approve) -- SUPERUSER is
+        # never a member (it is inactive at SQL level, see
+        # odoo/addons/base/data/base_data.sql), so the approve call below
+        # must run as a genuine approver instead of ``cls.env`` (which is
+        # SUPERUSER here).
+        cls.admin = cls.env.ref("base.user_admin")
         grade_type = cls.env["school_grade_type"].create(
             {"name": "TOUR-WIZARD-GRADE-TYPE", "code": "/"}
         )
@@ -164,16 +172,21 @@ class TestUiSchoolExtracurricularCreateDueInvoice(HttpSavepointCase):
                 "price_unit": 300000.0,
             }
         )
-        participant.action_confirm()
+        participant.with_user(cls.admin).action_confirm()
         # approve_ok is a non-stored compute that only depends on
         # policy_template_id (see mixin.policy._compute_policy) --
         # not on the approval_ids that action_confirm() just created
         # -- so its cached (pre-confirm, False) value must be
         # invalidated here or action_approve_approval() below raises
         # "Document is not allowed to approve" even though admin is a
-        # genuine approver.
+        # genuine approver. ``with_user(cls.admin)`` is also required on
+        # the approve call itself: ``cls.env`` is SUPERUSER, which is
+        # never in ``active_approver_user_ids`` (see comment above
+        # ``cls.admin``), so calling as SUPERUSER always raises
+        # "Document is not allowed to approve" regardless of the cache.
         participant.invalidate_cache()
-        participant.action_approve_approval()
+        participant.with_user(cls.admin).action_approve_approval()
+        participant.invalidate_cache()
 
         term = cls.env["school_extracurricular_payment_term"].create(
             {

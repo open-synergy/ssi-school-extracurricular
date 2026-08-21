@@ -116,6 +116,14 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         already used by this module's YAML workflow scenarios.
         """
         super().setUpClass()
+        # ``approve_ok``/``reject_ok`` are only granted to users listed in
+        # ``active_approver_user_ids`` (policy_template/
+        # school_extracurricular_participant.xml, Approve/Reject) --
+        # SUPERUSER is never a member (it is inactive at SQL level, see
+        # odoo/addons/base/data/base_data.sql), so any fixture that reaches
+        # an approve/reject call must run as a genuine approver instead of
+        # ``cls.env`` (which is SUPERUSER here).
+        cls.admin = cls.env.ref("base.user_admin")
         cls.grade_type = cls.env["school_grade_type"].create(
             {"name": "TOUR-PARTICIPANT-GRADE-TYPE", "code": "/"}
         )
@@ -238,12 +246,21 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
             approve_student, approve_enrollment, "enrollment"
         )
         cls._allocate_to_enrollment(cls.participant_approve, approve_enrollment)
+        # Plain SUPERUSER call, no with_user() needed: confirm_ok has
+        # restrict_user=1 (policy_template/
+        # school_extracurricular_participant.xml, Confirm), and
+        # mixin.policy._get_policy short-circuits restrict_user to True
+        # for SUPERUSER_ID -- unlike approve_ok/reject_ok below, which
+        # use restrict_additional's active_approver_user_ids check that
+        # has no such bypass. The actual approve happens in the browser
+        # (as "admin"), not here.
         cls.participant_approve.action_confirm()
 
         reject_student = cls._create_student("TOUR-PARTICIPANT-REJECT")
         cls.participant_reject = cls._create_participant(
             reject_student, cls._create_enrollment(reject_student), "free"
         )
+        # Same reasoning as participant_approve above.
         cls.participant_reject.action_confirm()
 
         finish_student = cls._create_student("TOUR-PARTICIPANT-FINISH")
@@ -252,16 +269,21 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
             finish_student, finish_enrollment, "enrollment"
         )
         cls._allocate_to_enrollment(cls.participant_finish, finish_enrollment)
-        cls.participant_finish.action_confirm()
+        cls.participant_finish.with_user(cls.admin).action_confirm()
         # approve_ok is a non-stored compute that only depends on
         # policy_template_id (see mixin.policy._compute_policy) --
         # not on the approval_ids that action_confirm() just created
         # -- so its cached (pre-confirm, False) value must be
         # invalidated here or action_approve_approval() below raises
         # "Document is not allowed to approve" even though admin is a
-        # genuine approver.
+        # genuine approver. ``with_user(cls.admin)`` is also required on
+        # the approve call itself: ``cls.env`` is SUPERUSER, which is
+        # never in ``active_approver_user_ids`` (see comment above
+        # ``cls.admin``), so calling as SUPERUSER always raises
+        # "Document is not allowed to approve" regardless of the cache.
         cls.participant_finish.invalidate_cache()
-        cls.participant_finish.action_approve_approval()
+        cls.participant_finish.with_user(cls.admin).action_approve_approval()
+        cls.participant_finish.invalidate_cache()
 
         cancel_student = cls._create_student("TOUR-PARTICIPANT-CANCEL")
         cancel_enrollment = cls._create_enrollment(cancel_student)
@@ -269,11 +291,14 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
             cancel_student, cancel_enrollment, "enrollment"
         )
         cls._allocate_to_enrollment(cls.participant_cancel, cancel_enrollment)
-        cls.participant_cancel.action_confirm()
+        cls.participant_cancel.with_user(cls.admin).action_confirm()
         # approve_ok is subject to the same non-stored, confirm-blind
-        # compute as above -- invalidate before approving.
+        # compute as above -- invalidate before approving. Same
+        # SUPERUSER-is-not-an-approver reasoning as participant_finish
+        # above applies to ``with_user(cls.admin)`` here too.
         cls.participant_cancel.invalidate_cache()
-        cls.participant_cancel.action_approve_approval()
+        cls.participant_cancel.with_user(cls.admin).action_approve_approval()
+        cls.participant_cancel.invalidate_cache()
 
         restart_student = cls._create_student("TOUR-PARTICIPANT-RESTART")
         restart_enrollment = cls._create_enrollment(restart_student)
@@ -281,11 +306,15 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
             restart_student, restart_enrollment, "enrollment"
         )
         cls._allocate_to_enrollment(cls.participant_restart, restart_enrollment)
-        cls.participant_restart.action_confirm()
+        cls.participant_restart.with_user(cls.admin).action_confirm()
         # reject_ok is subject to the same non-stored, confirm-blind
         # compute as approve_ok above -- invalidate before rejecting.
+        # Same SUPERUSER-is-not-an-approver reasoning as
+        # participant_finish above applies to ``with_user(cls.admin)``
+        # here too.
         cls.participant_restart.invalidate_cache()
-        cls.participant_restart.action_reject_approval()
+        cls.participant_restart.with_user(cls.admin).action_reject_approval()
+        cls.participant_restart.invalidate_cache()
 
     def test_create(self):
         """Run the create tour for ``school_extracurricular_participant``.

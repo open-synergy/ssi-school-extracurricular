@@ -65,6 +65,14 @@ class TestUiSchoolExtracurricularOffering(HttpSavepointCase):
         already used by this module's YAML workflow scenarios.
         """
         super().setUpClass()
+        # ``approve_ok``/``reject_ok`` are only granted to users listed in
+        # ``active_approver_user_ids`` (policy_template/
+        # school_extracurricular_offering.xml, Approve/Reject) -- SUPERUSER
+        # is never a member (it is inactive at SQL level, see
+        # odoo/addons/base/data/base_data.sql), so any fixture that reaches
+        # an approve/reject call must run as a genuine approver instead of
+        # ``cls.env`` (which is SUPERUSER here).
+        cls.admin = cls.env.ref("base.user_admin")
         cls.grade_type = cls.env["school_grade_type"].create(
             {"name": "TOUR-OFFERING-GRADE-TYPE", "code": "/"}
         )
@@ -140,35 +148,52 @@ class TestUiSchoolExtracurricularOffering(HttpSavepointCase):
         cls.offering_approve = cls._create_offering(
             cls._create_teacher("TOUR-OFFERING-APPROVE")
         )
+        # Plain SUPERUSER call, no with_user() needed: confirm_ok has
+        # restrict_user=1 (policy_template/school_extracurricular_offering
+        # .xml, Confirm), and mixin.policy._get_policy short-circuits
+        # restrict_user to True for SUPERUSER_ID -- unlike approve_ok/
+        # reject_ok below, which use restrict_additional's
+        # active_approver_user_ids check that has no such bypass. The
+        # actual approve/reject in this scenario happens in the browser
+        # (as "admin"), not here.
         cls.offering_approve.action_confirm()
 
         cls.offering_reject = cls._create_offering(
             cls._create_teacher("TOUR-OFFERING-REJECT")
         )
+        # Same reasoning as offering_approve above.
         cls.offering_reject.action_confirm()
 
         cls.offering_finish = cls._create_offering(
             cls._create_teacher("TOUR-OFFERING-FINISH")
         )
-        cls.offering_finish.action_confirm()
+        cls.offering_finish.with_user(cls.admin).action_confirm()
         # approve_ok is a non-stored compute that only depends on
         # policy_template_id (see mixin.policy._compute_policy) --
         # not on the approval_ids that action_confirm() just created
         # -- so its cached (pre-confirm, False) value must be
         # invalidated here or action_approve_approval() below raises
         # "Document is not allowed to approve" even though admin is a
-        # genuine approver.
+        # genuine approver. ``with_user(cls.admin)`` is also required on
+        # the approve call itself: ``cls.env`` is SUPERUSER, which is
+        # never in ``active_approver_user_ids`` (see comment above
+        # ``cls.admin``), so calling as SUPERUSER always raises
+        # "Document is not allowed to approve" regardless of the cache.
         cls.offering_finish.invalidate_cache()
-        cls.offering_finish.action_approve_approval()
+        cls.offering_finish.with_user(cls.admin).action_approve_approval()
+        cls.offering_finish.invalidate_cache()
 
         cls.offering_restart = cls._create_offering(
             cls._create_teacher("TOUR-OFFERING-RESTART")
         )
-        cls.offering_restart.action_confirm()
+        cls.offering_restart.with_user(cls.admin).action_confirm()
         # reject_ok is subject to the same non-stored, confirm-blind
         # compute as approve_ok above -- invalidate before rejecting.
+        # Same SUPERUSER-is-not-an-approver reasoning as approve above
+        # applies to ``with_user(cls.admin)`` here too.
         cls.offering_restart.invalidate_cache()
-        cls.offering_restart.action_reject_approval()
+        cls.offering_restart.with_user(cls.admin).action_reject_approval()
+        cls.offering_restart.invalidate_cache()
 
     def test_create(self):
         """Run the create tour for ``school_extracurricular_offering``.
