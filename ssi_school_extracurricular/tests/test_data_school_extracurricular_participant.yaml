@@ -1,0 +1,1147 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Extracurricular Participant defaults, amount, and full workflow"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_wf"
+        values:
+          name: "Grade Type Participant WF"
+          code: "EXTPAR-GT-WF"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_wf"
+        values:
+          name: "School Participant WF"
+          code: "EXTPAR-SCH-WF"
+          grade_type_id: "REC: grade_type_wf.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_wf"
+        values:
+          name: "Category Participant WF"
+          code: "EXTPAR-CAT-WF"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_wf"
+        values:
+          name: "Futsal Club Participant WF"
+          code: "EXTPAR-EXT-WF"
+          category_id: "REC: category_wf.id"
+          school_id: "REC: school_wf.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_wf"
+        values:
+          name: "AY Participant WF"
+          code: "EXTPAR-AY-WF"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_wf"
+        values:
+          name: "Term Participant WF"
+          code: "EXTPAR-TERM-WF"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_wf.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_wf"
+        values:
+          name: "Teacher Employee Participant WF"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_wf"
+        values:
+          name: "Teacher Participant WF"
+          code: "EXTPAR-TCH-WF"
+          employee_id: "REC: employee_wf.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_wf"
+        values:
+          name: "Extracurricular Fee Participant WF"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_wf"
+        values:
+          extracurricular_id: "REC: extracurricular_wf.id"
+          academic_year_id: "REC: academic_year_wf.id"
+          academic_term_id: "REC: academic_term_wf.id"
+          teacher_id: "REC: teacher_wf.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_wf.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_wf"
+        values:
+          name: "Grade Participant WF"
+          code: "EXTPAR-GR-WF"
+          type_id: "REC: grade_type_wf.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_wf"
+        values:
+          name: "Grade Class Participant WF"
+          code: "EXTPAR-GC-WF"
+          school_id: "REC: school_wf.id"
+          grade_id: "REC: grade_wf.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_wf"
+        values:
+          name: "Student Contact Participant WF"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_wf"
+        values:
+          name: "Student Participant WF"
+          code: "EXTPAR-ST-WF"
+          contact_id: "REC: contact_wf.id"
+          school_id: "REC: school_wf.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_wf"
+        values:
+          academic_year_id: "REC: academic_year_wf.id"
+          academic_term_id: "REC: academic_term_wf.id"
+          school_id: "REC: school_wf.id"
+          grade_id: "REC: grade_wf.id"
+          grade_class_id: "REC: grade_class_wf.id"
+          student_id: "REC: student_wf.id"
+
+      - step: "Create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_wf"
+        values:
+          offering_id: "REC: offering_wf.id"
+          student_id: "REC: student_wf.id"
+          enrollment_id: "REC: enrollment_wf.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_wf.id"
+          uom_quantity: 1.0
+          price_unit: 600000.0
+
+      - step: "Assert participant created in draft"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Assert school_id populated from offering"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          school_id:
+            type: "m2o"
+            expected: "REC: school_wf"
+
+      - step: "Assert academic_term_id populated from offering"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          academic_term_id:
+            type: "m2o"
+            expected: "REC: academic_term_wf"
+
+      - step: "Assert currency_id populated from offering"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          currency_id:
+            type: "m2o"
+            expected: "REC: offering_wf.currency_id"
+
+      - step: "Assert amount computed without tax"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 600000.0
+          amount_tax:
+            type: "value"
+            expected: 0.0
+          amount_total:
+            type: "value"
+            expected: 600000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_wf"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant"
+        action: "call"
+        target: "participant_wf"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert document number generated"
+        action: "assert"
+        target: "participant_wf"
+        asserts:
+          name:
+            type: "value"
+            operator: "not_equals"
+            expected: "/"
+
+      - step: "Assert offering participant_count reflects the open participant"
+        action: "assert"
+        target: "offering_wf"
+        asserts:
+          participant_count:
+            type: "value"
+            expected: 1
+
+  - name: "Extracurricular Participant copies billing defaults from offering"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_od"
+        values:
+          name: "Grade Type Participant OD"
+          code: "EXTPAR-GT-OD"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_od"
+        values:
+          name: "School Participant OD"
+          code: "EXTPAR-SCH-OD"
+          grade_type_id: "REC: grade_type_od.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_od"
+        values:
+          name: "Category Participant OD"
+          code: "EXTPAR-CAT-OD"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_od"
+        values:
+          name: "Futsal Club Participant OD"
+          code: "EXTPAR-EXT-OD"
+          category_id: "REC: category_od.id"
+          school_id: "REC: school_od.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_od"
+        values:
+          name: "AY Participant OD"
+          code: "EXTPAR-AY-OD"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_od"
+        values:
+          name: "Term Participant OD"
+          code: "EXTPAR-TERM-OD"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_od.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_od"
+        values:
+          name: "Teacher Employee Participant OD"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_od"
+        values:
+          name: "Teacher Participant OD"
+          code: "EXTPAR-TCH-OD"
+          employee_id: "REC: employee_od.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_od"
+        values:
+          name: "Extracurricular Fee Participant OD"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_od"
+        values:
+          extracurricular_id: "REC: extracurricular_od.id"
+          academic_year_id: "REC: academic_year_od.id"
+          academic_term_id: "REC: academic_term_od.id"
+          teacher_id: "REC: teacher_od.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_od.id"
+          price_unit: 175000.0
+
+      - step: "Fill offering_id on a new participant form"
+        action: "form"
+        model: "school_extracurricular_participant"
+        save: false
+        values:
+          offering_id: "REC: offering_od"
+        asserts:
+          billing_mode:
+            type: "value"
+            expected: "enrollment"
+          product_id:
+            type: "m2o"
+            expected: "REC: product_od"
+          price_unit:
+            type: "value"
+            expected: 175000.0
+
+  - name: "Extracurricular Participant rejects mismatched enrollment student"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ms"
+        values:
+          name: "Grade Type Participant MS"
+          code: "EXTPAR-GT-MS"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ms"
+        values:
+          name: "School Participant MS"
+          code: "EXTPAR-SCH-MS"
+          grade_type_id: "REC: grade_type_ms.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ms"
+        values:
+          name: "Category Participant MS"
+          code: "EXTPAR-CAT-MS"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ms"
+        values:
+          name: "Futsal Club Participant MS"
+          code: "EXTPAR-EXT-MS"
+          category_id: "REC: category_ms.id"
+          school_id: "REC: school_ms.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ms"
+        values:
+          name: "AY Participant MS"
+          code: "EXTPAR-AY-MS"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ms"
+        values:
+          name: "Term Participant MS"
+          code: "EXTPAR-TERM-MS"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ms.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ms"
+        values:
+          name: "Teacher Employee Participant MS"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ms"
+        values:
+          name: "Teacher Participant MS"
+          code: "EXTPAR-TCH-MS"
+          employee_id: "REC: employee_ms.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ms"
+        values:
+          name: "Extracurricular Fee Participant MS"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ms"
+        values:
+          extracurricular_id: "REC: extracurricular_ms.id"
+          academic_year_id: "REC: academic_year_ms.id"
+          academic_term_id: "REC: academic_term_ms.id"
+          teacher_id: "REC: teacher_ms.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ms.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ms"
+        values:
+          name: "Grade Participant MS"
+          code: "EXTPAR-GR-MS"
+          type_id: "REC: grade_type_ms.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ms"
+        values:
+          name: "Grade Class Participant MS"
+          code: "EXTPAR-GC-MS"
+          school_id: "REC: school_ms.id"
+          grade_id: "REC: grade_ms.id"
+
+      - step: "Setup - create contact of enrollment owner"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ms_a"
+        values:
+          name: "Student Contact Participant MS A"
+
+      - step: "Setup - create enrollment owner student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ms_a"
+        values:
+          name: "Student Participant MS A"
+          code: "EXTPAR-ST-MS-A"
+          contact_id: "REC: contact_ms_a.id"
+          school_id: "REC: school_ms.id"
+
+      - step: "Setup - create enrollment owned by student A"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ms_a"
+        values:
+          academic_year_id: "REC: academic_year_ms.id"
+          academic_term_id: "REC: academic_term_ms.id"
+          school_id: "REC: school_ms.id"
+          grade_id: "REC: grade_ms.id"
+          grade_class_id: "REC: grade_class_ms.id"
+          student_id: "REC: student_ms_a.id"
+
+      - step: "Setup - create contact of the other student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ms_b"
+        values:
+          name: "Student Contact Participant MS B"
+
+      - step: "Setup - create the other student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ms_b"
+        values:
+          name: "Student Participant MS B"
+          code: "EXTPAR-ST-MS-B"
+          contact_id: "REC: contact_ms_b.id"
+          school_id: "REC: school_ms.id"
+
+      - step: "Create participant with mismatched enrollment student must fail"
+        action: "create"
+        model: "school_extracurricular_participant"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not belong to Student"
+        values:
+          offering_id: "REC: offering_ms.id"
+          student_id: "REC: student_ms_b.id"
+          enrollment_id: "REC: enrollment_ms_a.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ms.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+  - name: "Extracurricular Participant rejects enrollment/offering term mismatch"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_tm"
+        values:
+          name: "Grade Type Participant TM"
+          code: "EXTPAR-GT-TM"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_tm"
+        values:
+          name: "School Participant TM"
+          code: "EXTPAR-SCH-TM"
+          grade_type_id: "REC: grade_type_tm.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_tm"
+        values:
+          name: "Category Participant TM"
+          code: "EXTPAR-CAT-TM"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_tm"
+        values:
+          name: "Futsal Club Participant TM"
+          code: "EXTPAR-EXT-TM"
+          category_id: "REC: category_tm.id"
+          school_id: "REC: school_tm.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_tm"
+        values:
+          name: "AY Participant TM"
+          code: "EXTPAR-AY-TM"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term A (offering term)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_tm_a"
+        values:
+          name: "Term Participant TM A"
+          code: "EXTPAR-TERM-TM-A"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_tm.id"
+
+      - step: "Setup - create academic term B (enrollment term)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_tm_b"
+        values:
+          name: "Term Participant TM B"
+          code: "EXTPAR-TERM-TM-B"
+          date_start: 2027-01-01
+          date_end: 2027-06-30
+          year_id: "REC: academic_year_tm.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_tm"
+        values:
+          name: "Teacher Employee Participant TM"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_tm"
+        values:
+          name: "Teacher Participant TM"
+          code: "EXTPAR-TCH-TM"
+          employee_id: "REC: employee_tm.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_tm"
+        values:
+          name: "Extracurricular Fee Participant TM"
+
+      - step: "Setup - create offering on term A"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_tm"
+        values:
+          extracurricular_id: "REC: extracurricular_tm.id"
+          academic_year_id: "REC: academic_year_tm.id"
+          academic_term_id: "REC: academic_term_tm_a.id"
+          teacher_id: "REC: teacher_tm.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_tm.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_tm"
+        values:
+          name: "Grade Participant TM"
+          code: "EXTPAR-GR-TM"
+          type_id: "REC: grade_type_tm.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_tm"
+        values:
+          name: "Grade Class Participant TM"
+          code: "EXTPAR-GC-TM"
+          school_id: "REC: school_tm.id"
+          grade_id: "REC: grade_tm.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_tm"
+        values:
+          name: "Student Contact Participant TM"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_tm"
+        values:
+          name: "Student Participant TM"
+          code: "EXTPAR-ST-TM"
+          contact_id: "REC: contact_tm.id"
+          school_id: "REC: school_tm.id"
+
+      - step: "Setup - create enrollment on term B"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_tm"
+        values:
+          academic_year_id: "REC: academic_year_tm.id"
+          academic_term_id: "REC: academic_term_tm_b.id"
+          school_id: "REC: school_tm.id"
+          grade_id: "REC: grade_tm.id"
+          grade_class_id: "REC: grade_class_tm.id"
+          student_id: "REC: student_tm.id"
+
+      - step: "Create participant with mismatched academic term must fail"
+        action: "create"
+        model: "school_extracurricular_participant"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not match Offering"
+        values:
+          offering_id: "REC: offering_tm.id"
+          student_id: "REC: student_tm.id"
+          enrollment_id: "REC: enrollment_tm.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_tm.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+  - name: "Extracurricular Participant rejects a second open participation"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_do"
+        values:
+          name: "Grade Type Participant DO"
+          code: "EXTPAR-GT-DO"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_do"
+        values:
+          name: "School Participant DO"
+          code: "EXTPAR-SCH-DO"
+          grade_type_id: "REC: grade_type_do.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_do"
+        values:
+          name: "Category Participant DO"
+          code: "EXTPAR-CAT-DO"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_do"
+        values:
+          name: "Futsal Club Participant DO"
+          code: "EXTPAR-EXT-DO"
+          category_id: "REC: category_do.id"
+          school_id: "REC: school_do.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_do"
+        values:
+          name: "AY Participant DO"
+          code: "EXTPAR-AY-DO"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_do"
+        values:
+          name: "Term Participant DO"
+          code: "EXTPAR-TERM-DO"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_do.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_do"
+        values:
+          name: "Teacher Employee Participant DO"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_do"
+        values:
+          name: "Teacher Participant DO"
+          code: "EXTPAR-TCH-DO"
+          employee_id: "REC: employee_do.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_do"
+        values:
+          name: "Extracurricular Fee Participant DO"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_do"
+        values:
+          extracurricular_id: "REC: extracurricular_do.id"
+          academic_year_id: "REC: academic_year_do.id"
+          academic_term_id: "REC: academic_term_do.id"
+          teacher_id: "REC: teacher_do.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_do.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_do"
+        values:
+          name: "Grade Participant DO"
+          code: "EXTPAR-GR-DO"
+          type_id: "REC: grade_type_do.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_do"
+        values:
+          name: "Grade Class Participant DO"
+          code: "EXTPAR-GC-DO"
+          school_id: "REC: school_do.id"
+          grade_id: "REC: grade_do.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_do"
+        values:
+          name: "Student Contact Participant DO"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_do"
+        values:
+          name: "Student Participant DO"
+          code: "EXTPAR-ST-DO"
+          contact_id: "REC: contact_do.id"
+          school_id: "REC: school_do.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_do"
+        values:
+          academic_year_id: "REC: academic_year_do.id"
+          academic_term_id: "REC: academic_term_do.id"
+          school_id: "REC: school_do.id"
+          grade_id: "REC: grade_do.id"
+          grade_class_id: "REC: grade_class_do.id"
+          student_id: "REC: student_do.id"
+
+      - step: "Create first participant for the student"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_do_1"
+        values:
+          offering_id: "REC: offering_do.id"
+          student_id: "REC: student_do.id"
+          enrollment_id: "REC: enrollment_do.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_do.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Open the first participant"
+        action: "call"
+        target: "participant_do_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the first participant"
+        action: "call"
+        target: "participant_do_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant for the same student and offering"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_do_2"
+        values:
+          offering_id: "REC: offering_do.id"
+          student_id: "REC: student_do.id"
+          enrollment_id: "REC: enrollment_do.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_do.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Confirm the second participant"
+        action: "call"
+        target: "participant_do_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Opening the second participant must fail"
+        action: "call"
+        target: "participant_do_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has an active participation"
+
+  - name: "Extracurricular Participant rejects opening beyond the offering quota"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_qt"
+        values:
+          name: "Grade Type Participant QT"
+          code: "EXTPAR-GT-QT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_qt"
+        values:
+          name: "School Participant QT"
+          code: "EXTPAR-SCH-QT"
+          grade_type_id: "REC: grade_type_qt.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_qt"
+        values:
+          name: "Category Participant QT"
+          code: "EXTPAR-CAT-QT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_qt"
+        values:
+          name: "Futsal Club Participant QT"
+          code: "EXTPAR-EXT-QT"
+          category_id: "REC: category_qt.id"
+          school_id: "REC: school_qt.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_qt"
+        values:
+          name: "AY Participant QT"
+          code: "EXTPAR-AY-QT"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_qt"
+        values:
+          name: "Term Participant QT"
+          code: "EXTPAR-TERM-QT"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_qt.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_qt"
+        values:
+          name: "Teacher Employee Participant QT"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_qt"
+        values:
+          name: "Teacher Participant QT"
+          code: "EXTPAR-TCH-QT"
+          employee_id: "REC: employee_qt.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_qt"
+        values:
+          name: "Extracurricular Fee Participant QT"
+
+      - step: "Setup - create offering with quota_max 1"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_qt"
+        values:
+          extracurricular_id: "REC: extracurricular_qt.id"
+          academic_year_id: "REC: academic_year_qt.id"
+          academic_term_id: "REC: academic_term_qt.id"
+          teacher_id: "REC: teacher_qt.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_qt.id"
+          price_unit: 150000.0
+          quota_max: 1
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_qt"
+        values:
+          name: "Grade Participant QT"
+          code: "EXTPAR-GR-QT"
+          type_id: "REC: grade_type_qt.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_qt"
+        values:
+          name: "Grade Class Participant QT"
+          code: "EXTPAR-GC-QT"
+          school_id: "REC: school_qt.id"
+          grade_id: "REC: grade_qt.id"
+
+      - step: "Setup - create contact of first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_qt_a"
+        values:
+          name: "Student Contact Participant QT A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_qt_a"
+        values:
+          name: "Student Participant QT A"
+          code: "EXTPAR-ST-QT-A"
+          contact_id: "REC: contact_qt_a.id"
+          school_id: "REC: school_qt.id"
+
+      - step: "Setup - create enrollment for first student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_qt_a"
+        values:
+          academic_year_id: "REC: academic_year_qt.id"
+          academic_term_id: "REC: academic_term_qt.id"
+          school_id: "REC: school_qt.id"
+          grade_id: "REC: grade_qt.id"
+          grade_class_id: "REC: grade_class_qt.id"
+          student_id: "REC: student_qt_a.id"
+
+      - step: "Setup - create contact of second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_qt_b"
+        values:
+          name: "Student Contact Participant QT B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_qt_b"
+        values:
+          name: "Student Participant QT B"
+          code: "EXTPAR-ST-QT-B"
+          contact_id: "REC: contact_qt_b.id"
+          school_id: "REC: school_qt.id"
+
+      - step: "Setup - create enrollment for second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_qt_b"
+        values:
+          academic_year_id: "REC: academic_year_qt.id"
+          academic_term_id: "REC: academic_term_qt.id"
+          school_id: "REC: school_qt.id"
+          grade_id: "REC: grade_qt.id"
+          grade_class_id: "REC: grade_class_qt.id"
+          student_id: "REC: student_qt_b.id"
+
+      - step: "Create first participant filling the quota"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_qt_1"
+        values:
+          offering_id: "REC: offering_qt.id"
+          student_id: "REC: student_qt_a.id"
+          enrollment_id: "REC: enrollment_qt_a.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_qt.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Confirm first participant"
+        action: "call"
+        target: "participant_qt_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve first participant, quota now full"
+        action: "call"
+        target: "participant_qt_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant for the other student"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_qt_2"
+        values:
+          offering_id: "REC: offering_qt.id"
+          student_id: "REC: student_qt_b.id"
+          enrollment_id: "REC: enrollment_qt_b.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_qt.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Confirm second participant"
+        action: "call"
+        target: "participant_qt_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Opening the second participant must fail on quota"
+        action: "call"
+        target: "participant_qt_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "reached its maximum quota"
