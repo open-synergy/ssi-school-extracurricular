@@ -19,6 +19,7 @@
         "ssi_transaction_cancel_mixin",
         "ssi_customer_invoice",
         "ssi_product_line_account_mixin",
+        "web_tour",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -56,5 +57,6 @@
         "views/school_extracurricular_fee_analysis.xml",
         "wizards/school_extracurricular_create_due_invoice.xml",
         "menu_create_due_invoice.xml",
+        "views/assets.xml",
     ],
 }
