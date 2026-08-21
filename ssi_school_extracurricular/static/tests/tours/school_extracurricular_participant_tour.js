@@ -618,14 +618,8 @@ odoo.define(
                 },
                 {
                     content: "Select the cancellation reason",
-                    trigger: ".o_field_many2one[name='cancel_reason_id'] input",
-                    run: "text TOUR-PARTICIPANT-CANCEL-REASON",
-                },
-                {
-                    content: "Pick the reason",
                     trigger:
-                        ".ui-autocomplete .ui-menu-item a:contains(TOUR-PARTICIPANT-CANCEL-REASON)",
-                    in_modal: false,
+                        ".o_field_widget[name='cancel_reason_id'] .o_radio_item:contains(TOUR-PARTICIPANT-CANCEL-REASON) input",
                 },
 
                 // Flow 5 — Click Confirm.

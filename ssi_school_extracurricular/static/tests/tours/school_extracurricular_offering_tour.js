@@ -110,6 +110,11 @@ odoo.define(
                     run: "text 12/31/2026",
                 },
                 {
+                    content: "Switch to the Billing tab",
+                    trigger: ".o_notebook .nav-link:contains(Billing)",
+                    extra_trigger: ".o_form_view.o_form_editable",
+                },
+                {
                     content: "Fill in Price Unit",
                     trigger: "input.o_field_widget[name='price_unit']",
                     run: "text 150000.0",
@@ -188,6 +193,11 @@ odoo.define(
                 },
 
                 // Flow 3 — Change the required fields.
+                {
+                    content: "Switch to the Billing tab",
+                    trigger: ".o_notebook .nav-link:contains(Billing)",
+                    extra_trigger: ".o_form_view.o_form_editable",
+                },
                 {
                     content: "Change Price Unit",
                     trigger: "input.o_field_widget[name='price_unit']",
@@ -644,14 +654,8 @@ odoo.define(
                 },
                 {
                     content: "Select the cancellation reason",
-                    trigger: ".o_field_many2one[name='cancel_reason_id'] input",
-                    run: "text TOUR-OFFERING-CANCEL-REASON",
-                },
-                {
-                    content: "Pick the reason",
                     trigger:
-                        ".ui-autocomplete .ui-menu-item a:contains(TOUR-OFFERING-CANCEL-REASON)",
-                    in_modal: false,
+                        ".o_field_widget[name='cancel_reason_id'] .o_radio_item:contains(TOUR-OFFERING-CANCEL-REASON) input",
                 },
 
                 // Flow 5 — Click Confirm.
