@@ -13,3 +13,4 @@ from . import school_extracurricular_payment_term_detail  # noqa: F401
 from . import school_enrollment_payment_term  # noqa: F401
 from . import school_enrollment  # noqa: F401
 from . import customer_invoice_line  # noqa: F401
+from . import school_extracurricular_fee_analysis  # noqa: F401

@@ -1,0 +1,771 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Route A allocation appears as an enrollment-billed analysis row"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ra"
+        values:
+          name: "Grade Type Fee Analysis RA"
+          code: "EXTFA-GT-RA"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ra"
+        values:
+          name: "School Fee Analysis RA"
+          code: "EXTFA-SCH-RA"
+          grade_type_id: "REC: grade_type_ra.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ra"
+        values:
+          name: "Category Fee Analysis RA"
+          code: "EXTFA-CAT-RA"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ra"
+        values:
+          name: "Chess Club Fee Analysis RA"
+          code: "EXTFA-EXT-RA"
+          category_id: "REC: category_ra.id"
+          school_id: "REC: school_ra.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ra"
+        values:
+          name: "AY Fee Analysis RA"
+          code: "EXTFA-AY-RA"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ra"
+        values:
+          name: "Term Fee Analysis RA"
+          code: "EXTFA-TERM-RA"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ra.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ra"
+        values:
+          name: "Teacher Employee Fee Analysis RA"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ra"
+        values:
+          name: "Teacher Fee Analysis RA"
+          code: "EXTFA-TCH-RA"
+          employee_id: "REC: employee_ra.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ra"
+        values:
+          name: "Extracurricular Fee Fee Analysis RA"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ra"
+        values:
+          extracurricular_id: "REC: extracurricular_ra.id"
+          academic_year_id: "REC: academic_year_ra.id"
+          academic_term_id: "REC: academic_term_ra.id"
+          teacher_id: "REC: teacher_ra.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ra.id"
+          price_unit: 400000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ra"
+        values:
+          name: "Grade Fee Analysis RA"
+          code: "EXTFA-GR-RA"
+          type_id: "REC: grade_type_ra.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ra"
+        values:
+          name: "Grade Class Fee Analysis RA"
+          code: "EXTFA-GC-RA"
+          school_id: "REC: school_ra.id"
+          grade_id: "REC: grade_ra.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ra"
+        values:
+          name: "Student Contact Fee Analysis RA"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ra"
+        values:
+          name: "Student Fee Analysis RA"
+          code: "EXTFA-ST-RA"
+          contact_id: "REC: contact_ra.id"
+          school_id: "REC: school_ra.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ra"
+        values:
+          academic_year_id: "REC: academic_year_ra.id"
+          academic_term_id: "REC: academic_term_ra.id"
+          school_id: "REC: school_ra.id"
+          grade_id: "REC: grade_ra.id"
+          grade_class_id: "REC: grade_class_ra.id"
+          student_id: "REC: student_ra.id"
+
+      - step: "Create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ra"
+        values:
+          offering_id: "REC: offering_ra.id"
+          student_id: "REC: student_ra.id"
+          enrollment_id: "REC: enrollment_ra.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ra.id"
+          uom_quantity: 1.0
+          price_unit: 400000.0
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_ra"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_ra"
+        values:
+          name: "Extracurricular Income Fee Analysis RA"
+          code: "EXTFA-INC-RA"
+          user_type_id: "REC: revenue_type_ra.id"
+
+      - step: "Setup - create payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_ra"
+        values:
+          enrollment_id: "REC: enrollment_ra.id"
+          name: "Term Fee Analysis RA"
+
+      - step: "Allocate the participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_ra"
+        values:
+          participant_id: "REC: participant_ra.id"
+          payment_term_id: "REC: term_ra.id"
+          product_id: "REC: product_ra.id"
+          name: "Extracurricular Fee Fee Analysis RA"
+          account_id: "REC: income_account_ra.id"
+          uom_quantity: 1.0
+          price_unit: 400000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_ra"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, creating the addendum fee line"
+        action: "call"
+        target: "participant_ra"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Search the analysis row for this participant"
+        action: "search"
+        model: "school_extracurricular_fee_analysis"
+        domain: [["participant_id", "=", "REC: participant_ra.id"]]
+        save_as: "row_ra"
+        expect_count: 1
+
+      - step: "Assert the row is tagged as the enrollment billing route"
+        action: "assert"
+        target: "row_ra"
+        asserts:
+          billing_route:
+            type: "value"
+            expected: "enrollment"
+          offering_id:
+            type: "m2o"
+            expected: "REC: offering_ra"
+          extracurricular_id:
+            type: "m2o"
+            expected: "REC: extracurricular_ra"
+          category_id:
+            type: "m2o"
+            expected: "REC: category_ra"
+          student_id:
+            type: "m2o"
+            expected: "REC: student_ra"
+          partner_id:
+            type: "m2o"
+            expected: "REC: contact_ra"
+          school_id:
+            type: "m2o"
+            expected: "REC: school_ra"
+          academic_year_id:
+            type: "m2o"
+            expected: "REC: academic_year_ra"
+          academic_term_id:
+            type: "m2o"
+            expected: "REC: academic_term_ra"
+          teacher_id:
+            type: "m2o"
+            expected: "REC: teacher_ra"
+          product_id:
+            type: "m2o"
+            expected: "REC: product_ra"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Search the addendum fee line the analysis row derives from"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["participant_id", "=", "REC: participant_ra.id"]]
+        save_as: "extra_detail_ra"
+        expect_count: 1
+
+      - step: "Assert the row amounts match its own source line, the addendum fee line"
+        action: "assert"
+        target: "row_ra"
+        asserts:
+          uom_quantity:
+            type: "value"
+            expected: "REC: extra_detail_ra.uom_quantity"
+          price_unit:
+            type: "value"
+            expected: "REC: extra_detail_ra.price_unit"
+          price_subtotal:
+            type: "value"
+            expected: "REC: extra_detail_ra.price_subtotal"
+          price_tax:
+            type: "value"
+            expected: "REC: extra_detail_ra.price_tax"
+          price_total:
+            type: "value"
+            expected: "REC: extra_detail_ra.price_total"
+
+  - name: "Route B standalone details appear as two separate-invoice analysis rows"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rb"
+        values:
+          name: "Grade Type Fee Analysis RB"
+          code: "EXTFA-GT-RB"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rb"
+        values:
+          name: "School Fee Analysis RB"
+          code: "EXTFA-SCH-RB"
+          grade_type_id: "REC: grade_type_rb.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rb"
+        values:
+          name: "Category Fee Analysis RB"
+          code: "EXTFA-CAT-RB"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rb"
+        values:
+          name: "Robotics Club Fee Analysis RB"
+          code: "EXTFA-EXT-RB"
+          category_id: "REC: category_rb.id"
+          school_id: "REC: school_rb.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rb"
+        values:
+          name: "AY Fee Analysis RB"
+          code: "EXTFA-AY-RB"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rb"
+        values:
+          name: "Term Fee Analysis RB"
+          code: "EXTFA-TERM-RB"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rb.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rb"
+        values:
+          name: "Teacher Employee Fee Analysis RB"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rb"
+        values:
+          name: "Teacher Fee Analysis RB"
+          code: "EXTFA-TCH-RB"
+          employee_id: "REC: employee_rb.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rb"
+        values:
+          name: "Extracurricular Fee Fee Analysis RB"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rb"
+        values:
+          extracurricular_id: "REC: extracurricular_rb.id"
+          academic_year_id: "REC: academic_year_rb.id"
+          academic_term_id: "REC: academic_term_rb.id"
+          teacher_id: "REC: teacher_rb.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rb.id"
+          price_unit: 500000.0
+          billing_mode: "standalone"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rb"
+        values:
+          name: "Grade Fee Analysis RB"
+          code: "EXTFA-GR-RB"
+          type_id: "REC: grade_type_rb.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rb"
+        values:
+          name: "Grade Class Fee Analysis RB"
+          code: "EXTFA-GC-RB"
+          school_id: "REC: school_rb.id"
+          grade_id: "REC: grade_rb.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rb"
+        values:
+          name: "Student Contact Fee Analysis RB"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rb"
+        values:
+          name: "Student Fee Analysis RB"
+          code: "EXTFA-ST-RB"
+          contact_id: "REC: contact_rb.id"
+          school_id: "REC: school_rb.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rb"
+        values:
+          academic_year_id: "REC: academic_year_rb.id"
+          academic_term_id: "REC: academic_term_rb.id"
+          school_id: "REC: school_rb.id"
+          grade_id: "REC: grade_rb.id"
+          grade_class_id: "REC: grade_class_rb.id"
+          student_id: "REC: student_rb.id"
+
+      - step: "Setup - create standalone participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rb"
+        values:
+          offering_id: "REC: offering_rb.id"
+          student_id: "REC: student_rb.id"
+          enrollment_id: "REC: enrollment_rb.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_rb.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rb"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rb"
+        values:
+          name: "Extracurricular Income Fee Analysis RB"
+          code: "EXTFA-INC-RB"
+          user_type_id: "REC: revenue_type_rb.id"
+
+      - step: "Create the standalone payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_rb"
+        values:
+          participant_id: "REC: participant_rb.id"
+          name: "Term Fee Analysis RB"
+
+      - step: "Create first detail line"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_rb_1"
+        values:
+          term_id: "REC: term_rb.id"
+          product_id: "REC: product_rb.id"
+          name: "Robotics Fee - Part 1"
+          account_id: "REC: income_account_rb.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create second detail line"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_rb_2"
+        values:
+          term_id: "REC: term_rb.id"
+          product_id: "REC: product_rb.id"
+          name: "Robotics Fee - Part 2"
+          account_id: "REC: income_account_rb.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Search the analysis rows for this participant"
+        action: "search"
+        model: "school_extracurricular_fee_analysis"
+        domain: [["participant_id", "=", "REC: participant_rb.id"]]
+        save_as: "rows_rb"
+        expect_count: 2
+
+      - step: "Both rows are tagged as the standalone billing route"
+        action: "search"
+        model: "school_extracurricular_fee_analysis"
+        domain:
+          - ["participant_id", "=", "REC: participant_rb.id"]
+          - ["billing_route", "=", "standalone"]
+        save_as: "rows_rb_standalone"
+        expect_count: 2
+
+      - step: "Search the first detail's own analysis row"
+        action: "search"
+        model: "school_extracurricular_fee_analysis"
+        domain:
+          - ["participant_id", "=", "REC: participant_rb.id"]
+          - ["price_unit", "=", 300000.0]
+        save_as: "row_rb_1"
+        expect_count: 1
+
+      - step: "Assert the row amount matches the first detail's source line"
+        action: "assert"
+        target: "row_rb_1"
+        asserts:
+          billing_route:
+            type: "value"
+            expected: "standalone"
+          extracurricular_id:
+            type: "m2o"
+            expected: "REC: extracurricular_rb"
+          price_subtotal:
+            type: "value"
+            expected: "REC: detail_rb_1.price_subtotal"
+          price_total:
+            type: "value"
+            expected: "REC: detail_rb_1.price_total"
+
+  - name: "Reading the analysis model without its report group is denied"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ac"
+        values:
+          name: "Grade Type Fee Analysis AC"
+          code: "EXTFA-GT-AC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ac"
+        values:
+          name: "School Fee Analysis AC"
+          code: "EXTFA-SCH-AC"
+          grade_type_id: "REC: grade_type_ac.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ac"
+        values:
+          name: "Category Fee Analysis AC"
+          code: "EXTFA-CAT-AC"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ac"
+        values:
+          name: "Choir Club Fee Analysis AC"
+          code: "EXTFA-EXT-AC"
+          category_id: "REC: category_ac.id"
+          school_id: "REC: school_ac.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ac"
+        values:
+          name: "AY Fee Analysis AC"
+          code: "EXTFA-AY-AC"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ac"
+        values:
+          name: "Term Fee Analysis AC"
+          code: "EXTFA-TERM-AC"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ac.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ac"
+        values:
+          name: "Teacher Employee Fee Analysis AC"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ac"
+        values:
+          name: "Teacher Fee Analysis AC"
+          code: "EXTFA-TCH-AC"
+          employee_id: "REC: employee_ac.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ac"
+        values:
+          name: "Extracurricular Fee Fee Analysis AC"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ac"
+        values:
+          extracurricular_id: "REC: extracurricular_ac.id"
+          academic_year_id: "REC: academic_year_ac.id"
+          academic_term_id: "REC: academic_term_ac.id"
+          teacher_id: "REC: teacher_ac.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ac.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ac"
+        values:
+          name: "Grade Fee Analysis AC"
+          code: "EXTFA-GR-AC"
+          type_id: "REC: grade_type_ac.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ac"
+        values:
+          name: "Grade Class Fee Analysis AC"
+          code: "EXTFA-GC-AC"
+          school_id: "REC: school_ac.id"
+          grade_id: "REC: grade_ac.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ac"
+        values:
+          name: "Student Contact Fee Analysis AC"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ac"
+        values:
+          name: "Student Fee Analysis AC"
+          code: "EXTFA-ST-AC"
+          contact_id: "REC: contact_ac.id"
+          school_id: "REC: school_ac.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ac"
+        values:
+          academic_year_id: "REC: academic_year_ac.id"
+          academic_term_id: "REC: academic_term_ac.id"
+          school_id: "REC: school_ac.id"
+          grade_id: "REC: grade_ac.id"
+          grade_class_id: "REC: grade_class_ac.id"
+          student_id: "REC: student_ac.id"
+
+      - step: "Create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ac"
+        values:
+          offering_id: "REC: offering_ac.id"
+          student_id: "REC: student_ac.id"
+          enrollment_id: "REC: enrollment_ac.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ac.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_ac"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_ac"
+        values:
+          name: "Extracurricular Income Fee Analysis AC"
+          code: "EXTFA-INC-AC"
+          user_type_id: "REC: revenue_type_ac.id"
+
+      - step: "Setup - create payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_ac"
+        values:
+          enrollment_id: "REC: enrollment_ac.id"
+          name: "Term Fee Analysis AC"
+
+      - step: "Allocate the participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_ac"
+        values:
+          participant_id: "REC: participant_ac.id"
+          payment_term_id: "REC: term_ac.id"
+          product_id: "REC: product_ac.id"
+          name: "Extracurricular Fee Fee Analysis AC"
+          account_id: "REC: income_account_ac.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_ac"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, creating the addendum fee line"
+        action: "call"
+        target: "participant_ac"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Search the analysis row for this participant"
+        action: "search"
+        model: "school_extracurricular_fee_analysis"
+        domain: [["participant_id", "=", "REC: participant_ac.id"]]
+        save_as: "row_ac"
+        expect_count: 1
+
+      - step: "Create a plain internal user without the fee analysis group"
+        action: "create"
+        model: "res.users"
+        save_as: "plain_user_ac"
+        values:
+          name: "No Fee Analysis Access AC"
+          login: "no_fee_analysis_access_ac@example.com"
+          groups_id: [[6, 0, ["REF: base.group_user"]]]
+
+      - step: "Plain user reading the analysis row must be denied"
+        action: "call"
+        target: "row_ac"
+        method: "read"
+        args:
+          - ["id"]
+        as_user: "plain_user_ac"
+        expect_error:
+          type: "AccessError"
