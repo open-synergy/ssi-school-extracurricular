@@ -21,7 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_school_extracurricular](ssi_school_extracurricular/) | 14.0.1.1.0 |  | School Extracurricular
+[ssi_school_extracurricular](ssi_school_extracurricular/) | 14.0.1.2.0 |  | School Extracurricular
 
 [//]: # (end addons)
 
