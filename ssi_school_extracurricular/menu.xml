@@ -10,6 +10,13 @@
     />
 
 <menuitem
+        id="menu_extracurricular_report"
+        name="Reporting"
+        parent="menu_extracurricular_root"
+        sequence="998"
+    />
+
+<menuitem
         id="menu_extracurricular_configuration"
         name="Configuration"
         parent="menu_extracurricular_root"
