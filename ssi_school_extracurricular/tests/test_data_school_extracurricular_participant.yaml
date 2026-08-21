@@ -207,6 +207,41 @@ scenarios:
             type: "value"
             expected: 600000.0
 
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_wf"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_wf"
+        values:
+          name: "Extracurricular Income WF"
+          code: "EXTPAR-INC-WF"
+          user_type_id: "REC: revenue_type_wf.id"
+
+      - step: "Setup - create payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_wf"
+        values:
+          enrollment_id: "REC: enrollment_wf.id"
+          name: "Term Participant WF"
+
+      - step: "Allocate the participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_wf"
+        values:
+          participant_id: "REC: participant_wf.id"
+          payment_term_id: "REC: term_wf.id"
+          product_id: "REC: product_wf.id"
+          name: "Extracurricular Fee Participant WF"
+          account_id: "REC: income_account_wf.id"
+          uom_quantity: 1.0
+          price_unit: 600000.0
+
       - step: "Confirm participant"
         action: "call"
         target: "participant_wf"
@@ -226,6 +261,18 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Assert the addendum line was created on the payment term"
+        action: "assert"
+        target: "term_wf"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          amount_extra:
+            type: "value"
+            expected: 600000.0
 
       - step: "Assert document number generated"
         action: "assert"
@@ -843,6 +890,28 @@ scenarios:
           grade_class_id: "REC: grade_class_do.id"
           student_id: "REC: student_do.id"
 
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_do"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_do"
+        values:
+          name: "Extracurricular Income DO"
+          code: "EXTPAR-INC-DO"
+          user_type_id: "REC: revenue_type_do.id"
+
+      - step: "Setup - create payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_do"
+        values:
+          enrollment_id: "REC: enrollment_do.id"
+          name: "Term Participant DO"
+
       - step: "Create first participant for the student"
         action: "create"
         model: "school_extracurricular_participant"
@@ -853,6 +922,19 @@ scenarios:
           enrollment_id: "REC: enrollment_do.id"
           billing_mode: "enrollment"
           product_id: "REC: product_do.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Allocate the first participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_do_1"
+        values:
+          participant_id: "REC: participant_do_1.id"
+          payment_term_id: "REC: term_do.id"
+          product_id: "REC: product_do.id"
+          name: "Extracurricular Fee Participant DO 1"
+          account_id: "REC: income_account_do.id"
           uom_quantity: 1.0
           price_unit: 150000.0
 
@@ -886,6 +968,19 @@ scenarios:
           enrollment_id: "REC: enrollment_do.id"
           billing_mode: "enrollment"
           product_id: "REC: product_do.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Allocate the second participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_do_2"
+        values:
+          participant_id: "REC: participant_do_2.id"
+          payment_term_id: "REC: term_do.id"
+          product_id: "REC: product_do.id"
+          name: "Extracurricular Fee Participant DO 2"
+          account_id: "REC: income_account_do.id"
           uom_quantity: 1.0
           price_unit: 150000.0
 
@@ -1052,6 +1147,28 @@ scenarios:
           grade_class_id: "REC: grade_class_qt.id"
           student_id: "REC: student_qt_a.id"
 
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_qt"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_qt"
+        values:
+          name: "Extracurricular Income QT"
+          code: "EXTPAR-INC-QT"
+          user_type_id: "REC: revenue_type_qt.id"
+
+      - step: "Setup - create payment term to allocate the first participant's fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_qt_a"
+        values:
+          enrollment_id: "REC: enrollment_qt_a.id"
+          name: "Term Participant QT A"
+
       - step: "Setup - create contact of second student"
         action: "create"
         model: "res.partner"
@@ -1091,6 +1208,19 @@ scenarios:
           enrollment_id: "REC: enrollment_qt_a.id"
           billing_mode: "enrollment"
           product_id: "REC: product_qt.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Allocate the first participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_qt_1"
+        values:
+          participant_id: "REC: participant_qt_1.id"
+          payment_term_id: "REC: term_qt_a.id"
+          product_id: "REC: product_qt.id"
+          name: "Extracurricular Fee Participant QT 1"
+          account_id: "REC: income_account_qt.id"
           uom_quantity: 1.0
           price_unit: 150000.0
 
@@ -1145,3 +1275,179 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "reached its maximum quota"
+
+  - name:
+      "Extracurricular Participant rejects opening enrollment billing without allocation"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_na"
+        values:
+          name: "Grade Type Participant NA"
+          code: "EXTPAR-GT-NA"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_na"
+        values:
+          name: "School Participant NA"
+          code: "EXTPAR-SCH-NA"
+          grade_type_id: "REC: grade_type_na.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_na"
+        values:
+          name: "Category Participant NA"
+          code: "EXTPAR-CAT-NA"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_na"
+        values:
+          name: "Futsal Club Participant NA"
+          code: "EXTPAR-EXT-NA"
+          category_id: "REC: category_na.id"
+          school_id: "REC: school_na.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_na"
+        values:
+          name: "AY Participant NA"
+          code: "EXTPAR-AY-NA"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_na"
+        values:
+          name: "Term Participant NA"
+          code: "EXTPAR-TERM-NA"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_na.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_na"
+        values:
+          name: "Teacher Employee Participant NA"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_na"
+        values:
+          name: "Teacher Participant NA"
+          code: "EXTPAR-TCH-NA"
+          employee_id: "REC: employee_na.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_na"
+        values:
+          name: "Extracurricular Fee Participant NA"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_na"
+        values:
+          extracurricular_id: "REC: extracurricular_na.id"
+          academic_year_id: "REC: academic_year_na.id"
+          academic_term_id: "REC: academic_term_na.id"
+          teacher_id: "REC: teacher_na.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_na.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_na"
+        values:
+          name: "Grade Participant NA"
+          code: "EXTPAR-GR-NA"
+          type_id: "REC: grade_type_na.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_na"
+        values:
+          name: "Grade Class Participant NA"
+          code: "EXTPAR-GC-NA"
+          school_id: "REC: school_na.id"
+          grade_id: "REC: grade_na.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_na"
+        values:
+          name: "Student Contact Participant NA"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_na"
+        values:
+          name: "Student Participant NA"
+          code: "EXTPAR-ST-NA"
+          contact_id: "REC: contact_na.id"
+          school_id: "REC: school_na.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_na"
+        values:
+          academic_year_id: "REC: academic_year_na.id"
+          academic_term_id: "REC: academic_term_na.id"
+          school_id: "REC: school_na.id"
+          grade_id: "REC: grade_na.id"
+          grade_class_id: "REC: grade_class_na.id"
+          student_id: "REC: student_na.id"
+
+      - step: "Create participant without allocation"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_na"
+        values:
+          offering_id: "REC: offering_na.id"
+          student_id: "REC: student_na.id"
+          enrollment_id: "REC: enrollment_na.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_na.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_na"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Opening without an allocation line must fail"
+        action: "call"
+        target: "participant_na"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "but no Allocation"

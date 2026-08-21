@@ -322,6 +322,22 @@ class SchoolExtracurricularParticipant(models.Model):
         currency_field="currency_id",
         help="The fee amount including tax.",
     )
+    allocation_ids = fields.One2many(
+        string="Allocation",
+        comodel_name="school_extracurricular_participant_allocation",
+        inverse_name="participant_id",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Enrollment payment term(s) this participant's fee is "
+            "allocated to. Required to open a participant whose "
+            "Billing Mode is Charged to Enrollment; ignored otherwise."
+        ),
+    )
 
     @api.depends(
         "uom_quantity",
@@ -573,6 +589,107 @@ existing participant before opening a new one
                 }
             )
             raise UserError(error_message)
+
+    @ssi_decorator.pre_open_check()
+    def _20_check_allocation_required(self):
+        """Block opening this participant without an allocation.
+
+        Runs after the quota check. When ``billing_mode`` is
+        ``enrollment``, at least one ``allocation_ids`` line must
+        exist so the fee can be billed through the enrollment's
+        payment term(s); other billing modes are not affected.
+
+        :raises UserError: when billed through enrollment without any
+            allocation line
+        :return: None
+        """
+        self.ensure_one()
+        if self.billing_mode == "enrollment" and not self.allocation_ids:
+            error_message = (
+                _(
+                    """
+Context: Open extracurricular participant
+Database ID: %(id)s
+Problem: Billing Mode is 'Charged to Enrollment' but no Allocation
+line is set
+Solution: Add at least one Allocation line pointing to an enrollment
+payment term before opening
+"""
+                )
+                % {"id": self.id}
+            )
+            raise UserError(error_message)
+
+    @ssi_decorator.post_open_action()
+    def _10_create_extra_detail(self):
+        """Create one addendum fee line per allocation.
+
+        Post-open hook: for every ``allocation_ids`` line, creates a
+        ``school_enrollment_payment_term_extra_detail`` on the
+        allocated payment term mirroring the allocation's product line
+        values, and writes the created line back onto
+        ``extra_detail_id`` for traceability.
+
+        :return: None
+        """
+        self.ensure_one()
+        Detail = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term_extra_detail"
+        ]
+        for allocation in self.allocation_ids:
+            aa = (  # pylint: disable=invalid-name,consider-using-ternary
+                allocation.analytic_account_id
+                and allocation.analytic_account_id.id
+                or False
+            )
+            detail = Detail.create(
+                {
+                    "term_id": allocation.payment_term_id.id,
+                    "participant_id": self.id,
+                    "product_id": allocation.product_id.id,
+                    "name": allocation.name,
+                    "account_id": allocation.account_id.id,
+                    "uom_id": allocation.uom_id.id,
+                    "uom_quantity": allocation.uom_quantity,
+                    "price_unit": allocation.price_unit,
+                    "tax_ids": [(6, 0, allocation.tax_ids.ids)],
+                    "analytic_account_id": aa or False,
+                }
+            )
+            allocation.write({"extra_detail_id": detail.id})
+
+    @ssi_decorator.post_cancel_action()
+    def _10_remove_extra_detail(self):
+        """Remove the addendum fee lines created by this participant.
+
+        Post-cancel hook: rejects cancellation when any addendum fee
+        line created from ``allocation_ids`` is already ``locked``
+        (meaning the enrollment has already been opened around it);
+        otherwise deletes the unlocked lines so the payment term's
+        totals fall back to what they were before this participant
+        was opened.
+
+        :raises UserError: when an addendum fee line is locked
+        :return: None
+        """
+        self.ensure_one()
+        extra_details = self.allocation_ids.mapped("extra_detail_id")
+        locked = extra_details.filtered("locked")
+        if locked:
+            error_message = (
+                _(
+                    """
+Context: Cancel extracurricular participant
+Database ID: %(id)s
+Problem: An addendum fee line on the payment term is already locked
+Solution: The enrollment has already been opened around this fee;
+it can no longer be cancelled through this document
+"""
+                )
+                % {"id": self.id}
+            )
+            raise UserError(error_message)
+        extra_details.unlink()
 
     @api.model
     def _get_policy_field(self):
