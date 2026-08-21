@@ -1,0 +1,181 @@
+scenarios:
+  - name: "Create extracurricular with category and school"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_1"
+        values:
+          name: "Grade Type 1"
+          code: "EXT-GT-01"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school_1"
+        values:
+          name: "School 1"
+          code: "EXT-SCH-01"
+          grade_type_id: "REC: grade_type_1.id"
+      - step: "Create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_1"
+        values:
+          name: "Category 1"
+          code: "EXT-CAT-01"
+      - step: "Create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_1"
+        values:
+          name: "Football Club"
+          code: "EXT-001"
+          category_id: "REC: category_1.id"
+          school_id: "REC: school_1.id"
+      - step: "Assert category stored"
+        action: "assert"
+        target: "extracurricular_1"
+        asserts:
+          category_id:
+            type: "m2o"
+            expected: "REC: category_1"
+      - step: "Assert school stored"
+        action: "assert"
+        target: "extracurricular_1"
+        asserts:
+          school_id:
+            type: "m2o"
+            expected: "REC: school_1"
+
+  - name: "Create extracurricular with two allowed grades"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_2"
+        values:
+          name: "Grade Type 2"
+          code: "EXT-GT-02"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school_2"
+        values:
+          name: "School 2"
+          code: "EXT-SCH-02"
+          grade_type_id: "REC: grade_type_2.id"
+      - step: "Create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_2"
+        values:
+          name: "Category 2"
+          code: "EXT-CAT-02"
+      - step: "Create grade A"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Grade A"
+          code: "EXT-GR-A"
+          type_id: "REC: grade_type_2.id"
+      - step: "Create grade B"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Grade B"
+          code: "EXT-GR-B"
+          type_id: "REC: grade_type_2.id"
+      - step: "Create extracurricular with allowed grades"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_2"
+        values:
+          name: "Basketball Club"
+          code: "EXT-002"
+          category_id: "REC: category_2.id"
+          school_id: "REC: school_2.id"
+          allowed_grade_ids: [[6, 0, ["REC: grade_a.id", "REC: grade_b.id"]]]
+      - step: "Assert allowed grade count"
+        action: "assert"
+        target: "extracurricular_2"
+        asserts:
+          allowed_grade_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "Write name of catalog"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_3"
+        values:
+          name: "Grade Type 3"
+          code: "EXT-GT-03"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school_3"
+        values:
+          name: "School 3"
+          code: "EXT-SCH-03"
+          grade_type_id: "REC: grade_type_3.id"
+      - step: "Create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_3"
+        values:
+          name: "Category 3"
+          code: "EXT-CAT-03"
+      - step: "Create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_3"
+        values:
+          name: "Chess Club"
+          code: "EXT-003"
+          category_id: "REC: category_3.id"
+          school_id: "REC: school_3.id"
+      - step: "Write new name"
+        action: "write"
+        target: "extracurricular_3"
+        values:
+          name: "Chess Club Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "extracurricular_3"
+        asserts:
+          name:
+            type: "value"
+            expected: "Chess Club Updated"
+
+  - name: "Create extracurricular without category_id"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_4"
+        values:
+          name: "Grade Type 4"
+          code: "EXT-GT-04"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school_4"
+        values:
+          name: "School 4"
+          code: "EXT-SCH-04"
+          grade_type_id: "REC: grade_type_4.id"
+      - step: "Create extracurricular without category_id must fail"
+        action: "create"
+        model: "school_extracurricular"
+        expect_error:
+          type: "AssertionError"
+          message_contains: "required field"
+        values:
+          name: "No Category"
+          code: "EXT-004"
+          school_id: "REC: school_4.id"

@@ -1,0 +1,43 @@
+scenarios:
+  - name: "Create category with default sequence"
+    steps:
+      - step: "Create extracurricular category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category"
+        values:
+          name: "Sport"
+          code: "EXTCAT-001"
+      - step: "Assert active defaults to True"
+        action: "assert"
+        target: "category"
+        asserts:
+          active:
+            type: "value"
+            expected: true
+      - step: "Assert sequence defaults to 10"
+        action: "assert"
+        target: "category"
+        asserts:
+          sequence:
+            type: "value"
+            expected: 10
+
+  - name: "Duplicate code rejected"
+    steps:
+      - step: "Create first category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "first"
+        values:
+          name: "Art"
+          code: "EXTCAT-DUP"
+      - step: "Create second category with same code must fail"
+        action: "create"
+        model: "school_extracurricular_category"
+        expect_error:
+          type: "UserError"
+          message_contains: "Dupilicate code"
+        values:
+          name: "Art Duplicate"
+          code: "EXTCAT-DUP"

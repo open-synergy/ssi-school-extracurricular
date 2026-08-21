@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_extracurricular_view_search" model="ir.ui.view">
+    <field name="name">school_extracurricular - search</field>
+    <field name="model">school_extracurricular</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="category_id" />
+                <field name="school_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_category_id"
+                            string="Category"
+                            context="{'group_by': 'category_id'}"
+                        />
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_view_tree" model="ir.ui.view">
+    <field name="name">school_extracurricular - tree</field>
+    <field name="model">school_extracurricular</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="category_id" />
+                <field name="school_id" />
+                <field name="teacher_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_view_form" model="ir.ui.view">
+    <field name="name">school_extracurricular - form</field>
+    <field name="model">school_extracurricular</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="category_id" />
+                <field name="school_id" />
+                <field name="allowed_grade_ids" widget="many2many_tags" />
+                <field name="teacher_id" />
+                <field name="product_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_extracurricular_action" model="ir.actions.act_window">
+    <field name="name">Extracurriculars</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_extracurricular</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_extracurricular_menu"
+        name="Extracurriculars"
+        parent="menu_extracurricular_configuration"
+        action="school_extracurricular_action"
+        groups="school_extracurricular_group"
+        sequence="20"
+    />
+
+</odoo>
