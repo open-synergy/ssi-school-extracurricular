@@ -170,11 +170,11 @@ scenarios:
           code: "EXT-SCH-04"
           grade_type_id: "REC: grade_type_4.id"
       - step: "Create extracurricular without category_id must fail"
-        action: "create"
+        action: "form"
         model: "school_extracurricular"
         expect_error:
           type: "AssertionError"
-          message_contains: "required field"
+          message_contains: "is a required field"
         values:
           name: "No Category"
           code: "EXT-004"
