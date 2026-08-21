@@ -318,6 +318,67 @@ class SchoolExtracurricularOffering(models.Model):
             "every payment term."
         ),
     )
+    customer_invoice_type_id = fields.Many2one(
+        string="Customer Invoice Type",
+        comodel_name="customer_invoice_type",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Customer invoice type used when invoicing this offering's "
+            "fee separately (Billing Mode 'Separate Invoice'). Required "
+            "by the create due invoice wizard, ignored for other Billing "
+            "Modes."
+        ),
+    )
+    receivable_journal_id = fields.Many2one(
+        string="Receivable Journal",
+        comodel_name="account.journal",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Accounting journal used when invoicing this offering's fee "
+            "separately. Required by the create due invoice wizard, "
+            "ignored for other Billing Modes."
+        ),
+    )
+    receivable_account_id = fields.Many2one(
+        string="Receivable Account",
+        comodel_name="account.account",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Receivable account used when invoicing this offering's fee "
+            "separately. Required by the create due invoice wizard, "
+            "ignored for other Billing Modes."
+        ),
+    )
+    auto_confirm_customer_invoice = fields.Boolean(
+        string="Auto Confirm Customer Invoice",
+        default=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "If enabled, the customer invoice created by the create due "
+            "invoice wizard from this offering's payment terms is "
+            "automatically confirmed once all its lines are created."
+        ),
+    )
 
     participant_ids = fields.One2many(
         string="Participants",

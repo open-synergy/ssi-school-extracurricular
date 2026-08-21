@@ -32,6 +32,9 @@
         "security/ir_model_access/school_extracurricular_participant.xml",
         "security/ir_model_access/school_enrollment_payment_term_extra_detail.xml",
         "security/ir_model_access/school_extracurricular_participant_allocation.xml",
+        "security/ir_model_access/school_extracurricular_payment_term.xml",
+        "security/ir_model_access/school_extracurricular_payment_term_detail.xml",
+        "security/ir_model_access/school_extracurricular_create_due_invoice.xml",
         "security/ir_rule/school_extracurricular_offering.xml",
         "security/ir_rule/school_extracurricular_participant.xml",
         "ir_sequence/school_extracurricular_offering.xml",
@@ -48,5 +51,7 @@
         "views/school_extracurricular_offering.xml",
         "views/school_extracurricular_participant.xml",
         "views/school_enrollment_payment_term.xml",
+        "wizards/school_extracurricular_create_due_invoice.xml",
+        "menu_create_due_invoice.xml",
     ],
 }
