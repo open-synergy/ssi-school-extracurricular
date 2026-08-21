@@ -17,6 +17,8 @@
         "ssi_transaction_open_mixin",
         "ssi_transaction_done_mixin",
         "ssi_transaction_cancel_mixin",
+        "ssi_customer_invoice",
+        "ssi_product_line_account_mixin",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -28,6 +30,8 @@
         "security/ir_model_access/school_extracurricular.xml",
         "security/ir_model_access/school_extracurricular_offering.xml",
         "security/ir_model_access/school_extracurricular_participant.xml",
+        "security/ir_model_access/school_enrollment_payment_term_extra_detail.xml",
+        "security/ir_model_access/school_extracurricular_participant_allocation.xml",
         "security/ir_rule/school_extracurricular_offering.xml",
         "security/ir_rule/school_extracurricular_participant.xml",
         "ir_sequence/school_extracurricular_offering.xml",
@@ -43,5 +47,6 @@
         "views/school_extracurricular.xml",
         "views/school_extracurricular_offering.xml",
         "views/school_extracurricular_participant.xml",
+        "views/school_enrollment_payment_term.xml",
     ],
 }

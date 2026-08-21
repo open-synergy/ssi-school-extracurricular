@@ -93,6 +93,51 @@
                         <field name="amount_tax" />
                         <field name="amount_total" />
                     </group>
+                    <field
+                            name="allocation_ids"
+                            colspan="4"
+                            nolabel="1"
+                            attrs="{'readonly': [('state','!=','draft')]}"
+                        >
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="payment_term_id" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="account_id" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="uom_id" />
+                            <field name="uom_quantity" string="Quantity" />
+                            <field name="price_unit" />
+                            <field name="price_subtotal" />
+                            <field name="tax_ids" widget="many2many_tags" />
+                            <field name="price_tax" />
+                            <field name="price_total" />
+                        </tree>
+                        <form>
+                            <header />
+                            <sheet>
+                                <group name="allocation_group" colspan="4" col="2">
+                                    <group name="allocation_left" colspan="1" col="2">
+                                        <field name="payment_term_id" />
+                                        <field name="product_id" />
+                                        <field name="name" />
+                                        <field name="account_id" />
+                                    </group>
+                                    <group name="allocation_right" colspan="1" col="2">
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="uom_id" />
+                                        <field name="uom_quantity" string="Quantity" />
+                                        <field name="price_unit" />
+                                        <field name="price_subtotal" />
+                                        <field name="tax_ids" widget="many2many_tags" />
+                                        <field name="price_tax" />
+                                        <field name="price_total" />
+                                    </group>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
                 </page>
             </xpath>
         </data>
