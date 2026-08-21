@@ -99,6 +99,12 @@
                         <field name="billing_mode" />
                         <field name="billing_frequency" />
                     </group>
+                    <group name="billing_group_3" string="Separate Invoice Setting">
+                        <field name="customer_invoice_type_id" />
+                        <field name="receivable_journal_id" />
+                        <field name="receivable_account_id" />
+                        <field name="auto_confirm_customer_invoice" />
+                    </group>
                 </page>
                 <page name="participant" string="Participants">
                     <field

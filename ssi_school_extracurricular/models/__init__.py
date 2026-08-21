@@ -8,6 +8,8 @@ from . import school_extracurricular_offering  # noqa: F401
 from . import school_enrollment_payment_term_extra_detail  # noqa: F401
 from . import school_extracurricular_participant_allocation  # noqa: F401
 from . import school_extracurricular_participant  # noqa: F401
+from . import school_extracurricular_payment_term  # noqa: F401
+from . import school_extracurricular_payment_term_detail  # noqa: F401
 from . import school_enrollment_payment_term  # noqa: F401
 from . import school_enrollment  # noqa: F401
 from . import customer_invoice_line  # noqa: F401

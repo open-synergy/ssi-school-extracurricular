@@ -1,0 +1,1118 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name:
+      "Create due invoice consolidates two participants of the same student into one
+      invoice"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_cw"
+        values:
+          name: "Grade Type Wizard CW"
+          code: "EXTWIZ-GT-CW"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_cw"
+        values:
+          name: "School Wizard CW"
+          code: "EXTWIZ-SCH-CW"
+          grade_type_id: "REC: grade_type_cw.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_cw"
+        values:
+          name: "Category Wizard CW"
+          code: "EXTWIZ-CAT-CW"
+
+      - step: "Setup - create first extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_cw_1"
+        values:
+          name: "Chess Club Wizard CW"
+          code: "EXTWIZ-EXT-CW-1"
+          category_id: "REC: category_cw.id"
+          school_id: "REC: school_cw.id"
+
+      - step: "Setup - create second extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_cw_2"
+        values:
+          name: "Robotics Club Wizard CW"
+          code: "EXTWIZ-EXT-CW-2"
+          category_id: "REC: category_cw.id"
+          school_id: "REC: school_cw.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_cw"
+        values:
+          name: "AY Wizard CW"
+          code: "EXTWIZ-AY-CW"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_cw"
+        values:
+          name: "Term Wizard CW"
+          code: "EXTWIZ-TERM-CW"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_cw.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_cw"
+        values:
+          name: "Teacher Employee Wizard CW"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_cw"
+        values:
+          name: "Teacher Wizard CW"
+          code: "EXTWIZ-TCH-CW"
+          employee_id: "REC: employee_cw.id"
+
+      - step: "Setup - create first offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_cw_1"
+        values:
+          name: "Chess Club Fee Wizard CW"
+
+      - step: "Setup - create second offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_cw_2"
+        values:
+          name: "Robotics Club Fee Wizard CW"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_cw"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_cw"
+        values:
+          name: "Extracurricular Wizard Income CW"
+          code: "EXTWIZ-INC-CW"
+          user_type_id: "REC: revenue_type_cw.id"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_cw"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_cw"
+        values:
+          name: "Extracurricular Wizard Receivable CW"
+          code: "EXTWIZ-REC-CW"
+          user_type_id: "REC: receivable_type_cw.id"
+          reconcile: true
+
+      - step: "Setup - create receivable journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal_cw"
+        values:
+          name: "Extracurricular Wizard Journal CW"
+          code: "EXTWZCW"
+          type: "sale"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "invoice_type_cw"
+        values:
+          name: "Extracurricular Wizard Invoice Type CW"
+          code: "/"
+          journal_id: "REC: journal_cw.id"
+          receivable_account_id: "REC: receivable_account_cw.id"
+
+      - step: "Setup - create first offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_cw_1"
+        values:
+          extracurricular_id: "REC: extracurricular_cw_1.id"
+          academic_year_id: "REC: academic_year_cw.id"
+          academic_term_id: "REC: academic_term_cw.id"
+          teacher_id: "REC: teacher_cw.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_cw_1.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: invoice_type_cw.id"
+          receivable_journal_id: "REC: journal_cw.id"
+          receivable_account_id: "REC: receivable_account_cw.id"
+
+      - step: "Setup - create second offering, same accounting setup"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_cw_2"
+        values:
+          extracurricular_id: "REC: extracurricular_cw_2.id"
+          academic_year_id: "REC: academic_year_cw.id"
+          academic_term_id: "REC: academic_term_cw.id"
+          teacher_id: "REC: teacher_cw.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_cw_2.id"
+          price_unit: 200000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: invoice_type_cw.id"
+          receivable_journal_id: "REC: journal_cw.id"
+          receivable_account_id: "REC: receivable_account_cw.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_cw"
+        values:
+          name: "Grade Wizard CW"
+          code: "EXTWIZ-GR-CW"
+          type_id: "REC: grade_type_cw.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_cw"
+        values:
+          name: "Grade Class Wizard CW"
+          code: "EXTWIZ-GC-CW"
+          school_id: "REC: school_cw.id"
+          grade_id: "REC: grade_cw.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_cw"
+        values:
+          name: "Student Contact Wizard CW"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_cw"
+        values:
+          name: "Student Wizard CW"
+          code: "EXTWIZ-ST-CW"
+          contact_id: "REC: contact_cw.id"
+          school_id: "REC: school_cw.id"
+
+      - step: "Setup - create the student's enrollment for the term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_cw"
+        values:
+          academic_year_id: "REC: academic_year_cw.id"
+          academic_term_id: "REC: academic_term_cw.id"
+          school_id: "REC: school_cw.id"
+          grade_id: "REC: grade_cw.id"
+          grade_class_id: "REC: grade_class_cw.id"
+          student_id: "REC: student_cw.id"
+
+      - step: "Create first participant (first extracurricular)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_cw_1"
+        values:
+          offering_id: "REC: offering_cw_1.id"
+          student_id: "REC: student_cw.id"
+          enrollment_id: "REC: enrollment_cw.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_cw_1.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm first participant"
+        action: "call"
+        target: "participant_cw_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve first participant"
+        action: "call"
+        target: "participant_cw_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant (second extracurricular)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_cw_2"
+        values:
+          offering_id: "REC: offering_cw_2.id"
+          student_id: "REC: student_cw.id"
+          enrollment_id: "REC: enrollment_cw.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_cw_2.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Confirm second participant"
+        action: "call"
+        target: "participant_cw_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve second participant"
+        action: "call"
+        target: "participant_cw_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create payment term for the first participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_cw_1"
+        values:
+          participant_id: "REC: participant_cw_1.id"
+          name: "Chess Club Term 1 CW"
+          date_due: 2024-06-15
+
+      - step: "Create detail line for the first term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_cw_1"
+        values:
+          term_id: "REC: term_cw_1.id"
+          product_id: "REC: product_cw_1.id"
+          name: "Chess Club Fee CW"
+          account_id: "REC: income_account_cw.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create payment term for the second participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_cw_2"
+        values:
+          participant_id: "REC: participant_cw_2.id"
+          name: "Robotics Club Term 1 CW"
+          date_due: 2024-06-20
+
+      - step: "Create detail line for the second term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_cw_2"
+        values:
+          term_id: "REC: term_cw_2.id"
+          product_id: "REC: product_cw_2.id"
+          name: "Robotics Club Fee CW"
+          account_id: "REC: income_account_cw.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Both terms are uninvoiced and due before the cut-off"
+        action: "assert"
+        target: "term_cw_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Create the wizard for the consolidated student"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_cw"
+        values:
+          student_id: "REC: student_cw.id"
+          date_invoice: 2024-06-01
+          date_due_max: 2024-06-30
+
+      - step: "The wizard picked up both due payment terms"
+        action: "assert"
+        target: "wizard_cw"
+        asserts:
+          term_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Run the wizard"
+        action: "call"
+        target: "wizard_cw"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "The first term is now invoiced"
+        action: "assert"
+        target: "term_cw_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "The second term is now invoiced, on the SAME invoice"
+        action: "assert"
+        target: "term_cw_2"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "m2o"
+            expected: "REC: term_cw_1.customer_invoice_id"
+
+      - step: "The consolidated invoice has one line per detail"
+        action: "assert"
+        target: "term_cw_1"
+        asserts:
+          customer_invoice_id.line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "Wizard auto-confirms the invoice when the offering enables it"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ac"
+        values:
+          name: "Grade Type Wizard AC"
+          code: "EXTWIZ-GT-AC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ac"
+        values:
+          name: "School Wizard AC"
+          code: "EXTWIZ-SCH-AC"
+          grade_type_id: "REC: grade_type_ac.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ac"
+        values:
+          name: "Category Wizard AC"
+          code: "EXTWIZ-CAT-AC"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ac"
+        values:
+          name: "Chess Club Wizard AC"
+          code: "EXTWIZ-EXT-AC"
+          category_id: "REC: category_ac.id"
+          school_id: "REC: school_ac.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ac"
+        values:
+          name: "AY Wizard AC"
+          code: "EXTWIZ-AY-AC"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ac"
+        values:
+          name: "Term Wizard AC"
+          code: "EXTWIZ-TERM-AC"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_ac.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ac"
+        values:
+          name: "Teacher Employee Wizard AC"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ac"
+        values:
+          name: "Teacher Wizard AC"
+          code: "EXTWIZ-TCH-AC"
+          employee_id: "REC: employee_ac.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ac"
+        values:
+          name: "Chess Club Fee Wizard AC"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_ac"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_ac"
+        values:
+          name: "Extracurricular Wizard Income AC"
+          code: "EXTWIZ-INC-AC"
+          user_type_id: "REC: revenue_type_ac.id"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_ac"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_ac"
+        values:
+          name: "Extracurricular Wizard Receivable AC"
+          code: "EXTWIZ-REC-AC"
+          user_type_id: "REC: receivable_type_ac.id"
+          reconcile: true
+
+      - step: "Setup - create receivable journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal_ac"
+        values:
+          name: "Extracurricular Wizard Journal AC"
+          code: "EXTWZAC"
+          type: "sale"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "invoice_type_ac"
+        values:
+          name: "Extracurricular Wizard Invoice Type AC"
+          code: "/"
+          journal_id: "REC: journal_ac.id"
+          receivable_account_id: "REC: receivable_account_ac.id"
+
+      - step: "Setup - create offering with auto confirm enabled"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ac"
+        values:
+          extracurricular_id: "REC: extracurricular_ac.id"
+          academic_year_id: "REC: academic_year_ac.id"
+          academic_term_id: "REC: academic_term_ac.id"
+          teacher_id: "REC: teacher_ac.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_ac.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: invoice_type_ac.id"
+          receivable_journal_id: "REC: journal_ac.id"
+          receivable_account_id: "REC: receivable_account_ac.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ac"
+        values:
+          name: "Grade Wizard AC"
+          code: "EXTWIZ-GR-AC"
+          type_id: "REC: grade_type_ac.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ac"
+        values:
+          name: "Grade Class Wizard AC"
+          code: "EXTWIZ-GC-AC"
+          school_id: "REC: school_ac.id"
+          grade_id: "REC: grade_ac.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ac"
+        values:
+          name: "Student Contact Wizard AC"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ac"
+        values:
+          name: "Student Wizard AC"
+          code: "EXTWIZ-ST-AC"
+          contact_id: "REC: contact_ac.id"
+          school_id: "REC: school_ac.id"
+
+      - step: "Setup - create the student's enrollment for the term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ac"
+        values:
+          academic_year_id: "REC: academic_year_ac.id"
+          academic_term_id: "REC: academic_term_ac.id"
+          school_id: "REC: school_ac.id"
+          grade_id: "REC: grade_ac.id"
+          grade_class_id: "REC: grade_class_ac.id"
+          student_id: "REC: student_ac.id"
+
+      - step: "Create the participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ac"
+        values:
+          offering_id: "REC: offering_ac.id"
+          student_id: "REC: student_ac.id"
+          enrollment_id: "REC: enrollment_ac.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_ac.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_ac"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_ac"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_ac"
+        values:
+          participant_id: "REC: participant_ac.id"
+          name: "Chess Club Term 1 AC"
+          date_due: 2024-06-15
+
+      - step: "Create the detail line"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_ac"
+        values:
+          term_id: "REC: term_ac.id"
+          product_id: "REC: product_ac.id"
+          name: "Chess Club Fee AC"
+          account_id: "REC: income_account_ac.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the wizard"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_ac"
+        values:
+          student_id: "REC: student_ac.id"
+          date_invoice: 2024-06-01
+          date_due_max: 2024-06-30
+
+      - step: "Run the wizard"
+        action: "call"
+        target: "wizard_ac"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "The invoice is no longer draft"
+        action: "assert"
+        target: "term_ac"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.state:
+            type: "value"
+            operator: "not_equals"
+            expected: "draft"
+
+  - name: "Wizard rejects due terms whose offerings disagree on accounting setup"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_mm"
+        values:
+          name: "Grade Type Wizard MM"
+          code: "EXTWIZ-GT-MM"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_mm"
+        values:
+          name: "School Wizard MM"
+          code: "EXTWIZ-SCH-MM"
+          grade_type_id: "REC: grade_type_mm.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_mm"
+        values:
+          name: "Category Wizard MM"
+          code: "EXTWIZ-CAT-MM"
+
+      - step: "Setup - create first extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_mm_1"
+        values:
+          name: "Chess Club Wizard MM"
+          code: "EXTWIZ-EXT-MM-1"
+          category_id: "REC: category_mm.id"
+          school_id: "REC: school_mm.id"
+
+      - step: "Setup - create second extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_mm_2"
+        values:
+          name: "Robotics Club Wizard MM"
+          code: "EXTWIZ-EXT-MM-2"
+          category_id: "REC: category_mm.id"
+          school_id: "REC: school_mm.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_mm"
+        values:
+          name: "AY Wizard MM"
+          code: "EXTWIZ-AY-MM"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_mm"
+        values:
+          name: "Term Wizard MM"
+          code: "EXTWIZ-TERM-MM"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_mm.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_mm"
+        values:
+          name: "Teacher Employee Wizard MM"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_mm"
+        values:
+          name: "Teacher Wizard MM"
+          code: "EXTWIZ-TCH-MM"
+          employee_id: "REC: employee_mm.id"
+
+      - step: "Setup - create first offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_mm_1"
+        values:
+          name: "Chess Club Fee Wizard MM"
+
+      - step: "Setup - create second offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_mm_2"
+        values:
+          name: "Robotics Club Fee Wizard MM"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_mm"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_mm"
+        values:
+          name: "Extracurricular Wizard Income MM"
+          code: "EXTWIZ-INC-MM"
+          user_type_id: "REC: revenue_type_mm.id"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_mm"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_mm"
+        values:
+          name: "Extracurricular Wizard Receivable MM"
+          code: "EXTWIZ-REC-MM"
+          user_type_id: "REC: receivable_type_mm.id"
+          reconcile: true
+
+      - step: "Setup - create first receivable journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal_mm_1"
+        values:
+          name: "Extracurricular Wizard Journal MM 1"
+          code: "EXWZMM1"
+          type: "sale"
+
+      - step: "Setup - create second receivable journal (different)"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal_mm_2"
+        values:
+          name: "Extracurricular Wizard Journal MM 2"
+          code: "EXWZMM2"
+          type: "sale"
+
+      - step: "Setup - create first customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "invoice_type_mm_1"
+        values:
+          name: "Extracurricular Wizard Invoice Type MM 1"
+          code: "/"
+          journal_id: "REC: journal_mm_1.id"
+          receivable_account_id: "REC: receivable_account_mm.id"
+
+      - step: "Setup - create second customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "invoice_type_mm_2"
+        values:
+          name: "Extracurricular Wizard Invoice Type MM 2"
+          code: "/"
+          journal_id: "REC: journal_mm_2.id"
+          receivable_account_id: "REC: receivable_account_mm.id"
+
+      - step: "Setup - create first offering on the first journal"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_mm_1"
+        values:
+          extracurricular_id: "REC: extracurricular_mm_1.id"
+          academic_year_id: "REC: academic_year_mm.id"
+          academic_term_id: "REC: academic_term_mm.id"
+          teacher_id: "REC: teacher_mm.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_mm_1.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: invoice_type_mm_1.id"
+          receivable_journal_id: "REC: journal_mm_1.id"
+          receivable_account_id: "REC: receivable_account_mm.id"
+
+      - step: "Setup - create second offering on the second journal"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_mm_2"
+        values:
+          extracurricular_id: "REC: extracurricular_mm_2.id"
+          academic_year_id: "REC: academic_year_mm.id"
+          academic_term_id: "REC: academic_term_mm.id"
+          teacher_id: "REC: teacher_mm.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_mm_2.id"
+          price_unit: 200000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: invoice_type_mm_2.id"
+          receivable_journal_id: "REC: journal_mm_2.id"
+          receivable_account_id: "REC: receivable_account_mm.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_mm"
+        values:
+          name: "Grade Wizard MM"
+          code: "EXTWIZ-GR-MM"
+          type_id: "REC: grade_type_mm.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_mm"
+        values:
+          name: "Grade Class Wizard MM"
+          code: "EXTWIZ-GC-MM"
+          school_id: "REC: school_mm.id"
+          grade_id: "REC: grade_mm.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_mm"
+        values:
+          name: "Student Contact Wizard MM"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_mm"
+        values:
+          name: "Student Wizard MM"
+          code: "EXTWIZ-ST-MM"
+          contact_id: "REC: contact_mm.id"
+          school_id: "REC: school_mm.id"
+
+      - step: "Setup - create the student's enrollment for the term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_mm"
+        values:
+          academic_year_id: "REC: academic_year_mm.id"
+          academic_term_id: "REC: academic_term_mm.id"
+          school_id: "REC: school_mm.id"
+          grade_id: "REC: grade_mm.id"
+          grade_class_id: "REC: grade_class_mm.id"
+          student_id: "REC: student_mm.id"
+
+      - step: "Create first participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_mm_1"
+        values:
+          offering_id: "REC: offering_mm_1.id"
+          student_id: "REC: student_mm.id"
+          enrollment_id: "REC: enrollment_mm.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_mm_1.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm first participant"
+        action: "call"
+        target: "participant_mm_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve first participant"
+        action: "call"
+        target: "participant_mm_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_mm_2"
+        values:
+          offering_id: "REC: offering_mm_2.id"
+          student_id: "REC: student_mm.id"
+          enrollment_id: "REC: enrollment_mm.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_mm_2.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Confirm second participant"
+        action: "call"
+        target: "participant_mm_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve second participant"
+        action: "call"
+        target: "participant_mm_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create payment term for the first participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_mm_1"
+        values:
+          participant_id: "REC: participant_mm_1.id"
+          name: "Chess Club Term 1 MM"
+          date_due: 2024-06-15
+
+      - step: "Create detail line for the first term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_mm_1"
+        values:
+          term_id: "REC: term_mm_1.id"
+          product_id: "REC: product_mm_1.id"
+          name: "Chess Club Fee MM"
+          account_id: "REC: income_account_mm.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create payment term for the second participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_mm_2"
+        values:
+          participant_id: "REC: participant_mm_2.id"
+          name: "Robotics Club Term 1 MM"
+          date_due: 2024-06-20
+
+      - step: "Create detail line for the second term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_mm_2"
+        values:
+          term_id: "REC: term_mm_2.id"
+          product_id: "REC: product_mm_2.id"
+          name: "Robotics Club Fee MM"
+          account_id: "REC: income_account_mm.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Create the wizard for the consolidated student"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_mm"
+        values:
+          student_id: "REC: student_mm.id"
+          date_invoice: 2024-06-01
+          date_due_max: 2024-06-30
+
+      - step: "Running the wizard must fail on the accounting mismatch"
+        action: "call"
+        target: "wizard_mm"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "do not share the same"
+
+  - name: "Wizard rejects a student with no due payment term"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_nd"
+        values:
+          name: "Grade Type Wizard ND"
+          code: "EXTWIZ-GT-ND"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_nd"
+        values:
+          name: "School Wizard ND"
+          code: "EXTWIZ-SCH-ND"
+          grade_type_id: "REC: grade_type_nd.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_nd"
+        values:
+          name: "Student Contact Wizard ND"
+
+      - step: "Setup - create student with no participation at all"
+        action: "create"
+        model: "school_student"
+        save_as: "student_nd"
+        values:
+          name: "Student Wizard ND"
+          code: "EXTWIZ-ST-ND"
+          contact_id: "REC: contact_nd.id"
+          school_id: "REC: school_nd.id"
+
+      - step: "Create the wizard for a student with nothing due"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_nd"
+        values:
+          student_id: "REC: student_nd.id"
+          date_invoice: 2024-06-01
+          date_due_max: 2024-06-30
+
+      - step: "The wizard picked up no payment term"
+        action: "assert"
+        target: "wizard_nd"
+        asserts:
+          term_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Running the wizard must fail with nothing due"
+        action: "call"
+        target: "wizard_nd"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "No uninvoiced payment term of Student"

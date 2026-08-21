@@ -338,6 +338,15 @@ class SchoolExtracurricularParticipant(models.Model):
             "Billing Mode is Charged to Enrollment; ignored otherwise."
         ),
     )
+    payment_term_ids = fields.One2many(
+        string="Payment Term",
+        comodel_name="school_extracurricular_payment_term",
+        inverse_name="participant_id",
+        help=(
+            "This participant's own payment term(s), used when Billing "
+            "Mode is Separate Invoice; ignored otherwise."
+        ),
+    )
 
     @api.depends(
         "uom_quantity",

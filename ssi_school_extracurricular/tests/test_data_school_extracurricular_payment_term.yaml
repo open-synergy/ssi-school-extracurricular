@@ -1,0 +1,641 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Payment term totals are computed from its detail lines"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_tt"
+        values:
+          name: "Grade Type Term TT"
+          code: "EXTTRM-GT-TT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_tt"
+        values:
+          name: "School Term TT"
+          code: "EXTTRM-SCH-TT"
+          grade_type_id: "REC: grade_type_tt.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_tt"
+        values:
+          name: "Category Term TT"
+          code: "EXTTRM-CAT-TT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_tt"
+        values:
+          name: "Chess Club Term TT"
+          code: "EXTTRM-EXT-TT"
+          category_id: "REC: category_tt.id"
+          school_id: "REC: school_tt.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_tt"
+        values:
+          name: "AY Term TT"
+          code: "EXTTRM-AY-TT"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_tt"
+        values:
+          name: "Term Term TT"
+          code: "EXTTRM-TERM-TT"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_tt.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_tt"
+        values:
+          name: "Teacher Employee Term TT"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_tt"
+        values:
+          name: "Teacher Term TT"
+          code: "EXTTRM-TCH-TT"
+          employee_id: "REC: employee_tt.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_tt"
+        values:
+          name: "Extracurricular Fee Term TT"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_tt"
+        values:
+          extracurricular_id: "REC: extracurricular_tt.id"
+          academic_year_id: "REC: academic_year_tt.id"
+          academic_term_id: "REC: academic_term_tt.id"
+          teacher_id: "REC: teacher_tt.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_tt.id"
+          price_unit: 500000.0
+          billing_mode: "standalone"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_tt"
+        values:
+          name: "Grade Term TT"
+          code: "EXTTRM-GR-TT"
+          type_id: "REC: grade_type_tt.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_tt"
+        values:
+          name: "Grade Class Term TT"
+          code: "EXTTRM-GC-TT"
+          school_id: "REC: school_tt.id"
+          grade_id: "REC: grade_tt.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_tt"
+        values:
+          name: "Student Contact Term TT"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_tt"
+        values:
+          name: "Student Term TT"
+          code: "EXTTRM-ST-TT"
+          contact_id: "REC: contact_tt.id"
+          school_id: "REC: school_tt.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_tt"
+        values:
+          academic_year_id: "REC: academic_year_tt.id"
+          academic_term_id: "REC: academic_term_tt.id"
+          school_id: "REC: school_tt.id"
+          grade_id: "REC: grade_tt.id"
+          grade_class_id: "REC: grade_class_tt.id"
+          student_id: "REC: student_tt.id"
+
+      - step: "Setup - create standalone participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_tt"
+        values:
+          offering_id: "REC: offering_tt.id"
+          student_id: "REC: student_tt.id"
+          enrollment_id: "REC: enrollment_tt.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_tt.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_tt"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_tt"
+        values:
+          name: "Extracurricular Term Income TT"
+          code: "EXTTRM-INC-TT"
+          user_type_id: "REC: revenue_type_tt.id"
+
+      - step: "Create the standalone payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_tt"
+        values:
+          participant_id: "REC: participant_tt.id"
+          name: "Term 1 Fee TT"
+
+      - step: "Create first detail line"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_tt_1"
+        values:
+          term_id: "REC: term_tt.id"
+          product_id: "REC: product_tt.id"
+          name: "Chess Club Fee - Part 1"
+          account_id: "REC: income_account_tt.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create second detail line"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_tt_2"
+        values:
+          term_id: "REC: term_tt.id"
+          product_id: "REC: product_tt.id"
+          name: "Chess Club Fee - Part 2"
+          account_id: "REC: income_account_tt.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Assert the term totals sum the two detail lines"
+        action: "assert"
+        target: "term_tt"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 500000.0
+          amount_tax:
+            type: "value"
+            expected: 0.0
+          amount_total:
+            type: "value"
+            expected: 500000.0
+
+  - name: "Payment term state follows the participant, then goes manual"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_st"
+        values:
+          name: "Grade Type Term ST"
+          code: "EXTTRM-GT-ST"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_st"
+        values:
+          name: "School Term ST"
+          code: "EXTTRM-SCH-ST"
+          grade_type_id: "REC: grade_type_st.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_st"
+        values:
+          name: "Category Term ST"
+          code: "EXTTRM-CAT-ST"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_st"
+        values:
+          name: "Chess Club Term ST"
+          code: "EXTTRM-EXT-ST"
+          category_id: "REC: category_st.id"
+          school_id: "REC: school_st.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_st"
+        values:
+          name: "AY Term ST"
+          code: "EXTTRM-AY-ST"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_st"
+        values:
+          name: "Term Term ST"
+          code: "EXTTRM-TERM-ST"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_st.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_st"
+        values:
+          name: "Teacher Employee Term ST"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_st"
+        values:
+          name: "Teacher Term ST"
+          code: "EXTTRM-TCH-ST"
+          employee_id: "REC: employee_st.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_st"
+        values:
+          name: "Extracurricular Fee Term ST"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_st"
+        values:
+          extracurricular_id: "REC: extracurricular_st.id"
+          academic_year_id: "REC: academic_year_st.id"
+          academic_term_id: "REC: academic_term_st.id"
+          teacher_id: "REC: teacher_st.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_st.id"
+          price_unit: 500000.0
+          billing_mode: "standalone"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_st"
+        values:
+          name: "Grade Term ST"
+          code: "EXTTRM-GR-ST"
+          type_id: "REC: grade_type_st.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_st"
+        values:
+          name: "Grade Class Term ST"
+          code: "EXTTRM-GC-ST"
+          school_id: "REC: school_st.id"
+          grade_id: "REC: grade_st.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_st"
+        values:
+          name: "Student Contact Term ST"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_st"
+        values:
+          name: "Student Term ST"
+          code: "EXTTRM-ST-ST"
+          contact_id: "REC: contact_st.id"
+          school_id: "REC: school_st.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_st"
+        values:
+          academic_year_id: "REC: academic_year_st.id"
+          academic_term_id: "REC: academic_term_st.id"
+          school_id: "REC: school_st.id"
+          grade_id: "REC: grade_st.id"
+          grade_class_id: "REC: grade_class_st.id"
+          student_id: "REC: student_st.id"
+
+      - step: "Setup - create standalone participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_st"
+        values:
+          offering_id: "REC: offering_st.id"
+          student_id: "REC: student_st.id"
+          enrollment_id: "REC: enrollment_st.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_st.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Create the standalone payment term while participant is draft"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_st"
+        values:
+          participant_id: "REC: participant_st.id"
+          name: "Term 1 Fee ST"
+
+      - step: "Assert the term is draft while the participant is draft"
+        action: "assert"
+        target: "term_st"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_st"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert the term is still draft while the participant is confirm"
+        action: "assert"
+        target: "term_st"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_st"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term becomes uninvoiced once the participant is open"
+        action: "assert"
+        target: "term_st"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Mark the term as manually controlled"
+        action: "write"
+        target: "term_st"
+        values:
+          manually_control: true
+
+      - step: "Assert the term state becomes manual"
+        action: "assert"
+        target: "term_st"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+
+  - name: "Payment term detail without a product must be rejected"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rq"
+        values:
+          name: "Grade Type Term RQ"
+          code: "EXTTRM-GT-RQ"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rq"
+        values:
+          name: "School Term RQ"
+          code: "EXTTRM-SCH-RQ"
+          grade_type_id: "REC: grade_type_rq.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rq"
+        values:
+          name: "Category Term RQ"
+          code: "EXTTRM-CAT-RQ"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rq"
+        values:
+          name: "Chess Club Term RQ"
+          code: "EXTTRM-EXT-RQ"
+          category_id: "REC: category_rq.id"
+          school_id: "REC: school_rq.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rq"
+        values:
+          name: "AY Term RQ"
+          code: "EXTTRM-AY-RQ"
+          date_start: 2024-07-01
+          date_end: 2025-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rq"
+        values:
+          name: "Term Term RQ"
+          code: "EXTTRM-TERM-RQ"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          year_id: "REC: academic_year_rq.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rq"
+        values:
+          name: "Teacher Employee Term RQ"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rq"
+        values:
+          name: "Teacher Term RQ"
+          code: "EXTTRM-TCH-RQ"
+          employee_id: "REC: employee_rq.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rq"
+        values:
+          name: "Extracurricular Fee Term RQ"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rq"
+        values:
+          extracurricular_id: "REC: extracurricular_rq.id"
+          academic_year_id: "REC: academic_year_rq.id"
+          academic_term_id: "REC: academic_term_rq.id"
+          teacher_id: "REC: teacher_rq.id"
+          date_start: 2024-07-01
+          date_end: 2024-12-31
+          product_id: "REC: product_rq.id"
+          price_unit: 500000.0
+          billing_mode: "standalone"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rq"
+        values:
+          name: "Grade Term RQ"
+          code: "EXTTRM-GR-RQ"
+          type_id: "REC: grade_type_rq.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rq"
+        values:
+          name: "Grade Class Term RQ"
+          code: "EXTTRM-GC-RQ"
+          school_id: "REC: school_rq.id"
+          grade_id: "REC: grade_rq.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rq"
+        values:
+          name: "Student Contact Term RQ"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rq"
+        values:
+          name: "Student Term RQ"
+          code: "EXTTRM-ST-RQ"
+          contact_id: "REC: contact_rq.id"
+          school_id: "REC: school_rq.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rq"
+        values:
+          academic_year_id: "REC: academic_year_rq.id"
+          academic_term_id: "REC: academic_term_rq.id"
+          school_id: "REC: school_rq.id"
+          grade_id: "REC: grade_rq.id"
+          grade_class_id: "REC: grade_class_rq.id"
+          student_id: "REC: student_rq.id"
+
+      - step: "Setup - create standalone participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rq"
+        values:
+          offering_id: "REC: offering_rq.id"
+          student_id: "REC: student_rq.id"
+          enrollment_id: "REC: enrollment_rq.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_rq.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Create the standalone payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_rq"
+        values:
+          participant_id: "REC: participant_rq.id"
+          name: "Term 1 Fee RQ"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rq"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rq"
+        values:
+          name: "Extracurricular Term Income RQ"
+          code: "EXTTRM-INC-RQ"
+          user_type_id: "REC: revenue_type_rq.id"
+
+      # required=True on a Many2one only becomes a NOT NULL violation
+      # (psycopg2.IntegrityError) on `action: create` -- not recognized
+      # by the `expect_error` registry (odoo-development-unit-test
+      # skill, python-escape-hatch.md L-22). `action: form` triggers
+      # the same rejection through Form.save(), which is a plain
+      # AssertionError the registry does understand. `account_id` is
+      # filled so the rejection is unambiguously about Product.
+      - step: "Detail line without Product must be rejected via the form"
+        action: "form"
+        model: "school_extracurricular_payment_term_detail"
+        save: true
+        expect_error:
+          type: "AssertionError"
+          message_contains: "is a required field"
+        values:
+          term_id: "REC: term_rq"
+          name: "Chess Club Fee - No Product"
+          account_id: "REC: income_account_rq"
