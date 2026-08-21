@@ -272,6 +272,85 @@ session as done
             "context": {"default_session_id": self.id},
         }
 
+    def action_fill_attendance(self):
+        """Fill this session's attendance from its active participants.
+
+        Creates one ``present`` attendance line for every Offering
+        participant currently ``open`` and active on this session's
+        date. A participant that already has a line on this session
+        is skipped, so the button stays idempotent.
+
+        :raises UserError: when this session is not ``planned``
+        :return: nothing
+        """
+        for record in self.sudo():
+            record._fill_attendance()
+
+    def _fill_attendance(self):
+        """Create attendance lines for this session's active participants.
+
+        Side effect: creates
+        ``school_extracurricular_session_attendance`` records.
+
+        :raises UserError: when this session is not ``planned``
+        """
+        self.ensure_one()
+        if self.state != "planned":
+            error_message = (
+                _(
+                    """
+Context: Fill extracurricular session attendance
+Database ID: %s
+Problem: Session is not in Planned state
+Solution: Only a session in Planned state may have its attendance
+filled automatically
+"""
+                )
+                % (self.id,)
+            )
+            raise UserError(error_message)
+        attendance_obj = self.env["school_extracurricular_session_attendance"]
+        already_filled = self.attendance_ids.mapped("participant_id")
+        for participant in self._get_active_participants():
+            if participant in already_filled:
+                continue
+            attendance_obj.create(self._prepare_attendance_data(participant))
+
+    def _get_active_participants(self):
+        """List the Offering participants active on this session's date.
+
+        Active means ``open`` state, joined on or before the session
+        date, and not yet left (empty ``date_leave``, or a leave date
+        on or after the session date).
+
+        :return: a ``school_extracurricular_participant`` recordset
+        """
+        self.ensure_one()
+        return self.offering_id.participant_ids.filtered(
+            lambda participant: (
+                participant.state == "open"
+                and participant.date_join
+                and participant.date_join <= self.date
+                and (not participant.date_leave or participant.date_leave >= self.date)
+            )
+        )
+
+    def _prepare_attendance_data(self, participant):
+        """Build the values of one generated attendance line.
+
+        Extension point: override to carry extra fields into the
+        generated attendance line.
+
+        :param participant: the participant the line is generated for
+        :return: dict of
+            ``school_extracurricular_session_attendance`` values
+        """
+        self.ensure_one()
+        return {
+            "session_id": self.id,
+            "participant_id": participant.id,
+        }
+
     def action_restart(self):
         """Return this session to ``planned``.
 

@@ -1,0 +1,495 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Generate sessions for a checked weekday only, then again idempotently"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg1"
+        values:
+          name: "Grade Type Session Generate SG1"
+          code: "EXTSESSGEN-GT-SG1"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg1"
+        values:
+          name: "School Session Generate SG1"
+          code: "EXTSESSGEN-SCH-SG1"
+          grade_type_id: "REC: grade_type_sg1.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg1"
+        values:
+          name: "Category Session Generate SG1"
+          code: "EXTSESSGEN-CAT-SG1"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg1"
+        values:
+          name: "Futsal Club Session Generate SG1"
+          code: "EXTSESSGEN-EXT-SG1"
+          category_id: "REC: category_sg1.id"
+          school_id: "REC: school_sg1.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg1"
+        values:
+          name: "AY Session Generate SG1"
+          code: "EXTSESSGEN-AY-SG1"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg1"
+        values:
+          name: "Term Session Generate SG1"
+          code: "EXTSESSGEN-TERM-SG1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg1.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sg1"
+        values:
+          name: "Teacher Employee Session Generate SG1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sg1"
+        values:
+          name: "Teacher Session Generate SG1"
+          code: "EXTSESSGEN-TCH-SG1"
+          employee_id: "REC: employee_sg1.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg1"
+        values:
+          name: "Extracurricular Fee Session Generate SG1"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg1"
+        values:
+          extracurricular_id: "REC: extracurricular_sg1.id"
+          academic_year_id: "REC: academic_year_sg1.id"
+          academic_term_id: "REC: academic_term_sg1.id"
+          teacher_id: "REC: teacher_sg1.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sg1.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard checking Tuesday only"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg1"
+        values:
+          offering_id: "REC: offering_sg1.id"
+          date_start: 2026-08-01
+          date_end: 2026-08-14
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_sg1.id"
+          tue: true
+
+      - step: "Run the generator"
+        action: "call"
+        target: "wizard_sg1"
+        method: "action_generate"
+
+      - step: "Search sessions generated for the offering"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain: [["offering_id", "=", "REC: offering_sg1.id"]]
+        save_as: "generated_sg1"
+        expect_count: 2
+
+      - step: "Create a second, identical generate wizard"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg1_again"
+        values:
+          offering_id: "REC: offering_sg1.id"
+          date_start: 2026-08-01
+          date_end: 2026-08-14
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_sg1.id"
+          tue: true
+
+      - step: "Run the generator again with the same parameters"
+        action: "call"
+        target: "wizard_sg1_again"
+        method: "action_generate"
+
+      - step: "Assert the session count did not increase"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain: [["offering_id", "=", "REC: offering_sg1.id"]]
+        save_as: "generated_sg1_again"
+        expect_count: 2
+
+  - name: "Generate rejected without any weekday checked"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg2"
+        values:
+          name: "Grade Type Session Generate SG2"
+          code: "EXTSESSGEN-GT-SG2"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg2"
+        values:
+          name: "School Session Generate SG2"
+          code: "EXTSESSGEN-SCH-SG2"
+          grade_type_id: "REC: grade_type_sg2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg2"
+        values:
+          name: "Category Session Generate SG2"
+          code: "EXTSESSGEN-CAT-SG2"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg2"
+        values:
+          name: "Futsal Club Session Generate SG2"
+          code: "EXTSESSGEN-EXT-SG2"
+          category_id: "REC: category_sg2.id"
+          school_id: "REC: school_sg2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg2"
+        values:
+          name: "AY Session Generate SG2"
+          code: "EXTSESSGEN-AY-SG2"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg2"
+        values:
+          name: "Term Session Generate SG2"
+          code: "EXTSESSGEN-TERM-SG2"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg2.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sg2"
+        values:
+          name: "Teacher Employee Session Generate SG2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sg2"
+        values:
+          name: "Teacher Session Generate SG2"
+          code: "EXTSESSGEN-TCH-SG2"
+          employee_id: "REC: employee_sg2.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg2"
+        values:
+          name: "Extracurricular Fee Session Generate SG2"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg2"
+        values:
+          extracurricular_id: "REC: extracurricular_sg2.id"
+          academic_year_id: "REC: academic_year_sg2.id"
+          academic_term_id: "REC: academic_term_sg2.id"
+          teacher_id: "REC: teacher_sg2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sg2.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard with no weekday checked"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg2"
+        values:
+          offering_id: "REC: offering_sg2.id"
+          date_start: 2026-08-01
+          date_end: 2026-08-14
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_sg2.id"
+
+      - step: "Generate without any weekday checked must fail"
+        action: "call"
+        target: "wizard_sg2"
+        method: "action_generate"
+        expect_error:
+          type: "UserError"
+          message_contains: "No weekday is checked"
+
+  - name: "Generate rejected when range is outside Offering period"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg3"
+        values:
+          name: "Grade Type Session Generate SG3"
+          code: "EXTSESSGEN-GT-SG3"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg3"
+        values:
+          name: "School Session Generate SG3"
+          code: "EXTSESSGEN-SCH-SG3"
+          grade_type_id: "REC: grade_type_sg3.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg3"
+        values:
+          name: "Category Session Generate SG3"
+          code: "EXTSESSGEN-CAT-SG3"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg3"
+        values:
+          name: "Futsal Club Session Generate SG3"
+          code: "EXTSESSGEN-EXT-SG3"
+          category_id: "REC: category_sg3.id"
+          school_id: "REC: school_sg3.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg3"
+        values:
+          name: "AY Session Generate SG3"
+          code: "EXTSESSGEN-AY-SG3"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg3"
+        values:
+          name: "Term Session Generate SG3"
+          code: "EXTSESSGEN-TERM-SG3"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg3.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sg3"
+        values:
+          name: "Teacher Employee Session Generate SG3"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sg3"
+        values:
+          name: "Teacher Session Generate SG3"
+          code: "EXTSESSGEN-TCH-SG3"
+          employee_id: "REC: employee_sg3.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg3"
+        values:
+          name: "Extracurricular Fee Session Generate SG3"
+
+      - step: "Setup - create offering with a narrow period"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg3"
+        values:
+          extracurricular_id: "REC: extracurricular_sg3.id"
+          academic_year_id: "REC: academic_year_sg3.id"
+          academic_term_id: "REC: academic_term_sg3.id"
+          teacher_id: "REC: teacher_sg3.id"
+          date_start: 2026-07-01
+          date_end: 2026-07-31
+          product_id: "REC: product_sg3.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard with a range outside the offering period"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg3"
+        values:
+          offering_id: "REC: offering_sg3.id"
+          date_start: 2026-08-01
+          date_end: 2026-08-14
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_sg3.id"
+          tue: true
+
+      - step: "Generate with a range outside the offering period must fail"
+        action: "call"
+        target: "wizard_sg3"
+        method: "action_generate"
+        expect_error:
+          type: "UserError"
+          message_contains: "Date range is outside Offering"
+
+  - name: "Generate rejected when no date in range matches a checked weekday"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg4"
+        values:
+          name: "Grade Type Session Generate SG4"
+          code: "EXTSESSGEN-GT-SG4"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg4"
+        values:
+          name: "School Session Generate SG4"
+          code: "EXTSESSGEN-SCH-SG4"
+          grade_type_id: "REC: grade_type_sg4.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg4"
+        values:
+          name: "Category Session Generate SG4"
+          code: "EXTSESSGEN-CAT-SG4"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg4"
+        values:
+          name: "Futsal Club Session Generate SG4"
+          code: "EXTSESSGEN-EXT-SG4"
+          category_id: "REC: category_sg4.id"
+          school_id: "REC: school_sg4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg4"
+        values:
+          name: "AY Session Generate SG4"
+          code: "EXTSESSGEN-AY-SG4"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg4"
+        values:
+          name: "Term Session Generate SG4"
+          code: "EXTSESSGEN-TERM-SG4"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg4.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sg4"
+        values:
+          name: "Teacher Employee Session Generate SG4"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sg4"
+        values:
+          name: "Teacher Session Generate SG4"
+          code: "EXTSESSGEN-TCH-SG4"
+          employee_id: "REC: employee_sg4.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg4"
+        values:
+          name: "Extracurricular Fee Session Generate SG4"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg4"
+        values:
+          extracurricular_id: "REC: extracurricular_sg4.id"
+          academic_year_id: "REC: academic_year_sg4.id"
+          academic_term_id: "REC: academic_term_sg4.id"
+          teacher_id: "REC: teacher_sg4.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sg4.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard for a single Monday range, checking Tuesday only"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg4"
+        values:
+          offering_id: "REC: offering_sg4.id"
+          date_start: 2026-08-03
+          date_end: 2026-08-03
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_sg4.id"
+          tue: true
+
+      - step: "Generate with no matching date must fail"
+        action: "call"
+        target: "wizard_sg4"
+        method: "action_generate"
+        expect_error:
+          type: "UserError"
+          message_contains: "No date in the range matches"

@@ -1,0 +1,614 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name:
+      "Fill attendance from active participants, idempotently, excluding a left
+      participant"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sf1"
+        values:
+          name: "Grade Type Session Fill SF1"
+          code: "EXTSESSFILL-GT-SF1"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sf1"
+        values:
+          name: "School Session Fill SF1"
+          code: "EXTSESSFILL-SCH-SF1"
+          grade_type_id: "REC: grade_type_sf1.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sf1"
+        values:
+          name: "Category Session Fill SF1"
+          code: "EXTSESSFILL-CAT-SF1"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sf1"
+        values:
+          name: "Futsal Club Session Fill SF1"
+          code: "EXTSESSFILL-EXT-SF1"
+          category_id: "REC: category_sf1.id"
+          school_id: "REC: school_sf1.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sf1"
+        values:
+          name: "AY Session Fill SF1"
+          code: "EXTSESSFILL-AY-SF1"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sf1"
+        values:
+          name: "Term Session Fill SF1"
+          code: "EXTSESSFILL-TERM-SF1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sf1.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sf1"
+        values:
+          name: "Teacher Employee Session Fill SF1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sf1"
+        values:
+          name: "Teacher Session Fill SF1"
+          code: "EXTSESSFILL-TCH-SF1"
+          employee_id: "REC: employee_sf1.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sf1"
+        values:
+          name: "Extracurricular Fee Session Fill SF1"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sf1"
+        values:
+          extracurricular_id: "REC: extracurricular_sf1.id"
+          academic_year_id: "REC: academic_year_sf1.id"
+          academic_term_id: "REC: academic_term_sf1.id"
+          teacher_id: "REC: teacher_sf1.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sf1.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_sf1"
+        values:
+          name: "Grade Session Fill SF1"
+          code: "EXTSESSFILL-GR-SF1"
+          type_id: "REC: grade_type_sf1.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_sf1"
+        values:
+          name: "Grade Class Session Fill SF1"
+          code: "EXTSESSFILL-GC-SF1"
+          school_id: "REC: school_sf1.id"
+          grade_id: "REC: grade_sf1.id"
+
+      - step: "Setup - create session in Planned state"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sf1"
+        values:
+          offering_id: "REC: offering_sf1.id"
+          teacher_id: "REC: teacher_sf1.id"
+          date: 2026-08-04
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Setup - create student contact 1"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sf1_1"
+        values:
+          name: "Student Contact Session Fill SF1 1"
+
+      - step: "Setup - create student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sf1_1"
+        values:
+          name: "Student Session Fill SF1 1"
+          code: "EXTSESSFILL-ST-SF1-1"
+          contact_id: "REC: contact_sf1_1.id"
+          school_id: "REC: school_sf1.id"
+
+      - step: "Setup - create enrollment 1"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sf1_1"
+        values:
+          academic_year_id: "REC: academic_year_sf1.id"
+          academic_term_id: "REC: academic_term_sf1.id"
+          school_id: "REC: school_sf1.id"
+          grade_id: "REC: grade_sf1.id"
+          grade_class_id: "REC: grade_class_sf1.id"
+          student_id: "REC: student_sf1_1.id"
+
+      - step: "Setup - create participant 1 (free billing, joined before the session)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sf1_1"
+        values:
+          offering_id: "REC: offering_sf1.id"
+          student_id: "REC: student_sf1_1.id"
+          enrollment_id: "REC: enrollment_sf1_1.id"
+          billing_mode: "free"
+          product_id: "REC: product_sf1.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+
+      - step: "Confirm participant 1"
+        action: "call"
+        target: "participant_sf1_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 1"
+        action: "call"
+        target: "participant_sf1_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create student contact 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sf1_2"
+        values:
+          name: "Student Contact Session Fill SF1 2"
+
+      - step: "Setup - create student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sf1_2"
+        values:
+          name: "Student Session Fill SF1 2"
+          code: "EXTSESSFILL-ST-SF1-2"
+          contact_id: "REC: contact_sf1_2.id"
+          school_id: "REC: school_sf1.id"
+
+      - step: "Setup - create enrollment 2"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sf1_2"
+        values:
+          academic_year_id: "REC: academic_year_sf1.id"
+          academic_term_id: "REC: academic_term_sf1.id"
+          school_id: "REC: school_sf1.id"
+          grade_id: "REC: grade_sf1.id"
+          grade_class_id: "REC: grade_class_sf1.id"
+          student_id: "REC: student_sf1_2.id"
+
+      - step: "Setup - create participant 2 (free billing, joined before the session)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sf1_2"
+        values:
+          offering_id: "REC: offering_sf1.id"
+          student_id: "REC: student_sf1_2.id"
+          enrollment_id: "REC: enrollment_sf1_2.id"
+          billing_mode: "free"
+          product_id: "REC: product_sf1.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+
+      - step: "Confirm participant 2"
+        action: "call"
+        target: "participant_sf1_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 2"
+        action: "call"
+        target: "participant_sf1_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create student contact 3"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sf1_3"
+        values:
+          name: "Student Contact Session Fill SF1 3"
+
+      - step: "Setup - create student 3"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sf1_3"
+        values:
+          name: "Student Session Fill SF1 3"
+          code: "EXTSESSFILL-ST-SF1-3"
+          contact_id: "REC: contact_sf1_3.id"
+          school_id: "REC: school_sf1.id"
+
+      - step: "Setup - create enrollment 3"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sf1_3"
+        values:
+          academic_year_id: "REC: academic_year_sf1.id"
+          academic_term_id: "REC: academic_term_sf1.id"
+          school_id: "REC: school_sf1.id"
+          grade_id: "REC: grade_sf1.id"
+          grade_class_id: "REC: grade_class_sf1.id"
+          student_id: "REC: student_sf1_3.id"
+
+      - step: "Setup - create participant 3 (free billing, joined before the session)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sf1_3"
+        values:
+          offering_id: "REC: offering_sf1.id"
+          student_id: "REC: student_sf1_3.id"
+          enrollment_id: "REC: enrollment_sf1_3.id"
+          billing_mode: "free"
+          product_id: "REC: product_sf1.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+
+      - step: "Confirm participant 3"
+        action: "call"
+        target: "participant_sf1_3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 3"
+        action: "call"
+        target: "participant_sf1_3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Fill attendance from the session's active participants"
+        action: "call"
+        target: "session_sf1"
+        method: "action_fill_attendance"
+
+      - step: "Assert 3 Present attendance lines were created"
+        action: "search"
+        model: "school_extracurricular_session_attendance"
+        domain:
+          - ["session_id", "=", "REC: session_sf1.id"]
+          - ["attendance_state", "=", "present"]
+        save_as: "attendance_present_sf1"
+        expect_count: 3
+
+      - step: "Fill attendance again must not duplicate the lines"
+        action: "call"
+        target: "session_sf1"
+        method: "action_fill_attendance"
+
+      - step: "Assert the attendance line count is still 3"
+        action: "search"
+        model: "school_extracurricular_session_attendance"
+        domain: [["session_id", "=", "REC: session_sf1.id"]]
+        save_as: "attendance_all_sf1"
+        expect_count: 3
+
+      - step: "Setup - create student contact 4 (leaves before the session date)"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sf1_4"
+        values:
+          name: "Student Contact Session Fill SF1 4"
+
+      - step: "Setup - create student 4"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sf1_4"
+        values:
+          name: "Student Session Fill SF1 4"
+          code: "EXTSESSFILL-ST-SF1-4"
+          contact_id: "REC: contact_sf1_4.id"
+          school_id: "REC: school_sf1.id"
+
+      - step: "Setup - create enrollment 4"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sf1_4"
+        values:
+          academic_year_id: "REC: academic_year_sf1.id"
+          academic_term_id: "REC: academic_term_sf1.id"
+          school_id: "REC: school_sf1.id"
+          grade_id: "REC: grade_sf1.id"
+          grade_class_id: "REC: grade_class_sf1.id"
+          student_id: "REC: student_sf1_4.id"
+
+      - step: "Setup - create participant 4, leaving before the session date"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sf1_4"
+        values:
+          offering_id: "REC: offering_sf1.id"
+          student_id: "REC: student_sf1_4.id"
+          enrollment_id: "REC: enrollment_sf1_4.id"
+          billing_mode: "free"
+          product_id: "REC: product_sf1.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+          date_leave: 2026-08-01
+
+      - step: "Confirm participant 4"
+        action: "call"
+        target: "participant_sf1_4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 4"
+        action: "call"
+        target: "participant_sf1_4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Fill attendance a third time; the left participant must be excluded"
+        action: "call"
+        target: "session_sf1"
+        method: "action_fill_attendance"
+
+      - step: "Assert the attendance line count is still 3 (participant 4 excluded)"
+        action: "search"
+        model: "school_extracurricular_session_attendance"
+        domain: [["session_id", "=", "REC: session_sf1.id"]]
+        save_as: "attendance_final_sf1"
+        expect_count: 3
+
+  - name: "Fill attendance rejected on a session that is not Planned"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sf2"
+        values:
+          name: "Grade Type Session Fill SF2"
+          code: "EXTSESSFILL-GT-SF2"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sf2"
+        values:
+          name: "School Session Fill SF2"
+          code: "EXTSESSFILL-SCH-SF2"
+          grade_type_id: "REC: grade_type_sf2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sf2"
+        values:
+          name: "Category Session Fill SF2"
+          code: "EXTSESSFILL-CAT-SF2"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sf2"
+        values:
+          name: "Futsal Club Session Fill SF2"
+          code: "EXTSESSFILL-EXT-SF2"
+          category_id: "REC: category_sf2.id"
+          school_id: "REC: school_sf2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sf2"
+        values:
+          name: "AY Session Fill SF2"
+          code: "EXTSESSFILL-AY-SF2"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sf2"
+        values:
+          name: "Term Session Fill SF2"
+          code: "EXTSESSFILL-TERM-SF2"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sf2.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sf2"
+        values:
+          name: "Teacher Employee Session Fill SF2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sf2"
+        values:
+          name: "Teacher Session Fill SF2"
+          code: "EXTSESSFILL-TCH-SF2"
+          employee_id: "REC: employee_sf2.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sf2"
+        values:
+          name: "Extracurricular Fee Session Fill SF2"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sf2"
+        values:
+          extracurricular_id: "REC: extracurricular_sf2.id"
+          academic_year_id: "REC: academic_year_sf2.id"
+          academic_term_id: "REC: academic_term_sf2.id"
+          teacher_id: "REC: teacher_sf2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sf2.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_sf2"
+        values:
+          name: "Grade Session Fill SF2"
+          code: "EXTSESSFILL-GR-SF2"
+          type_id: "REC: grade_type_sf2.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_sf2"
+        values:
+          name: "Grade Class Session Fill SF2"
+          code: "EXTSESSFILL-GC-SF2"
+          school_id: "REC: school_sf2.id"
+          grade_id: "REC: grade_sf2.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sf2"
+        values:
+          name: "Student Contact Session Fill SF2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sf2"
+        values:
+          name: "Student Session Fill SF2"
+          code: "EXTSESSFILL-ST-SF2"
+          contact_id: "REC: contact_sf2.id"
+          school_id: "REC: school_sf2.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sf2"
+        values:
+          academic_year_id: "REC: academic_year_sf2.id"
+          academic_term_id: "REC: academic_term_sf2.id"
+          school_id: "REC: school_sf2.id"
+          grade_id: "REC: grade_sf2.id"
+          grade_class_id: "REC: grade_class_sf2.id"
+          student_id: "REC: student_sf2.id"
+
+      - step:
+          "Setup - create participant (kept in draft; only the Offering match matters)"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sf2"
+        values:
+          offering_id: "REC: offering_sf2.id"
+          student_id: "REC: student_sf2.id"
+          enrollment_id: "REC: enrollment_sf2.id"
+          billing_mode: "free"
+          product_id: "REC: product_sf2.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+
+      - step: "Setup - create session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sf2"
+        values:
+          offering_id: "REC: offering_sf2.id"
+          teacher_id: "REC: teacher_sf2.id"
+          date: 2026-08-05
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Setup - add one attendance line so the session can be marked Done"
+        action: "create"
+        model: "school_extracurricular_session_attendance"
+        save_as: "attendance_manual_sf2"
+        values:
+          session_id: "REC: session_sf2.id"
+          participant_id: "REC: participant_sf2.id"
+
+      - step: "Mark the session as Done"
+        action: "call"
+        target: "session_sf2"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Fill attendance on a Done session must fail"
+        action: "call"
+        target: "session_sf2"
+        method: "action_fill_attendance"
+        expect_error:
+          type: "UserError"
+          message_contains: "Session is not in Planned state"

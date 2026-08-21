@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<!-- The menuitem is kept out of school_extracurricular_session_generate.xml
+     on purpose: menu.xml loads before the wizard's action, so the action
+     id would not exist yet if the menuitem lived in that same wizard file
+     (see odoo-development skill, 10-wizard.md; and the identical pattern
+     in ssi_school_extracurricular/menu_create_due_invoice.xml). This file
+     is loaded after the wizard's action (see __manifest__.py) so the
+     reference resolves. -->
+<odoo>
+<menuitem
+        id="menu_extracurricular_session_generate"
+        name="Generate Sessions"
+        parent="menu_extracurricular_session_root"
+        action="school_extracurricular_session_generate_action"
+        groups="school_extracurricular_session_user_group"
+        sequence="20"
+    />
+</odoo>

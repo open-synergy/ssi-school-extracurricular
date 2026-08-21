@@ -87,6 +87,13 @@
                         attrs="{'invisible': [('state', '!=', 'planned')]}"
                     />
                 <button
+                        name="action_fill_attendance"
+                        type="object"
+                        string="Fill Attendance"
+                        class="oe_highlight ml-2"
+                        attrs="{'invisible': [('state', '!=', 'planned')]}"
+                    />
+                <button
                         name="action_restart"
                         type="object"
                         string="Restart"

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_extracurricular_offering_view_form_session" model="ir.ui.view">
+    <field name="name">school_extracurricular_offering - form - session recap</field>
+    <field name="model">school_extracurricular_offering</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school_extracurricular.school_extracurricular_offering_view_form"
+        />
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='header_right']" position="inside">
+            <field name="session_count" />
+            <field name="session_done_count" />
+        </xpath>
+    </field>
+</record>
+</odoo>

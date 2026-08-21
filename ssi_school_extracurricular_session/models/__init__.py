@@ -4,3 +4,5 @@
 
 from . import school_extracurricular_session
 from . import school_extracurricular_session_attendance
+from . import school_extracurricular_offering
+from . import school_extracurricular_participant

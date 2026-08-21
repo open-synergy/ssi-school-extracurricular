@@ -18,8 +18,13 @@
         "security/res_groups/school_extracurricular_session.xml",
         "security/ir_model_access/school_extracurricular_session.xml",
         "security/ir_model_access/cancel_extracurricular_session.xml",
+        "security/ir_model_access/school_extracurricular_session_generate.xml",
         "menu.xml",
         "views/school_extracurricular_session.xml",
+        "views/school_extracurricular_offering.xml",
+        "views/school_extracurricular_participant.xml",
         "wizards/cancel_extracurricular_session.xml",
+        "wizards/school_extracurricular_session_generate.xml",
+        "menu_generate_session.xml",
     ],
 }
