@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name:
       "Create due invoice consolidates two participants of the same student into one

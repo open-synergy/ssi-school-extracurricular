@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Payment term totals are computed from its detail lines"
     steps:
