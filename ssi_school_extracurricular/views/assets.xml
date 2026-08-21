@@ -17,6 +17,18 @@
                 type="text/javascript"
                 src="/ssi_school_extracurricular/static/tests/tours/school_extracurricular_tour.js"
             />
+        <script
+                type="text/javascript"
+                src="/ssi_school_extracurricular/static/tests/tours/school_extracurricular_offering_tour.js"
+            />
+        <script
+                type="text/javascript"
+                src="/ssi_school_extracurricular/static/tests/tours/school_extracurricular_participant_tour.js"
+            />
+        <script
+                type="text/javascript"
+                src="/ssi_school_extracurricular/static/tests/tours/school_extracurricular_create_due_invoice_tour.js"
+            />
     </xpath>
 </template>
 </odoo>

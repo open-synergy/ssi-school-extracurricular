@@ -61,6 +61,48 @@ Menu: **Extracurricular > Configuration > Extracurriculars**
 | `ssi_school_extracurricular/docs/school_extracurricular/02-edit.md`   | Edit an extracurricular activity      |
 | `ssi_school_extracurricular/docs/school_extracurricular/03-delete.md` | Delete an extracurricular activity    |
 
+### `ssi_school_extracurricular` — Model: `school_extracurricular_offering`
+
+Menu: **Extracurricular > Extracurricular Offerings**
+
+| File                                                                                 | Action                                   |
+| ------------------------------------------------------------------------------------ | ---------------------------------------- |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/01-create.md`       | Create a new extracurricular offering    |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/02-edit.md`         | Edit an extracurricular offering         |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/03-delete.md`       | Delete an extracurricular offering       |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/04-confirm.md`      | Confirm an extracurricular offering      |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/05-approve.md`      | Approve an extracurricular offering      |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/06-reject.md`       | Reject an extracurricular offering       |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/09-finish.md`       | Finish an extracurricular offering       |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/10-cancel.md`       | Cancel an extracurricular offering       |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/12-restart.md`      | Restart an extracurricular offering      |
+| `ssi_school_extracurricular/docs/school_extracurricular_offering/13-reset-number.md` | Reset the document number of an offering |
+
+### `ssi_school_extracurricular` — Model: `school_extracurricular_participant`
+
+Menu: **Extracurricular > Extracurricular Participants**
+
+| File                                                                                    | Action                                            |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/01-create.md`       | Create a new extracurricular participant          |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/02-edit.md`         | Edit an extracurricular participant               |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/03-delete.md`       | Delete an extracurricular participant             |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/04-confirm.md`      | Confirm an extracurricular participant            |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/05-approve.md`      | Approve an extracurricular participant (opens it) |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/06-reject.md`       | Reject an extracurricular participant             |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/09-finish.md`       | Finish an extracurricular participant             |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/10-cancel.md`       | Cancel an extracurricular participant             |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/12-restart.md`      | Restart an extracurricular participant            |
+| `ssi_school_extracurricular/docs/school_extracurricular_participant/13-reset-number.md` | Reset the document number of a participant        |
+
+### `ssi_school_extracurricular` — Model: `school_extracurricular_create_due_invoice`
+
+Menu: **Extracurricular > Create Due Invoice**
+
+| File                                                                                             | Action                                                       |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `ssi_school_extracurricular/docs/school_extracurricular_create_due_invoice/01-create-invoice.md` | Consolidate a student's due standalone fees into one invoice |
+
 ---
 
 ## Module Development Guidelines
