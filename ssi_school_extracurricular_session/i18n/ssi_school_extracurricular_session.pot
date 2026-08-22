@@ -29,6 +29,53 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
+"Context: Fill extracurricular session attendance\n"
+"Database ID: %s\n"
+"Problem: Session is not in Planned state\n"
+"Solution: Only a session in Planned state may have its attendance\n"
+"filled automatically\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: Date range is outside Offering '%s' period\n"
+"Solution: Select a Start Date and End Date within the Offering's\n"
+"period ('%s' - '%s')\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: No date in the range matches a checked weekday\n"
+"Solution: Widen the date range, or check a weekday that falls\n"
+"within it\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: No weekday is checked\n"
+"Solution: Check at least one weekday before generating sessions\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
 "Context: Mark extracurricular session as done\n"
 "Database ID: %s\n"
 "Problem: Session has no attendance line\n"
@@ -100,7 +147,13 @@ msgid "Attendance"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_rate
+msgid "Attendance Rate"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.cancel_extracurricular_session_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
 msgid "Cancel"
 msgstr ""
@@ -136,6 +189,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -143,6 +197,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__create_date
 msgid "Created on"
 msgstr ""
 
@@ -160,8 +215,11 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -173,7 +231,23 @@ msgid "Done"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_done_count
+msgid "Done Session"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_done_count
+msgid "Done Session Count"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_end
+msgid "End Date"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__time_end
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_end
 msgid "End Time"
 msgstr ""
 
@@ -185,6 +259,16 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__extracurricular_id
 msgid "Extracurricular"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_offering
+msgid "Extracurricular Offering"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_participant
+msgid "Extracurricular Participant"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -210,6 +294,11 @@ msgid "Extracurricular Sessions"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Fill Attendance"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__note
 msgid "Free-form notes about this participant's attendance."
 msgstr ""
@@ -220,21 +309,83 @@ msgid "Free-form notes about this session's meeting."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__fri
+msgid "Friday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
+msgid "Generate"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session_generate
+msgid "Generate Extracurricular Sessions"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.actions.act_window,name:ssi_school_extracurricular_session.school_extracurricular_session_generate_action
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_generate
+msgid "Generate Sessions"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__fri
+msgid "Generate a session on every Friday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__mon
+msgid "Generate a session on every Monday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sat
+msgid "Generate a session on every Saturday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sun
+msgid "Generate a session on every Sunday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__thu
+msgid "Generate a session on every Thursday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__tue
+msgid "Generate a session on every Tuesday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__wed
+msgid "Generate a session on every Wednesday in the range."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
 msgid "Group By"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__id
 msgid "ID"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -242,6 +393,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -249,6 +401,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -259,6 +412,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__location
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__location
 msgid "Location"
 msgstr ""
 
@@ -268,12 +422,45 @@ msgid "Manager"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__mon
+msgid "Monday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__note
 msgid "Note"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_done_count
+msgid "Number of the Offering's sessions currently Done."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_planned_count
+msgid "Number of the Offering's sessions currently Planned."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_done_count
+msgid "Number of this offering's sessions currently Done."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_count
+msgid "Number of this offering's sessions, in any state."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
+msgid ""
+"Number of this participant's attendance lines marked Present or Late on a "
+"Done session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__offering_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__offering_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
 msgid "Offering"
 msgstr ""
@@ -286,6 +473,13 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__participant_id
 msgid "Participant"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_rate
+msgid ""
+"Percentage of the Offering's Done sessions this participant was Present or "
+"Late for. 0 when the Offering has no Done session yet."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -303,8 +497,18 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_planned_count
+msgid "Planned Session"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__present
 msgid "Present"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
+msgid "Present Count"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -315,6 +519,11 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
 msgid "Restart"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sat
+msgid "Saturday"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -329,7 +538,23 @@ msgid "Session"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_count
+msgid "Session Count"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_ids
+msgid "Sessions"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__time_start
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_start
 msgid "Start Time"
 msgstr ""
 
@@ -349,7 +574,13 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sun
+msgid "Sunday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__teacher_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__teacher_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
 msgid "Teacher"
 msgstr ""
@@ -379,6 +610,11 @@ msgid "The date this session's meeting takes place."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_end
+msgid "The end time applied to every generated session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__extracurricular_id
 msgid ""
 "The extracurricular activity being run, automatically populated from the "
@@ -388,6 +624,21 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_cancel_extracurricular_session__session_id
 msgid "The extracurricular session being cancelled."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_start
+msgid "The first date sessions may be generated on."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_end
+msgid "The last date sessions may be generated on."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__location
+msgid "The location applied to every generated session."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -410,6 +661,11 @@ msgid "The session's meeting this attendance line belongs to."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_start
+msgid "The start time applied to every generated session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__student_id
 msgid ""
 "The student attending, automatically populated from the selected "
@@ -417,8 +673,18 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__teacher_id
+msgid "The teacher applied to every generated session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__offering_id
 msgid "The term's offering this session is a meeting of."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__offering_id
+msgid "The term's offering to generate sessions for."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -433,13 +699,38 @@ msgid "The time this session's meeting starts."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_ids
+msgid "This offering's sessions across the term."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__thu
+msgid "Thursday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__topic
 msgid "Topic"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__tue
+msgid "Tuesday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_user_group
 msgid "User"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__wed
+msgid "Wednesday"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
+msgid "Weekdays"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
