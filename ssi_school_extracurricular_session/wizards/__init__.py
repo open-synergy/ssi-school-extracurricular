@@ -4,4 +4,5 @@
 
 from . import (
     cancel_extracurricular_session,
+    school_extracurricular_session_generate,
 )
