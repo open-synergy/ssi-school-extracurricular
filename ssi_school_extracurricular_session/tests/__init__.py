@@ -6,3 +6,4 @@ from . import test_school_extracurricular_session
 from . import test_school_extracurricular_session_generate
 from . import test_school_extracurricular_session_attendance_fill
 from . import test_school_extracurricular_participant_attendance_rate
+from . import test_ui_school_extracurricular_session

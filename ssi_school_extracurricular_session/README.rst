@@ -12,6 +12,19 @@ reports and prove that the number of meetings billed actually took
 place.
 
 
+Work Instruction
+================
+
+* `Create Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Edit Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Delete Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Fill Attendance - Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Done - Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Cancel Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Restart Extracurricular Session <docs/school_extracurricular_session/index.html>`_
+* `Generate Extracurricular Sessions <docs/school_extracurricular_session/index.html>`_
+
+
 Installation
 ============
 

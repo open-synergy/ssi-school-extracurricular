@@ -1,4 +1,0 @@
-# Kontrak validator odoo-development §13. Satu baris = satu penyimpangan sah.
-# <validator> <kunci-temuan> -- <alasan>
-
-ik modul-tak-punya-direktori-docs-belum-ada-ik-sama-sekali|docs/ -- IK dan tour modul ini sengaja DITUNDA ke item backlog terpisah sesuai issue open-synergy/ssi-school-extracurricular#10, bagian Ruang Lingkup: "Dokumentasi operasional & uji antarmuka model sesi -- item tersendiri". Modul ini baru dibuat di PR ini; belum ada IK/tour yang bisa menjadi basi selama jeda, dan verify-module.sh tidak menuntut docs/. Hapus baris ini begitu item dokumentasi modul sesi mendarat dan docs/ terisi.
