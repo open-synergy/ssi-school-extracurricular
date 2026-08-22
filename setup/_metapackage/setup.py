@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo14-addon-ssi_school_extracurricular',
+        'odoo14-addon-ssi_school_extracurricular_operating_unit',
         'odoo14-addon-ssi_school_extracurricular_session',
     ],
     classifiers=[
