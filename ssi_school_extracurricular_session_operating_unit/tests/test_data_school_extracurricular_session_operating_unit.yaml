@@ -1,0 +1,254 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Session Operating Unit follows its Offering, and cannot be written directly"
+    steps:
+      - step: "Get main company"
+        action: "ref"
+        xml_id: "base.main_company"
+        save_as: "ess1_company"
+
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ess1_ou_a_partner"
+        values:
+          name: "ESS1 Operating Unit A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ess1_ou_a"
+        values:
+          name: "ESS1 Operating Unit A"
+          code: "ESS1A"
+          company_id: "REC: ess1_company.id"
+          partner_id: "REC: ess1_ou_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ess1_ou_b_partner"
+        values:
+          name: "ESS1 Operating Unit B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ess1_ou_b"
+        values:
+          name: "ESS1 Operating Unit B"
+          code: "ESS1B"
+          company_id: "REC: ess1_company.id"
+          partner_id: "REC: ess1_ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "ess1_grade_type"
+        values:
+          name: "Grade Type ESS1"
+          code: "ESS1-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "ess1_school"
+        values:
+          name: "School ESS1"
+          code: "ESS1-SCH"
+          grade_type_id: "REC: ess1_grade_type.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "ess1_category"
+        values:
+          name: "Category ESS1"
+          code: "ESS1-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ess1_extracurricular"
+        values:
+          name: "Futsal Club ESS1"
+          code: "ESS1-EXT"
+          category_id: "REC: ess1_category.id"
+          school_id: "REC: ess1_school.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "ess1_academic_year"
+        values:
+          name: "AY ESS1"
+          code: "ESS1-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "ess1_academic_term"
+        values:
+          name: "Term ESS1"
+          code: "ESS1-TERM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: ess1_academic_year.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "ess1_employee"
+        values:
+          name: "Teacher Employee ESS1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "ess1_teacher"
+        values:
+          name: "Teacher ESS1"
+          code: "ESS1-TCH"
+          employee_id: "REC: ess1_employee.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ess1_product"
+        values:
+          name: "Extracurricular Fee ESS1"
+
+      - step: "Create the offering at Operating Unit A"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ess1_offering"
+        values:
+          extracurricular_id: "REC: ess1_extracurricular.id"
+          academic_year_id: "REC: ess1_academic_year.id"
+          academic_term_id: "REC: ess1_academic_term.id"
+          teacher_id: "REC: ess1_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ess1_product.id"
+          price_unit: 150000.0
+          operating_unit_id: "REC: ess1_ou_a.id"
+
+      # Positive 1: creating a session from an Offering at Operating Unit A
+      # copies that Operating Unit onto the session.
+      - step: "Create a session directly for the offering"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "ess1_session"
+        values:
+          offering_id: "REC: ess1_offering.id"
+          date: 2026-07-06
+          time_start: 9.0
+          time_end: 10.0
+          teacher_id: "REC: ess1_teacher.id"
+
+      - step: "The directly-created session carries the Offering's Operating Unit A"
+        action: "assert"
+        target: "ess1_session"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ess1_ou_a"
+
+      # Positive 2: a session created by the Generate Sessions wizard also
+      # carries the Offering's Operating Unit, with no change needed in the
+      # wizard itself (the field is `related` + `store=True`).
+      - step: "Create the Generate Sessions wizard for a single Monday"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "ess1_wizard"
+        values:
+          offering_id: "REC: ess1_offering.id"
+          date_start: 2026-07-13
+          date_end: 2026-07-13
+          time_start: 9.0
+          time_end: 10.0
+          teacher_id: "REC: ess1_teacher.id"
+          mon: true
+
+      - step: "Run the Generate Sessions wizard"
+        action: "call"
+        target: "ess1_wizard"
+        method: "action_generate"
+
+      - step: "Exactly one session was generated for the Monday in range"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain:
+          [["offering_id", "=", "REC: ess1_offering.id"], ["date", "=", "2026-07-13"]]
+        save_as: "ess1_generated_search"
+        expect_count: 1
+
+      - step: "No session of this offering deviates from Operating Unit A"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain:
+          [
+            ["offering_id", "=", "REC: ess1_offering.id"],
+            ["operating_unit_id", "!=", "REC: ess1_ou_a.id"],
+          ]
+        save_as: "ess1_deviating_search"
+        expect_count: 0
+
+      # Positive 3: changing the Offering's own Operating Unit later cascades
+      # to every one of its sessions (the `related` + `store=True` effect).
+      - step: "Change the offering's Operating Unit to B"
+        action: "write"
+        target: "ess1_offering"
+        values:
+          operating_unit_id: "REC: ess1_ou_b.id"
+
+      - step: "The directly-created session's Operating Unit followed to B"
+        action: "assert"
+        target: "ess1_session"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ess1_ou_b"
+
+      # Negative 4: the record rule hides a session outside the user's
+      # assigned Operating Unit.
+      - step: "Create a user restricted to Operating Unit A only"
+        action: "create"
+        model: "res.users"
+        save_as: "ess1_restricted_user"
+        values:
+          name: "ESS1 Restricted User"
+          login: "ess1_restricted_user@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular_session.school_extracurricular_session_user_group"
+                - "REF:
+                  ssi_school_extracurricular_session_operating_unit.school_extracurricular_session_operating_unit_group"
+          assigned_operating_unit_ids: [[6, 0, ["REC: ess1_ou_a.id"]]]
+
+      - step:
+          "Restricted user searches for the session (now Operating Unit B) -- excluded"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain: [["id", "=", "REC: ess1_session.id"]]
+        save_as: "ess1_restricted_search"
+        as_user: "ess1_restricted_user"
+        expect_count: 0
+
+      # Negative 5: writing operating_unit_id directly is rejected, even
+      # though the ORM would otherwise tunnel a related+store field's value
+      # straight to its stored column regardless of the readonly attribute.
+      - step: "Writing Operating Unit directly on the session is rejected"
+        action: "write"
+        target: "ess1_session"
+        expect_error:
+          type: "UserError"
+          message_contains: "cannot be written directly"
+        values:
+          operating_unit_id: "REC: ess1_ou_a.id"

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_extracurricular_session_operating_unit_group" model="res.groups">
+    <field name="name">Operating Unit</field>
+    <field
+            name="category_id"
+            ref="school_extracurricular_session_operating_unit_module_category"
+        />
+</record>
+
+<!-- Extend (not replace) the session's existing Manager group so its
+     members keep seeing/writing every operating unit's sessions. -->
+<record
+        id="ssi_school_extracurricular_session.school_extracurricular_session_manager_group"
+        model="res.groups"
+    >
+    <field
+            name="implied_ids"
+            eval="[(4, ref('school_extracurricular_session_operating_unit_group'))]"
+        />
+</record>
+</odoo>
