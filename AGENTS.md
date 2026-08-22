@@ -11,10 +11,11 @@ participant enrollment, participant fee billing, and related payment terms.
 
 ## Modules in This Repository
 
-| Module                                      | Description                                                                                                                                                |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ssi_school_extracurricular`                | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities |
-| `ssi_school_extracurricular_operating_unit` | Adds Operating Unit support to the Offering and Participant, and propagates it to the Route A addendum fee line and the Route B invoice                    |
+| Module                                      | Description                                                                                                                                                           |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ssi_school_extracurricular`                | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities            |
+| `ssi_school_extracurricular_operating_unit` | Adds Operating Unit support to the Offering and Participant, and propagates it to the Route A addendum fee line and the Route B invoice                               |
+| `ssi_school_extracurricular_session`        | Records each meeting (session) of an extracurricular offering, its participant attendance, bulk session generation from a weekly pattern, and attendance rate rollups |
 
 ---
 
@@ -103,6 +104,22 @@ Menu: **Extracurricular > Create Due Invoice**
 | File                                                                                             | Action                                                       |
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
 | `ssi_school_extracurricular/docs/school_extracurricular_create_due_invoice/01-create-invoice.md` | Consolidate a student's due standalone fees into one invoice |
+
+### `ssi_school_extracurricular_session` — Model: `school_extracurricular_session`
+
+Menu: **Extracurricular Session > Extracurricular Sessions** (Generate wizard:
+**Extracurricular Session > Generate Sessions**)
+
+| File                                                                                           | Action                                                    |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/01-create.md`          | Create a new extracurricular session                      |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/02-edit.md`            | Edit an extracurricular session                           |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/03-delete.md`          | Delete an extracurricular session                         |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/04-fill-attendance.md` | Fill attendance from the offering's active participants   |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/05-done.md`            | Mark a session's meeting as done                          |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/06-cancel.md`          | Cancel a session's meeting                                |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/07-restart.md`         | Return a session to Planned                               |
+| `ssi_school_extracurricular_session/docs/school_extracurricular_session/08-generate.md`        | Generate a term's worth of sessions from a weekly pattern |
 
 ### `ssi_school_extracurricular_operating_unit` — Delta Work Instructions
 

@@ -12,6 +12,7 @@
     "application": True,
     "depends": [
         "ssi_school_extracurricular",
+        "web_tour",
     ],
     "data": [
         "security/ir_module_category/school_extracurricular_session.xml",
@@ -26,5 +27,6 @@
         "wizards/cancel_extracurricular_session.xml",
         "wizards/school_extracurricular_session_generate.xml",
         "menu_generate_session.xml",
+        "views/assets.xml",
     ],
 }
