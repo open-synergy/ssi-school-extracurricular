@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<!-- One shared group, used by the Offering and Participant record
+     rules alike. Keputusan Desain deliberately does not split this
+     into one group per document like the generic Operating Unit
+     template does. -->
+<record id="school_extracurricular_operating_unit_group" model="res.groups">
+    <field name="name">Operating Unit</field>
+    <field
+            name="category_id"
+            ref="school_extracurricular_operating_unit_module_category"
+        />
+</record>
+
+<!-- Extend (not replace) each document's existing Manager group so its
+     members keep seeing/writing Operating Unit. ``(4, ...)`` adds to
+     the Officer implication already set by the base module, it does
+     not overwrite it. -->
+<record
+        id="ssi_school_extracurricular.school_extracurricular_offering_manager_group"
+        model="res.groups"
+    >
+    <field
+            name="implied_ids"
+            eval="[(4, ref('school_extracurricular_operating_unit_group'))]"
+        />
+</record>
+
+<record
+        id="ssi_school_extracurricular.school_extracurricular_participant_manager_group"
+        model="res.groups"
+    >
+    <field
+            name="implied_ids"
+            eval="[(4, ref('school_extracurricular_operating_unit_group'))]"
+        />
+</record>
+</odoo>

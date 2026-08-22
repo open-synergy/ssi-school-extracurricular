@@ -11,9 +11,10 @@ participant enrollment, participant fee billing, and related payment terms.
 
 ## Modules in This Repository
 
-| Module                       | Description                                                                                                                                                |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ssi_school_extracurricular` | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities |
+| Module                                      | Description                                                                                                                                                |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ssi_school_extracurricular`                | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities |
+| `ssi_school_extracurricular_operating_unit` | Adds Operating Unit support to the Offering and Participant, and propagates it to the Route A addendum fee line and the Route B invoice                    |
 
 ---
 
@@ -102,6 +103,18 @@ Menu: **Extracurricular > Create Due Invoice**
 | File                                                                                             | Action                                                       |
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
 | `ssi_school_extracurricular/docs/school_extracurricular_create_due_invoice/01-create-invoice.md` | Consolidate a student's due standalone fees into one invoice |
+
+### `ssi_school_extracurricular_operating_unit` — Delta Work Instructions
+
+These are **delta** documents: they only describe what changes on top of the base
+module's own Work Instructions above (base module documents are the source of truth for
+the rest of each Flow).
+
+| File                                                                                                            | Extends                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_offering/01-create.md`                   | `school_extracurricular_offering` — `01-create.md` (adds Operating Unit)                                                 |
+| `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_participant/01-create.md`                | `school_extracurricular_participant` — `01-create.md` (adds Operating Unit)                                              |
+| `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_create_due_invoice/01-create-invoice.md` | `school_extracurricular_create_due_invoice` — `01-create-invoice.md` (Operating Unit propagation and mismatch rejection) |
 
 ---
 

@@ -1,0 +1,1196 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name:
+      "Operating Unit onchange from Offering, still editable, and Route A propagation to
+      the addendum fee line"
+    steps:
+      - step: "Get main company"
+        action: "ref"
+        xml_id: "base.main_company"
+        save_as: "ecou1_company"
+
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou1_ou_a_partner"
+        values:
+          name: "ECOU1 Operating Unit A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou1_ou_a"
+        values:
+          name: "ECOU1 Operating Unit A"
+          code: "ECOU1A"
+          company_id: "REC: ecou1_company.id"
+          partner_id: "REC: ecou1_ou_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou1_ou_b_partner"
+        values:
+          name: "ECOU1 Operating Unit B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou1_ou_b"
+        values:
+          name: "ECOU1 Operating Unit B"
+          code: "ECOU1B"
+          company_id: "REC: ecou1_company.id"
+          partner_id: "REC: ecou1_ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "ecou1_grade_type"
+        values:
+          name: "Grade Type ECOU1"
+          code: "ECOU1-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "ecou1_school"
+        values:
+          name: "School ECOU1"
+          code: "ECOU1-SCH"
+          grade_type_id: "REC: ecou1_grade_type.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "ecou1_category"
+        values:
+          name: "Category ECOU1"
+          code: "ECOU1-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ecou1_extracurricular"
+        values:
+          name: "Futsal Club ECOU1"
+          code: "ECOU1-EXT"
+          category_id: "REC: ecou1_category.id"
+          school_id: "REC: ecou1_school.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "ecou1_academic_year"
+        values:
+          name: "AY ECOU1"
+          code: "ECOU1-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "ecou1_academic_term"
+        values:
+          name: "Term ECOU1"
+          code: "ECOU1-TERM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: ecou1_academic_year.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "ecou1_employee"
+        values:
+          name: "Teacher Employee ECOU1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "ecou1_teacher"
+        values:
+          name: "Teacher ECOU1"
+          code: "ECOU1-TCH"
+          employee_id: "REC: ecou1_employee.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ecou1_product"
+        values:
+          name: "Extracurricular Fee ECOU1"
+
+      - step: "Create offering at Operating Unit A"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou1_offering"
+        values:
+          extracurricular_id: "REC: ecou1_extracurricular.id"
+          academic_year_id: "REC: ecou1_academic_year.id"
+          academic_term_id: "REC: ecou1_academic_term.id"
+          teacher_id: "REC: ecou1_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou1_product.id"
+          price_unit: 150000.0
+          operating_unit_id: "REC: ecou1_ou_a.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "ecou1_grade"
+        values:
+          name: "Grade ECOU1"
+          code: "ECOU1-GR"
+          type_id: "REC: ecou1_grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "ecou1_grade_class"
+        values:
+          name: "Grade Class ECOU1"
+          code: "ECOU1-GC"
+          school_id: "REC: ecou1_school.id"
+          grade_id: "REC: ecou1_grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou1_contact"
+        values:
+          name: "Student Contact ECOU1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "ecou1_student"
+        values:
+          name: "Student ECOU1"
+          code: "ECOU1-ST"
+          contact_id: "REC: ecou1_contact.id"
+          school_id: "REC: ecou1_school.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "ecou1_enrollment"
+        values:
+          academic_year_id: "REC: ecou1_academic_year.id"
+          academic_term_id: "REC: ecou1_academic_term.id"
+          school_id: "REC: ecou1_school.id"
+          grade_id: "REC: ecou1_grade.id"
+          grade_class_id: "REC: ecou1_grade_class.id"
+          student_id: "REC: ecou1_student.id"
+
+      # Positive: selecting the Offering on the form copies its Operating
+      # Unit via onchange (docs/school_extracurricular_participant/
+      # 01-create.md, Additional Fields).
+      - step: "Open a new participant form and select the Offering"
+        action: "form"
+        model: "school_extracurricular_participant"
+        save: false
+        values:
+          offering_id: "REC: ecou1_offering"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ecou1_ou_a"
+
+      # Positive: the copied value is still editable -- create the real
+      # participant at Operating Unit B, different from its Offering's
+      # Operating Unit A.
+      - step: "Create the participant, then change its Operating Unit to B"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "ecou1_participant"
+        values:
+          offering_id: "REC: ecou1_offering.id"
+          student_id: "REC: ecou1_student.id"
+          enrollment_id: "REC: ecou1_enrollment.id"
+          billing_mode: "enrollment"
+          product_id: "REC: ecou1_product.id"
+          uom_quantity: 1.0
+          price_unit: 600000.0
+          operating_unit_id: "REC: ecou1_ou_b.id"
+
+      - step: "The participant kept the explicitly chosen Operating Unit B"
+        action: "assert"
+        target: "ecou1_participant"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ecou1_ou_b"
+
+      - step: "Create the enrollment payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "ecou1_term"
+        values:
+          enrollment_id: "REC: ecou1_enrollment.id"
+          name: "Term ECOU1"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "ecou1_revenue_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "ecou1_income_account"
+        values:
+          name: "Extracurricular Income ECOU1"
+          code: "ECOU1-INC"
+          user_type_id: "REC: ecou1_revenue_type.id"
+
+      - step: "Allocate the participant's fee to the payment term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "ecou1_allocation"
+        values:
+          participant_id: "REC: ecou1_participant.id"
+          payment_term_id: "REC: ecou1_term.id"
+          product_id: "REC: ecou1_product.id"
+          name: "Extracurricular Fee ECOU1"
+          account_id: "REC: ecou1_income_account.id"
+          uom_quantity: 1.0
+          price_unit: 600000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "ecou1_participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant (opens it, creates the addendum line)"
+        action: "call"
+        target: "ecou1_participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      # Positive: the addendum fee line created on the payment term
+      # (Route A) carries the participant's own Operating Unit B, not the
+      # Offering's Operating Unit A and not the creating user's default.
+      - step: "The addendum fee line carries the participant's Operating Unit"
+        action: "assert"
+        target: "ecou1_allocation"
+        asserts:
+          extra_detail_id.operating_unit_id:
+            type: "m2o"
+            expected: "REC: ecou1_ou_b"
+
+  - name: "Route B invoice inherits the participant's Operating Unit"
+    steps:
+      - step: "Get main company"
+        action: "ref"
+        xml_id: "base.main_company"
+        save_as: "ecou2_company"
+
+      - step: "Create partner for Operating Unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou2_ou_partner"
+        values:
+          name: "ECOU2 Operating Unit Partner"
+
+      - step: "Create Operating Unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou2_ou"
+        values:
+          name: "ECOU2 Operating Unit"
+          code: "ECOU2OU"
+          company_id: "REC: ecou2_company.id"
+          partner_id: "REC: ecou2_ou_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "ecou2_grade_type"
+        values:
+          name: "Grade Type ECOU2"
+          code: "ECOU2-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "ecou2_school"
+        values:
+          name: "School ECOU2"
+          code: "ECOU2-SCH"
+          grade_type_id: "REC: ecou2_grade_type.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "ecou2_category"
+        values:
+          name: "Category ECOU2"
+          code: "ECOU2-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ecou2_extracurricular"
+        values:
+          name: "Chess Club ECOU2"
+          code: "ECOU2-EXT"
+          category_id: "REC: ecou2_category.id"
+          school_id: "REC: ecou2_school.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "ecou2_academic_year"
+        values:
+          name: "AY ECOU2"
+          code: "ECOU2-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "ecou2_academic_term"
+        values:
+          name: "Term ECOU2"
+          code: "ECOU2-TERM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: ecou2_academic_year.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "ecou2_employee"
+        values:
+          name: "Teacher Employee ECOU2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "ecou2_teacher"
+        values:
+          name: "Teacher ECOU2"
+          code: "ECOU2-TCH"
+          employee_id: "REC: ecou2_employee.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ecou2_product"
+        values:
+          name: "Chess Club Fee ECOU2"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "ecou2_revenue_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "ecou2_income_account"
+        values:
+          name: "Extracurricular Income ECOU2"
+          code: "ECOU2-INC"
+          user_type_id: "REC: ecou2_revenue_type.id"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ecou2_receivable_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ecou2_receivable_account"
+        values:
+          name: "Extracurricular Receivable ECOU2"
+          code: "ECOU2-REC"
+          user_type_id: "REC: ecou2_receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create receivable journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "ecou2_journal"
+        values:
+          name: "Extracurricular Journal ECOU2"
+          code: "ECOU2J"
+          type: "sale"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ecou2_invoice_type"
+        values:
+          name: "Extracurricular Invoice Type ECOU2"
+          code: "/"
+          journal_id: "REC: ecou2_journal.id"
+          receivable_account_id: "REC: ecou2_receivable_account.id"
+
+      - step: "Create offering, billing mode standalone, at the Operating Unit"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou2_offering"
+        values:
+          extracurricular_id: "REC: ecou2_extracurricular.id"
+          academic_year_id: "REC: ecou2_academic_year.id"
+          academic_term_id: "REC: ecou2_academic_term.id"
+          teacher_id: "REC: ecou2_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou2_product.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: ecou2_invoice_type.id"
+          receivable_journal_id: "REC: ecou2_journal.id"
+          receivable_account_id: "REC: ecou2_receivable_account.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "ecou2_grade"
+        values:
+          name: "Grade ECOU2"
+          code: "ECOU2-GR"
+          type_id: "REC: ecou2_grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "ecou2_grade_class"
+        values:
+          name: "Grade Class ECOU2"
+          code: "ECOU2-GC"
+          school_id: "REC: ecou2_school.id"
+          grade_id: "REC: ecou2_grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou2_contact"
+        values:
+          name: "Student Contact ECOU2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "ecou2_student"
+        values:
+          name: "Student ECOU2"
+          code: "ECOU2-ST"
+          contact_id: "REC: ecou2_contact.id"
+          school_id: "REC: ecou2_school.id"
+
+      - step: "Setup - create the student's enrollment for the term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "ecou2_enrollment"
+        values:
+          academic_year_id: "REC: ecou2_academic_year.id"
+          academic_term_id: "REC: ecou2_academic_term.id"
+          school_id: "REC: ecou2_school.id"
+          grade_id: "REC: ecou2_grade.id"
+          grade_class_id: "REC: ecou2_grade_class.id"
+          student_id: "REC: ecou2_student.id"
+
+      - step: "Create the participant at the Operating Unit"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "ecou2_participant"
+        values:
+          offering_id: "REC: ecou2_offering.id"
+          student_id: "REC: ecou2_student.id"
+          enrollment_id: "REC: ecou2_enrollment.id"
+          billing_mode: "standalone"
+          product_id: "REC: ecou2_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          operating_unit_id: "REC: ecou2_ou.id"
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "ecou2_participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "ecou2_participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the payment term for the participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "ecou2_term"
+        values:
+          participant_id: "REC: ecou2_participant.id"
+          name: "Chess Club Term ECOU2"
+          date_due: 2026-06-15
+
+      - step: "Create the detail line for the term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "ecou2_detail"
+        values:
+          term_id: "REC: ecou2_term.id"
+          product_id: "REC: ecou2_product.id"
+          name: "Chess Club Fee ECOU2"
+          account_id: "REC: ecou2_income_account.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the wizard for the student"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "ecou2_wizard"
+        values:
+          student_id: "REC: ecou2_student.id"
+          date_invoice: 2026-06-01
+          date_due_max: 2026-06-30
+
+      - step: "Run the wizard"
+        action: "call"
+        target: "ecou2_wizard"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      # Positive: the invoice created by Route B carries the
+      # participant's Operating Unit.
+      - step: "The invoice carries the participant's Operating Unit"
+        action: "assert"
+        target: "ecou2_term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.operating_unit_id:
+            type: "m2o"
+            expected: "REC: ecou2_ou"
+
+  - name: "Record rule restricts visibility to the user's own Operating Unit"
+    steps:
+      - step: "Get main company"
+        action: "ref"
+        xml_id: "base.main_company"
+        save_as: "ecou3_company"
+
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou3_ou_a_partner"
+        values:
+          name: "ECOU3 Operating Unit A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou3_ou_a"
+        values:
+          name: "ECOU3 Operating Unit A"
+          code: "ECOU3A"
+          company_id: "REC: ecou3_company.id"
+          partner_id: "REC: ecou3_ou_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou3_ou_b_partner"
+        values:
+          name: "ECOU3 Operating Unit B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou3_ou_b"
+        values:
+          name: "ECOU3 Operating Unit B"
+          code: "ECOU3B"
+          company_id: "REC: ecou3_company.id"
+          partner_id: "REC: ecou3_ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "ecou3_grade_type"
+        values:
+          name: "Grade Type ECOU3"
+          code: "ECOU3-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "ecou3_school"
+        values:
+          name: "School ECOU3"
+          code: "ECOU3-SCH"
+          grade_type_id: "REC: ecou3_grade_type.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "ecou3_category"
+        values:
+          name: "Category ECOU3"
+          code: "ECOU3-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ecou3_extracurricular"
+        values:
+          name: "Basketball Club ECOU3"
+          code: "ECOU3-EXT"
+          category_id: "REC: ecou3_category.id"
+          school_id: "REC: ecou3_school.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "ecou3_academic_year"
+        values:
+          name: "AY ECOU3"
+          code: "ECOU3-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "ecou3_academic_term"
+        values:
+          name: "Term ECOU3"
+          code: "ECOU3-TERM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: ecou3_academic_year.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "ecou3_employee"
+        values:
+          name: "Teacher Employee ECOU3"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "ecou3_teacher"
+        values:
+          name: "Teacher ECOU3"
+          code: "ECOU3-TCH"
+          employee_id: "REC: ecou3_employee.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ecou3_product"
+        values:
+          name: "Extracurricular Fee ECOU3"
+
+      - step: "Create offering A, at Operating Unit A, owned by admin"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou3_offering_a"
+        as_user: "base.user_admin"
+        values:
+          extracurricular_id: "REC: ecou3_extracurricular.id"
+          academic_year_id: "REC: ecou3_academic_year.id"
+          academic_term_id: "REC: ecou3_academic_term.id"
+          teacher_id: "REC: ecou3_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou3_product.id"
+          price_unit: 150000.0
+          operating_unit_id: "REC: ecou3_ou_a.id"
+
+      - step: "Create offering B, at Operating Unit B, owned by admin"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou3_offering_b"
+        as_user: "base.user_admin"
+        values:
+          extracurricular_id: "REC: ecou3_extracurricular.id"
+          academic_year_id: "REC: ecou3_academic_year.id"
+          academic_term_id: "REC: ecou3_academic_term.id"
+          teacher_id: "REC: ecou3_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou3_product.id"
+          price_unit: 150000.0
+          operating_unit_id: "REC: ecou3_ou_b.id"
+
+      # The restricted user is deliberately NOT put in ``base.group_user``:
+      # this base module's own Company rule
+      # (``school_extracurricular_offering_company_rule``) is scoped to
+      # ``base.group_user`` and would OR its ``company_id`` domain back
+      # into every group-rule the user belongs to, masking the Operating
+      # Unit rule's restriction entirely for any user who is also a
+      # generic internal user of the same company. Leaving it out means
+      # this Operating Unit rule is the ONLY active group rule for this
+      # user, so the assertion below is unambiguously caused by it.
+      - step: "Create a user restricted to Operating Unit A only"
+        action: "create"
+        model: "res.users"
+        save_as: "ecou3_restricted_user"
+        values:
+          name: "ECOU3 Restricted User"
+          login: "ecou3_restricted_user@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular.school_extracurricular_offering_user_group"
+                - "REF:
+                  ssi_school_extracurricular_operating_unit.school_extracurricular_operating_unit_group"
+          assigned_operating_unit_ids: [[6, 0, ["REC: ecou3_ou_a.id"]]]
+
+      - step: "Restricted user searches for offering B (Operating Unit B) -- excluded"
+        action: "search"
+        model: "school_extracurricular_offering"
+        domain: [["id", "=", "REC: ecou3_offering_b.id"]]
+        save_as: "ecou3_search_b"
+        as_user: "ecou3_restricted_user"
+        expect_count: 0
+
+      - step: "Restricted user searches for offering A (Operating Unit A) -- visible"
+        action: "search"
+        model: "school_extracurricular_offering"
+        domain: [["id", "=", "REC: ecou3_offering_a.id"]]
+        save_as: "ecou3_search_a"
+        as_user: "ecou3_restricted_user"
+        expect_count: 1
+
+  - name:
+      "Wizard rejects consolidating due terms from participants with different Operating
+      Units"
+    steps:
+      - step: "Get main company"
+        action: "ref"
+        xml_id: "base.main_company"
+        save_as: "ecou4_company"
+
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou4_ou_a_partner"
+        values:
+          name: "ECOU4 Operating Unit A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou4_ou_a"
+        values:
+          name: "ECOU4 Operating Unit A"
+          code: "ECOU4A"
+          company_id: "REC: ecou4_company.id"
+          partner_id: "REC: ecou4_ou_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou4_ou_b_partner"
+        values:
+          name: "ECOU4 Operating Unit B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ecou4_ou_b"
+        values:
+          name: "ECOU4 Operating Unit B"
+          code: "ECOU4B"
+          company_id: "REC: ecou4_company.id"
+          partner_id: "REC: ecou4_ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "ecou4_grade_type"
+        values:
+          name: "Grade Type ECOU4"
+          code: "ECOU4-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "ecou4_school"
+        values:
+          name: "School ECOU4"
+          code: "ECOU4-SCH"
+          grade_type_id: "REC: ecou4_grade_type.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "ecou4_category"
+        values:
+          name: "Category ECOU4"
+          code: "ECOU4-CAT"
+
+      - step: "Setup - create first extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ecou4_extracurricular_1"
+        values:
+          name: "Chess Club ECOU4"
+          code: "ECOU4-EXT-1"
+          category_id: "REC: ecou4_category.id"
+          school_id: "REC: ecou4_school.id"
+
+      - step: "Setup - create second extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "ecou4_extracurricular_2"
+        values:
+          name: "Robotics Club ECOU4"
+          code: "ECOU4-EXT-2"
+          category_id: "REC: ecou4_category.id"
+          school_id: "REC: ecou4_school.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "ecou4_academic_year"
+        values:
+          name: "AY ECOU4"
+          code: "ECOU4-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "ecou4_academic_term"
+        values:
+          name: "Term ECOU4"
+          code: "ECOU4-TERM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: ecou4_academic_year.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "ecou4_employee"
+        values:
+          name: "Teacher Employee ECOU4"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "ecou4_teacher"
+        values:
+          name: "Teacher ECOU4"
+          code: "ECOU4-TCH"
+          employee_id: "REC: ecou4_employee.id"
+
+      - step: "Setup - create first offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ecou4_product_1"
+        values:
+          name: "Chess Club Fee ECOU4"
+
+      - step: "Setup - create second offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "ecou4_product_2"
+        values:
+          name: "Robotics Club Fee ECOU4"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "ecou4_revenue_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "ecou4_income_account"
+        values:
+          name: "Extracurricular Income ECOU4"
+          code: "ECOU4-INC"
+          user_type_id: "REC: ecou4_revenue_type.id"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ecou4_receivable_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ecou4_receivable_account"
+        values:
+          name: "Extracurricular Receivable ECOU4"
+          code: "ECOU4-REC"
+          user_type_id: "REC: ecou4_receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create receivable journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "ecou4_journal"
+        values:
+          name: "Extracurricular Journal ECOU4"
+          code: "ECOU4J"
+          type: "sale"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ecou4_invoice_type"
+        values:
+          name: "Extracurricular Invoice Type ECOU4"
+          code: "/"
+          journal_id: "REC: ecou4_journal.id"
+          receivable_account_id: "REC: ecou4_receivable_account.id"
+
+      - step: "Setup - create first offering, same accounting setup"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou4_offering_1"
+        values:
+          extracurricular_id: "REC: ecou4_extracurricular_1.id"
+          academic_year_id: "REC: ecou4_academic_year.id"
+          academic_term_id: "REC: ecou4_academic_term.id"
+          teacher_id: "REC: ecou4_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou4_product_1.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: ecou4_invoice_type.id"
+          receivable_journal_id: "REC: ecou4_journal.id"
+          receivable_account_id: "REC: ecou4_receivable_account.id"
+
+      - step: "Setup - create second offering, same accounting setup"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "ecou4_offering_2"
+        values:
+          extracurricular_id: "REC: ecou4_extracurricular_2.id"
+          academic_year_id: "REC: ecou4_academic_year.id"
+          academic_term_id: "REC: ecou4_academic_term.id"
+          teacher_id: "REC: ecou4_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: ecou4_product_2.id"
+          price_unit: 200000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: ecou4_invoice_type.id"
+          receivable_journal_id: "REC: ecou4_journal.id"
+          receivable_account_id: "REC: ecou4_receivable_account.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "ecou4_grade"
+        values:
+          name: "Grade ECOU4"
+          code: "ECOU4-GR"
+          type_id: "REC: ecou4_grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "ecou4_grade_class"
+        values:
+          name: "Grade Class ECOU4"
+          code: "ECOU4-GC"
+          school_id: "REC: ecou4_school.id"
+          grade_id: "REC: ecou4_grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "ecou4_contact"
+        values:
+          name: "Student Contact ECOU4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "ecou4_student"
+        values:
+          name: "Student ECOU4"
+          code: "ECOU4-ST"
+          contact_id: "REC: ecou4_contact.id"
+          school_id: "REC: ecou4_school.id"
+
+      - step: "Setup - create the student's enrollment for the term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "ecou4_enrollment"
+        values:
+          academic_year_id: "REC: ecou4_academic_year.id"
+          academic_term_id: "REC: ecou4_academic_term.id"
+          school_id: "REC: ecou4_school.id"
+          grade_id: "REC: ecou4_grade.id"
+          grade_class_id: "REC: ecou4_grade_class.id"
+          student_id: "REC: ecou4_student.id"
+
+      - step: "Create first participant, at Operating Unit A"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "ecou4_participant_1"
+        values:
+          offering_id: "REC: ecou4_offering_1.id"
+          student_id: "REC: ecou4_student.id"
+          enrollment_id: "REC: ecou4_enrollment.id"
+          billing_mode: "standalone"
+          product_id: "REC: ecou4_product_1.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          operating_unit_id: "REC: ecou4_ou_a.id"
+
+      - step: "Confirm first participant"
+        action: "call"
+        target: "ecou4_participant_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve first participant"
+        action: "call"
+        target: "ecou4_participant_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant, at Operating Unit B"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "ecou4_participant_2"
+        values:
+          offering_id: "REC: ecou4_offering_2.id"
+          student_id: "REC: ecou4_student.id"
+          enrollment_id: "REC: ecou4_enrollment.id"
+          billing_mode: "standalone"
+          product_id: "REC: ecou4_product_2.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+          operating_unit_id: "REC: ecou4_ou_b.id"
+
+      - step: "Confirm second participant"
+        action: "call"
+        target: "ecou4_participant_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve second participant"
+        action: "call"
+        target: "ecou4_participant_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create payment term for the first participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "ecou4_term_1"
+        values:
+          participant_id: "REC: ecou4_participant_1.id"
+          name: "Chess Club Term ECOU4"
+          date_due: 2026-06-15
+
+      - step: "Create detail line for the first term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "ecou4_detail_1"
+        values:
+          term_id: "REC: ecou4_term_1.id"
+          product_id: "REC: ecou4_product_1.id"
+          name: "Chess Club Fee ECOU4"
+          account_id: "REC: ecou4_income_account.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create payment term for the second participant"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "ecou4_term_2"
+        values:
+          participant_id: "REC: ecou4_participant_2.id"
+          name: "Robotics Club Term ECOU4"
+          date_due: 2026-06-20
+
+      - step: "Create detail line for the second term"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "ecou4_detail_2"
+        values:
+          term_id: "REC: ecou4_term_2.id"
+          product_id: "REC: ecou4_product_2.id"
+          name: "Robotics Club Fee ECOU4"
+          account_id: "REC: ecou4_income_account.id"
+          uom_quantity: 1.0
+          price_unit: 200000.0
+
+      - step: "Create the wizard for the consolidated student"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "ecou4_wizard"
+        values:
+          student_id: "REC: ecou4_student.id"
+          date_invoice: 2026-06-01
+          date_due_max: 2026-06-30
+
+      # Negative: both due terms are picked up (same Journal/Account/Type),
+      # but their participants disagree on Operating Unit -- the wizard
+      # must refuse rather than pick one Operating Unit silently.
+      - step: "Running the wizard is rejected because of the Operating Unit mismatch"
+        action: "call"
+        target: "ecou4_wizard"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "do not share the same"
