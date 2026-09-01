@@ -55,6 +55,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
     @api.depends(
         "detail_ids",
+        "detail_ids.voided",
         "detail_ids.price_subtotal",
         "detail_ids.price_tax",
         "detail_ids.price_total",
@@ -66,12 +67,15 @@ class SchoolEnrollmentPaymentTerm(models.Model):
     def _compute_total(self):
         """Sum the detail and addendum lines into the term totals.
 
-        ``amount_untaxed`` stays the sum of ``price_subtotal`` over
-        ``detail_ids`` only. ``amount_extra`` is the sum of
-        ``price_subtotal`` over ``extra_detail_ids``.
-        ``amount_tax_regular``/``amount_tax_extra`` are the summed
-        ``price_tax`` of each line set, and ``amount_tax`` is their
-        total. ``amount_total`` is
+        ``amount_untaxed`` and ``amount_tax_regular`` are the sums of
+        ``price_subtotal``/``price_tax`` over ``detail_ids`` lines
+        that are **not** ``voided`` -- a line whose amount already
+        moved to another term via a correction document is left out,
+        mirroring ``school_enrollment_payment_term._compute_total`` in
+        ``ssi_school``. ``extra_detail_ids`` has no ``voided`` marker
+        of its own yet, so ``amount_extra``/``amount_tax_extra`` still
+        sum every addendum line. ``amount_tax`` is the total of both
+        tax amounts, and ``amount_total`` is
         ``amount_untaxed + amount_extra + amount_tax``.
 
         :return: None
@@ -79,6 +83,8 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         for record in self:
             amount_untaxed = amount_tax_regular = 0.0
             for detail in record.detail_ids:
+                if detail.voided:
+                    continue
                 amount_untaxed += detail.price_subtotal
                 amount_tax_regular += detail.price_tax
             amount_extra = amount_tax_extra = 0.0
@@ -92,6 +98,25 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             record.amount_tax_extra = amount_tax_extra
             record.amount_tax = amount_tax
             record.amount_total = amount_untaxed + amount_extra + amount_tax
+
+    def _is_fully_voided(self):
+        """Extend the base predicate with the addendum line family.
+
+        A term is only fully voided when the base family agrees
+        (``super()._is_fully_voided()`` -- every ``detail_ids`` line
+        is ``voided``, or empty counts as not-fully-voided there) and
+        this term has no ``extra_detail_ids`` line: a term whose
+        regular lines are all voided but that still carries an
+        extracurricular addendum line still has something to
+        invoice, so it must never be reported as fully voided.
+
+        :return: bool
+        """
+        self.ensure_one()
+        return (
+            super()._is_fully_voided()  # pylint: disable=protected-access
+            and not self.extra_detail_ids
+        )
 
     def _prepare_invoice_data(self):
         """Add the addendum fee lines to the invoice header create-vals.

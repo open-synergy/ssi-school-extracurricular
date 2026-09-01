@@ -1,0 +1,907 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Voided detail lines are excluded from the term totals"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_v1"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_v1"
+        values:
+          name: "Voided Billing Income V1"
+          code: "EXTV-V1-INC"
+          user_type_id: "REC: revenue_type_v1.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_v1"
+        values:
+          name: "Grade Type Voided V1"
+          code: "EXTV-GT-V1"
+
+      - step: "Setup - create fee product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_fee_v1"
+        values:
+          name: "Registration Fee Product Voided V1"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_v1"
+        values:
+          name: "School Voided V1"
+          code: "EXTV-SCH-V1"
+          grade_type_id: "REC: grade_type_v1.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_v1"
+        values:
+          name: "AY Voided V1"
+          code: "EXTV-AY-V1"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_v1"
+        values:
+          name: "Term Voided V1"
+          code: "EXTV-TERM-V1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_v1.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_v1"
+        values:
+          name: "Grade Voided V1"
+          code: "EXTV-GR-V1"
+          type_id: "REC: grade_type_v1.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_v1"
+        values:
+          name: "Grade Class Voided V1"
+          code: "EXTV-GC-V1"
+          school_id: "REC: school_v1.id"
+          grade_id: "REC: grade_v1.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_v1"
+        values:
+          name: "Student Contact Voided V1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_v1"
+        values:
+          name: "Student Voided V1"
+          code: "EXTV-ST-V1"
+          contact_id: "REC: contact_v1.id"
+          school_id: "REC: school_v1.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_v1"
+        values:
+          academic_year_id: "REC: academic_year_v1.id"
+          academic_term_id: "REC: academic_term_v1.id"
+          school_id: "REC: school_v1.id"
+          grade_id: "REC: grade_v1.id"
+          grade_class_id: "REC: grade_class_v1.id"
+          student_id: "REC: student_v1.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_v1"
+        values:
+          enrollment_id: "REC: enrollment_v1.id"
+          name: "Term Voided V1"
+
+      - step: "Create a regular detail line kept invoiceable"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v1_kept"
+        values:
+          term_id: "REC: term_v1.id"
+          product_id: "REC: product_fee_v1.id"
+          name: "Registration Fee Voided V1 Kept"
+          account_id: "REC: income_account_v1.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+
+      - step:
+          "Create a regular detail line whose amount already moved to another term
+          (voided at creation, price_unit unchanged)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v1_voided"
+        values:
+          term_id: "REC: term_v1.id"
+          product_id: "REC: product_fee_v1.id"
+          name: "Registration Fee Voided V1 Moved"
+          account_id: "REC: income_account_v1.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Assert the voided line does not count toward the totals"
+        action: "assert"
+        target: "term_v1"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Voided detail lines stay excluded when an addendum line is present"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_v2"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_v2"
+        values:
+          name: "Voided Billing Income V2"
+          code: "EXTV-V2-INC"
+          user_type_id: "REC: revenue_type_v2.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_v2"
+        values:
+          name: "Grade Type Voided V2"
+          code: "EXTV-GT-V2"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_v2"
+        values:
+          name: "School Voided V2"
+          code: "EXTV-SCH-V2"
+          grade_type_id: "REC: grade_type_v2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_v2"
+        values:
+          name: "Category Voided V2"
+          code: "EXTV-CAT-V2"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_v2"
+        values:
+          name: "Futsal Club Voided V2"
+          code: "EXTV-EXT-V2"
+          category_id: "REC: category_v2.id"
+          school_id: "REC: school_v2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_v2"
+        values:
+          name: "AY Voided V2"
+          code: "EXTV-AY-V2"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_v2"
+        values:
+          name: "Term Voided V2"
+          code: "EXTV-TERM-V2"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_v2.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_v2"
+        values:
+          name: "Teacher Employee Voided V2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_v2"
+        values:
+          name: "Teacher Voided V2"
+          code: "EXTV-TCH-V2"
+          employee_id: "REC: employee_v2.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_v2"
+        values:
+          name: "Extracurricular Fee Voided V2"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_v2"
+        values:
+          extracurricular_id: "REC: extracurricular_v2.id"
+          academic_year_id: "REC: academic_year_v2.id"
+          academic_term_id: "REC: academic_term_v2.id"
+          teacher_id: "REC: teacher_v2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_v2.id"
+          price_unit: 500000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_v2"
+        values:
+          name: "Grade Voided V2"
+          code: "EXTV-GR-V2"
+          type_id: "REC: grade_type_v2.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_v2"
+        values:
+          name: "Grade Class Voided V2"
+          code: "EXTV-GC-V2"
+          school_id: "REC: school_v2.id"
+          grade_id: "REC: grade_v2.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_v2"
+        values:
+          name: "Student Contact Voided V2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_v2"
+        values:
+          name: "Student Voided V2"
+          code: "EXTV-ST-V2"
+          contact_id: "REC: contact_v2.id"
+          school_id: "REC: school_v2.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_v2"
+        values:
+          academic_year_id: "REC: academic_year_v2.id"
+          academic_term_id: "REC: academic_term_v2.id"
+          school_id: "REC: school_v2.id"
+          grade_id: "REC: grade_v2.id"
+          grade_class_id: "REC: grade_class_v2.id"
+          student_id: "REC: student_v2.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_v2"
+        values:
+          enrollment_id: "REC: enrollment_v2.id"
+          name: "Term Voided V2"
+
+      - step: "Create a regular detail line kept invoiceable"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v2_kept"
+        values:
+          term_id: "REC: term_v2.id"
+          product_id: "REC: product_offering_v2.id"
+          name: "Registration Fee Voided V2 Kept"
+          account_id: "REC: income_account_v2.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+
+      - step:
+          "Create a regular detail line whose amount already moved to another term
+          (voided at creation, price_unit unchanged)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v2_voided"
+        values:
+          term_id: "REC: term_v2.id"
+          product_id: "REC: product_offering_v2.id"
+          name: "Registration Fee Voided V2 Moved"
+          account_id: "REC: income_account_v2.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Create participant billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_v2"
+        values:
+          offering_id: "REC: offering_v2.id"
+          student_id: "REC: student_v2.id"
+          enrollment_id: "REC: enrollment_v2.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_v2.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Create allocation covering the full addendum fee"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_v2"
+        values:
+          participant_id: "REC: participant_v2.id"
+          payment_term_id: "REC: term_v2.id"
+          product_id: "REC: product_offering_v2.id"
+          name: "Extracurricular Fee Voided V2"
+          account_id: "REC: income_account_v2.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_v2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant_v2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step:
+          "Assert the voided regular line is excluded, and the addendum line is added to
+          amount_extra and amount_total in full"
+        action: "assert"
+        target: "term_v2"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_extra:
+            type: "value"
+            expected: 500000.0
+          amount_total:
+            type: "value"
+            expected: 1500000.0
+
+  - name:
+      "A term fully voided on regular lines but still billing an addendum line stays
+      invoiceable"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_v3"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_v3"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_v3"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_v3"
+        values:
+          name: "Voided Billing Income V3"
+          code: "EXTV-V3-INC"
+          user_type_id: "REC: revenue_type_v3.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_v3"
+        values:
+          name: "Voided Billing Receivable V3"
+          code: "EXTV-V3-REC"
+          user_type_id: "REC: receivable_type_v3.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_v3"
+        values:
+          name: "Customer Invoice Type Voided V3"
+          code: "EXTV-V3-CIT"
+          journal_id: "REC: journal_v3.id"
+          receivable_account_id: "REC: receivable_account_v3.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_v3"
+        values:
+          name: "Grade Type Voided V3"
+          code: "EXTV-GT-V3"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_v3"
+        values:
+          name: "School Voided V3"
+          code: "EXTV-SCH-V3"
+          grade_type_id: "REC: grade_type_v3.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_v3"
+        values:
+          name: "Category Voided V3"
+          code: "EXTV-CAT-V3"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_v3"
+        values:
+          name: "Futsal Club Voided V3"
+          code: "EXTV-EXT-V3"
+          category_id: "REC: category_v3.id"
+          school_id: "REC: school_v3.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_v3"
+        values:
+          name: "AY Voided V3"
+          code: "EXTV-AY-V3"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_v3"
+        values:
+          name: "Term Voided V3"
+          code: "EXTV-TERM-V3"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_v3.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_v3"
+        values:
+          name: "Teacher Employee Voided V3"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_v3"
+        values:
+          name: "Teacher Voided V3"
+          code: "EXTV-TCH-V3"
+          employee_id: "REC: employee_v3.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_v3"
+        values:
+          name: "Extracurricular Fee Voided V3"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_v3"
+        values:
+          extracurricular_id: "REC: extracurricular_v3.id"
+          academic_year_id: "REC: academic_year_v3.id"
+          academic_term_id: "REC: academic_term_v3.id"
+          teacher_id: "REC: teacher_v3.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_v3.id"
+          price_unit: 500000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_v3"
+        values:
+          name: "Grade Voided V3"
+          code: "EXTV-GR-V3"
+          type_id: "REC: grade_type_v3.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_v3"
+        values:
+          name: "Grade Class Voided V3"
+          code: "EXTV-GC-V3"
+          school_id: "REC: school_v3.id"
+          grade_id: "REC: grade_v3.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_v3"
+        values:
+          name: "Student Contact Voided V3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_v3"
+        values:
+          name: "Student Voided V3"
+          code: "EXTV-ST-V3"
+          contact_id: "REC: contact_v3.id"
+          school_id: "REC: school_v3.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_v3"
+        values:
+          academic_year_id: "REC: academic_year_v3.id"
+          academic_term_id: "REC: academic_term_v3.id"
+          school_id: "REC: school_v3.id"
+          grade_id: "REC: grade_v3.id"
+          grade_class_id: "REC: grade_class_v3.id"
+          student_id: "REC: student_v3.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_v3.id"
+          receivable_account_id: "REC: receivable_account_v3.id"
+          customer_invoice_type_id: "REC: ci_type_v3.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_v3"
+        values:
+          enrollment_id: "REC: enrollment_v3.id"
+          name: "Term Voided V3"
+          date_invoice: 2026-07-05
+          date_due: 2026-07-20
+
+      - step:
+          "Create the only regular detail line, voided at creation (its amount already
+          moved to another term)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v3_voided"
+        values:
+          term_id: "REC: term_v3.id"
+          product_id: "REC: product_offering_v3.id"
+          name: "Registration Fee Voided V3 Moved"
+          account_id: "REC: income_account_v3.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Create participant billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_v3"
+        values:
+          offering_id: "REC: offering_v3.id"
+          student_id: "REC: student_v3.id"
+          enrollment_id: "REC: enrollment_v3.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_v3.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Create allocation covering the full addendum fee"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_v3"
+        values:
+          participant_id: "REC: participant_v3.id"
+          payment_term_id: "REC: term_v3.id"
+          product_id: "REC: product_offering_v3.id"
+          name: "Extracurricular Fee Voided V3"
+          account_id: "REC: income_account_v3.id"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_v3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant_v3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_v3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_v3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step:
+          "Assert the term is still uninvoiced, not voided, even though every regular
+          detail line is voided"
+        action: "assert"
+        target: "term_v3"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Create the customer invoice from the payment term"
+        action: "call"
+        target: "term_v3"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step:
+          "Assert the invoice was created with exactly one line -- the addendum line,
+          since the regular one is voided"
+        action: "assert"
+        target: "term_v3"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name:
+      "A term with no addendum lines and every detail voided is fully voided and rejects
+      invoicing"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_v4"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_v4"
+        values:
+          name: "Voided Billing Income V4"
+          code: "EXTV-V4-INC"
+          user_type_id: "REC: revenue_type_v4.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_v4"
+        values:
+          name: "Grade Type Voided V4"
+          code: "EXTV-GT-V4"
+
+      - step: "Setup - create fee product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_fee_v4"
+        values:
+          name: "Registration Fee Product Voided V4"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_v4"
+        values:
+          name: "School Voided V4"
+          code: "EXTV-SCH-V4"
+          grade_type_id: "REC: grade_type_v4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_v4"
+        values:
+          name: "AY Voided V4"
+          code: "EXTV-AY-V4"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_v4"
+        values:
+          name: "Term Voided V4"
+          code: "EXTV-TERM-V4"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_v4.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_v4"
+        values:
+          name: "Grade Voided V4"
+          code: "EXTV-GR-V4"
+          type_id: "REC: grade_type_v4.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_v4"
+        values:
+          name: "Grade Class Voided V4"
+          code: "EXTV-GC-V4"
+          school_id: "REC: school_v4.id"
+          grade_id: "REC: grade_v4.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_v4"
+        values:
+          name: "Student Contact Voided V4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_v4"
+        values:
+          name: "Student Voided V4"
+          code: "EXTV-ST-V4"
+          contact_id: "REC: contact_v4.id"
+          school_id: "REC: school_v4.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_v4"
+        values:
+          academic_year_id: "REC: academic_year_v4.id"
+          academic_term_id: "REC: academic_term_v4.id"
+          school_id: "REC: school_v4.id"
+          grade_id: "REC: grade_v4.id"
+          grade_class_id: "REC: grade_class_v4.id"
+          student_id: "REC: student_v4.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_v4"
+        values:
+          enrollment_id: "REC: enrollment_v4.id"
+          name: "Term Voided V4"
+
+      - step:
+          "Create the only regular detail line, voided at creation (its amount already
+          moved to another term); no addendum line exists on this term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_v4_voided"
+        values:
+          term_id: "REC: term_v4.id"
+          product_id: "REC: product_fee_v4.id"
+          name: "Registration Fee Voided V4 Moved"
+          account_id: "REC: income_account_v4.id"
+          uom_quantity: 1.0
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_v4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_v4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term is fully voided, without any addendum line"
+        action: "assert"
+        target: "term_v4"
+        asserts:
+          state:
+            type: "value"
+            expected: "voided"
+
+      - step: "Creating an invoice from a fully voided term must fail"
+        action: "call"
+        target: "term_v4"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "no invoiceable detail line"
