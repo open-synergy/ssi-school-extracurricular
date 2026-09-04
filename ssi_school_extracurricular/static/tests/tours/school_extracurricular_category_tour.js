@@ -23,10 +23,10 @@ odoo.define(
                     trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
-                    content: "Open the Extracurricular menu",
+                    content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
                 // "Extracurricular" (Configuration) is a level-3 grouping
                 // menuitem with no action= -- 14.0 renders it as a
@@ -108,10 +108,10 @@ odoo.define(
                     trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
-                    content: "Open the Extracurricular menu",
+                    content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
                 // "Extracurricular" (Configuration) is a level-3 grouping
                 // menuitem with no action= -- 14.0 renders it as a
@@ -197,10 +197,10 @@ odoo.define(
                     trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
-                    content: "Open the Extracurricular menu",
+                    content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
                 // "Extracurricular" (Configuration) is a level-3 grouping
                 // menuitem with no action= -- 14.0 renders it as a
