@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_participant`\
-> **Menu:** Extracurricular > Extracurricular Participants\
+> **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - Officer`\
 > **State:** `draft` | `confirm` | `open` → `cancel`\
 > **Requires:** `01-create`
@@ -20,7 +20,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Participants** menu.
+1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Open the record to cancel.
 3. Click the **Cancel** button.
 4. In the wizard that appears, select the **Cancellation Reason**.

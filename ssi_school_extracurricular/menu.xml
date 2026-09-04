@@ -6,21 +6,22 @@
 <menuitem
         id="menu_extracurricular_root"
         name="Extracurricular"
-        web_icon="ssi_school_extracurricular,static/description/icon.png"
+        parent="ssi_school.menu_school_root"
+        sequence="80"
     />
 
 <menuitem
         id="menu_extracurricular_report"
-        name="Reporting"
-        parent="menu_extracurricular_root"
-        sequence="998"
+        name="Extracurricular"
+        parent="ssi_school.menu_school_report"
+        sequence="10"
     />
 
 <menuitem
         id="menu_extracurricular_configuration"
-        name="Configuration"
-        parent="menu_extracurricular_root"
-        sequence="999"
+        name="Extracurricular"
+        parent="ssi_school.menu_school_configuration"
+        sequence="190"
     />
 
 </odoo>

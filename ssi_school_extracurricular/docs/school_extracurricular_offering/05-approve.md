@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_offering`\
-> **Menu:** Extracurricular > Extracurricular Offerings\
+> **Menu:** School > Extracurricular > Extracurricular Offerings\
 > **Actor:** user in group `Extracurricular Offering - Officer`\
 > **State:** `confirm` → `open`\
 > **Requires:** `04-confirm`
@@ -18,7 +18,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Offerings** menu.
+1. Open the **School > Extracurricular > Extracurricular Offerings** menu.
 2. Open the record to approve.
 3. Click the **Approve** button.
 4. Click **OK** on the confirmation dialog.

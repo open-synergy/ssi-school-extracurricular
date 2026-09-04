@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_offering`\
-> **Menu:** Extracurricular > Extracurricular Offerings\
+> **Menu:** School > Extracurricular > Extracurricular Offerings\
 > **Actor:** user in group `Extracurricular Offering - User`\
 > **State:** `—` → `draft`
 
@@ -16,7 +16,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Offerings** menu.
+1. Open the **School > Extracurricular > Extracurricular Offerings** menu.
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Extracurricular** _(required)_: The extracurricular activity being opened this

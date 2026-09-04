@@ -16,20 +16,23 @@ odoo.define("ssi_school_extracurricular.school_extracurricular_tour", function (
             url: "/web",
         },
         [
-            // Flow 1 — Open the Extracurricular > Configuration > Extracurriculars
+            // Flow 1 — Open the School > Configuration > Extracurricular > Extracurriculars
             // menu.
             tour.stepUtils.showAppsMenuItem(),
             {
-                content: "Open the Extracurricular app",
-                trigger:
-                    '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                content: "Open the School app",
+                trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
             },
             {
                 content: "Open the Configuration menu",
                 trigger:
                     ".o_menu_sections " +
-                    '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                    '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
             },
+            // "Extracurricular" (Configuration) is a level-3 grouping
+            // menuitem with no action= -- 14.0 renders it as a
+            // non-clickable dropdown header without data-menu-xmlid, so
+            // there is no step for it. Go straight to the leaf below.
             {
                 content: "Open the Extracurriculars menu",
                 trigger:
@@ -119,20 +122,23 @@ odoo.define("ssi_school_extracurricular.school_extracurricular_tour", function (
             url: "/web",
         },
         [
-            // Flow 1 — Open the Extracurricular > Configuration > Extracurriculars
+            // Flow 1 — Open the School > Configuration > Extracurricular > Extracurriculars
             // menu.
             tour.stepUtils.showAppsMenuItem(),
             {
-                content: "Open the Extracurricular app",
-                trigger:
-                    '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                content: "Open the School app",
+                trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
             },
             {
                 content: "Open the Configuration menu",
                 trigger:
                     ".o_menu_sections " +
-                    '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                    '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
             },
+            // "Extracurricular" (Configuration) is a level-3 grouping
+            // menuitem with no action= -- 14.0 renders it as a
+            // non-clickable dropdown header without data-menu-xmlid, so
+            // there is no step for it. Go straight to the leaf below.
             {
                 content: "Open the Extracurriculars menu",
                 trigger:
@@ -206,20 +212,23 @@ odoo.define("ssi_school_extracurricular.school_extracurricular_tour", function (
             url: "/web",
         },
         [
-            // Flow 1 — Open the Extracurricular > Configuration > Extracurriculars
+            // Flow 1 — Open the School > Configuration > Extracurricular > Extracurriculars
             // menu.
             tour.stepUtils.showAppsMenuItem(),
             {
-                content: "Open the Extracurricular app",
-                trigger:
-                    '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                content: "Open the School app",
+                trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
             },
             {
                 content: "Open the Configuration menu",
                 trigger:
                     ".o_menu_sections " +
-                    '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                    '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
             },
+            // "Extracurricular" (Configuration) is a level-3 grouping
+            // menuitem with no action= -- 14.0 renders it as a
+            // non-clickable dropdown header without data-menu-xmlid, so
+            // there is no step for it. Go straight to the leaf below.
             {
                 content: "Open the Extracurriculars menu",
                 trigger:

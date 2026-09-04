@@ -16,19 +16,22 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular > Configuration > Categories menu.
+                // Flow 1 — Open the School > Configuration > Extracurricular > Categories menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
                     content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
+                // "Extracurricular" (Configuration) is a level-3 grouping
+                // menuitem with no action= -- 14.0 renders it as a
+                // non-clickable dropdown header without data-menu-xmlid, so
+                // there is no step for it. Go straight to the leaf below.
                 {
                     content: "Open the Categories menu",
                     trigger:
@@ -98,19 +101,22 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular > Configuration > Categories menu.
+                // Flow 1 — Open the School > Configuration > Extracurricular > Categories menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
                     content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
+                // "Extracurricular" (Configuration) is a level-3 grouping
+                // menuitem with no action= -- 14.0 renders it as a
+                // non-clickable dropdown header without data-menu-xmlid, so
+                // there is no step for it. Go straight to the leaf below.
                 {
                     content: "Open the Categories menu",
                     trigger:
@@ -184,19 +190,22 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular > Configuration > Categories menu.
+                // Flow 1 — Open the School > Configuration > Extracurricular > Categories menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
                 {
                     content: "Open the Configuration menu",
                     trigger:
                         ".o_menu_sections " +
-                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_configuration"]',
+                        '[data-menu-xmlid="ssi_school.menu_school_configuration"]',
                 },
+                // "Extracurricular" (Configuration) is a level-3 grouping
+                // menuitem with no action= -- 14.0 renders it as a
+                // non-clickable dropdown header without data-menu-xmlid, so
+                // there is no step for it. Go straight to the leaf below.
                 {
                     content: "Open the Categories menu",
                     trigger:

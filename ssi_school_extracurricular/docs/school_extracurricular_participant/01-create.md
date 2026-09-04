@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_participant`\
-> **Menu:** Extracurricular > Extracurricular Participants\
+> **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - User`\
 > **State:** `—` → `draft`
 
@@ -17,7 +17,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Participants** menu.
+1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Offering** _(required)_: The term's offering this participant is joining.
