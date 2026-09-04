@@ -22,9 +22,14 @@ odoo.define(
             [
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular app",
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
                     trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
                 },
                 {
                     content: "Open the Extracurricular Offerings menu",
