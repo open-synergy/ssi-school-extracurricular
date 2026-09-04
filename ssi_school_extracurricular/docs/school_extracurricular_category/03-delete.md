@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_category`\
-> **Menu:** Extracurricular > Configuration > Categories\
+> **Menu:** School > Configuration > Extracurricular > Categories\
 > **Actor:** user in group `Extracurricular Category`\
 > **Requires:** `01-create`
 
@@ -14,7 +14,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Configuration > Categories** menu.
+1. Open the **School > Configuration > Extracurricular > Categories** menu.
 2. Open the record to delete.
 3. Click **Action** > **Delete**.
 4. Click **OK** to confirm.

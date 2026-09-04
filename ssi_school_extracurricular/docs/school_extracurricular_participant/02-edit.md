@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_participant`\
-> **Menu:** Extracurricular > Extracurricular Participants\
+> **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - User`\
 > **Requires:** `01-create`
 
@@ -14,7 +14,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Participants** menu.
+1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Find and open the record to edit.
 3. Change the required fields.
 4. Click **Save**.

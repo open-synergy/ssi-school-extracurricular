@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular`\
-> **Menu:** Extracurricular > Configuration > Extracurriculars\
+> **Menu:** School > Configuration > Extracurricular > Extracurriculars\
 > **Actor:** user in group `Extracurricular`
 
 ## Pre-Condition
@@ -13,7 +13,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Configuration > Extracurriculars** menu.
+1. Open the **School > Configuration > Extracurricular > Extracurriculars** menu.
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Name** _(required)_: The name of the extracurricular activity.

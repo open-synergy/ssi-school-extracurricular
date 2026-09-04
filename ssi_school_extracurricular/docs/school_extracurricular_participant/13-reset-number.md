@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_participant`\
-> **Menu:** Extracurricular > Extracurricular Participants\
+> **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - Officer`\
 > **Requires:** `01-create`
 
@@ -14,7 +14,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Extracurricular Participants** menu.
+1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Open the record whose document number will be reset.
 3. Click the **Reset Document Number** button.
 4. Click **OK** on the confirmation dialog.

@@ -16,12 +16,17 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular > Create Due Invoice menu.
+                // Flow 1 — Open the School > Extracurricular > Create Due Invoice menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular app",
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
                     trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
                 },
                 {
                     content: "Open the Create Due Invoice menu",

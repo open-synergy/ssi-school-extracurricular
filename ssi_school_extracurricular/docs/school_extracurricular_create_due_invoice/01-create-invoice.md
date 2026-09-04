@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular\
 > **Model:** `school_extracurricular_create_due_invoice`\
-> **Menu:** Extracurricular > Create Due Invoice\
+> **Menu:** School > Extracurricular > Create Due Invoice\
 > **Actor:** user in group `Extracurricular Participant - User`
 
 ## Pre-Condition
@@ -17,7 +17,7 @@
 
 ## Flow
 
-1. Open the **Extracurricular > Create Due Invoice** menu.
+1. Open the **School > Extracurricular > Create Due Invoice** menu.
 2. Fill in the required fields:
    - **Student** _(required)_: The student whose due payment terms will be consolidated.
    - **Invoice Date** _(required)_: Defaults to today.
