@@ -176,11 +176,6 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
-#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_configuration
-msgid "Configuration"
-msgstr ""
-
-#. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.cancel_extracurricular_session_view_form
 msgid "Confirm"
 msgstr ""
@@ -273,6 +268,8 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_configuration
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_report
 #: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_root
 msgid "Extracurricular Session"
 msgstr ""
@@ -509,11 +506,6 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
 msgid "Present Count"
-msgstr ""
-
-#. module: ssi_school_extracurricular_session
-#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_report
-msgid "Reporting"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
