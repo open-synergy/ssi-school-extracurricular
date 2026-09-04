@@ -564,11 +564,6 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
-#: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_configuration
-msgid "Configuration"
-msgstr ""
-
-#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__confirm_ok
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__confirm_ok
 msgid ""
@@ -792,6 +787,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__extracurricular_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__extracurricular_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__extracurricular_id
+#: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_configuration
+#: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_report
 #: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_root
 #: model:res.groups,name:ssi_school_extracurricular.school_extracurricular_group
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_fee_analysis_view_search
@@ -1490,11 +1487,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__rejected
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__rejected
 msgid "Rejected"
-msgstr ""
-
-#. module: ssi_school_extracurricular
-#: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_report
-msgid "Reporting"
 msgstr ""
 
 #. module: ssi_school_extracurricular
