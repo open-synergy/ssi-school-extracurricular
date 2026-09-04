@@ -16,14 +16,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -106,14 +115,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -187,14 +205,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -273,14 +300,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -346,14 +382,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -412,14 +457,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -502,14 +556,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Extracurricular
-                // Sessions menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Extracurricular Sessions menu",
                     trigger:
@@ -568,14 +631,23 @@ odoo.define(
                 url: "/web",
             },
             [
-                // Flow 1 — Open the Extracurricular Session > Generate Sessions
-                // menu.
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Generate Sessions menu.
                 tour.stepUtils.showAppsMenuItem(),
                 {
-                    content: "Open the Extracurricular Session app",
-                    trigger:
-                        '.o_app[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session_root"]',
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
                 },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                // "Extracurricular Session" is a level-3 grouping menuitem
+                // with no action= -- 14.0 renders it as a non-clickable
+                // dropdown header without data-menu-xmlid, so there is no
+                // step for it. Go straight to the leaf below.
                 {
                     content: "Open the Generate Sessions menu",
                     trigger:

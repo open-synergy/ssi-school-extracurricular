@@ -2,7 +2,8 @@
 
 > **Module:** ssi_school_extracurricular_session\
 > **Model:** `school_extracurricular_session`\
-> **Menu:** Extracurricular Session > Extracurricular Sessions\
+> **Menu:** School > Extracurricular > Extracurricular Session > Extracurricular
+> Sessions\
 > **Actor:** user in group `Extracurricular Session - User`\
 > **State:** `planned` → `cancelled`\
 > **Requires:** `01-create`
@@ -14,7 +15,8 @@
 
 ## Flow
 
-1. Open the **Extracurricular Session > Extracurricular Sessions** menu.
+1. Open the **School > Extracurricular > Extracurricular Session > Extracurricular
+   Sessions** menu.
 2. Open the session to cancel.
 3. Click the **Cancel** button.
 4. In the wizard that appears, fill in the **Cancel Reason** _(required)_ — the wizard

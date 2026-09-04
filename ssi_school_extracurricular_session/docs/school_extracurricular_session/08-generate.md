@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_extracurricular_session\
 > **Model:** `school_extracurricular_session_generate`\
-> **Menu:** Extracurricular Session > Generate Sessions\
+> **Menu:** School > Extracurricular > Extracurricular Session > Generate Sessions\
 > **Actor:** user in group `Extracurricular Session - User`
 
 ## Pre-Condition
@@ -13,7 +13,8 @@
 
 ## Flow
 
-1. Open the **Extracurricular Session > Generate Sessions** menu.
+1. Open the **School > Extracurricular > Extracurricular Session > Generate Sessions**
+   menu.
 2. Fill in the required fields:
    - **Offering** _(required)_: The term's offering to generate sessions for.
    - **Start Date** _(required)_: Automatically filled from the selected Offering.
