@@ -2,7 +2,8 @@
 
 > **Module:** ssi_school_extracurricular_session\
 > **Model:** `school_extracurricular_session`\
-> **Menu:** Extracurricular Session > Extracurricular Sessions\
+> **Menu:** School > Extracurricular > Extracurricular Session > Extracurricular
+> Sessions\
 > **Actor:** user in group `Extracurricular Session - User`\
 > **State:** `—` → `planned`
 
@@ -15,7 +16,8 @@
 
 ## Flow
 
-1. Open the **Extracurricular Session > Extracurricular Sessions** menu.
+1. Open the **School > Extracurricular > Extracurricular Session > Extracurricular
+   Sessions** menu.
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Offering** _(required)_: The term's offering this session is a meeting of.

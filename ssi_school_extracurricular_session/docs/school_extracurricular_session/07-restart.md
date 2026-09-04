@@ -2,7 +2,8 @@
 
 > **Module:** ssi_school_extracurricular_session\
 > **Model:** `school_extracurricular_session`\
-> **Menu:** Extracurricular Session > Extracurricular Sessions\
+> **Menu:** School > Extracurricular > Extracurricular Session > Extracurricular
+> Sessions\
 > **Actor:** user in group `Extracurricular Session - User`\
 > **State:** `done` | `cancelled` → `planned`\
 > **Requires:** `05-done`
@@ -14,7 +15,8 @@
 
 ## Flow
 
-1. Open the **Extracurricular Session > Extracurricular Sessions** menu.
+1. Open the **School > Extracurricular > Extracurricular Session > Extracurricular
+   Sessions** menu.
 2. Open the session to restart.
 3. Click the **Restart** button.
 
