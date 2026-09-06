@@ -132,3 +132,88 @@ class SchoolExtracurricularParticipant(models.Model):
                     record.attendance_present_count / record.session_done_count * 100
                 )
             record.attendance_rate = result
+
+    def action_view_session_planned(self):
+        """Open this participant's Offering's sessions currently Planned.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
+        for record in self.sudo():
+            result = record._view_session_planned()
+        return result
+
+    def _view_session_planned(self):
+        """Build the window action listing the Offering's Planned sessions.
+
+        :return: an ``ir.actions.act_window`` dict domained to this
+            participant's ``offering_id`` sessions with
+            ``state == "planned"``
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Planned Sessions",
+            "res_model": "school_extracurricular_session",
+            "view_mode": "tree,form",
+            "domain": [
+                ("offering_id", "=", self.offering_id.id),
+                ("state", "=", "planned"),
+            ],
+        }
+
+    def action_view_session_done(self):
+        """Open this participant's Offering's sessions currently Done.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
+        for record in self.sudo():
+            result = record._view_session_done()
+        return result
+
+    def _view_session_done(self):
+        """Build the window action listing the Offering's Done sessions.
+
+        :return: an ``ir.actions.act_window`` dict domained to this
+            participant's ``offering_id`` sessions with
+            ``state == "done"``
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Done Sessions",
+            "res_model": "school_extracurricular_session",
+            "view_mode": "tree,form",
+            "domain": [
+                ("offering_id", "=", self.offering_id.id),
+                ("state", "=", "done"),
+            ],
+        }
+
+    def action_view_attendance_present(self):
+        """Open this participant's Present/Late lines on Done sessions.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
+        for record in self.sudo():
+            result = record._view_attendance_present()
+        return result
+
+    def _view_attendance_present(self):
+        """Build the window action listing Present/Late attendance lines.
+
+        :return: an ``ir.actions.act_window`` dict domained to this
+            participant's attendance lines marked ``present``/``late``
+            on a session with ``state == "done"``
+        """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Present Attendance",
+            "res_model": "school_extracurricular_session_attendance",
+            "view_mode": "tree,form",
+            "domain": [
+                ("participant_id", "=", self.id),
+                ("attendance_state", "in", ("present", "late")),
+                ("session_id.state", "=", "done"),
+            ],
+        }
