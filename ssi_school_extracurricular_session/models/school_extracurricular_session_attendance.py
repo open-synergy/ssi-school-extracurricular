@@ -20,14 +20,6 @@ class SchoolExtracurricularSessionAttendance(models.Model):
     _description = "Extracurricular Session Attendance"
     _order = "session_id, id"
 
-    _sql_constraints = [
-        (
-            "session_participant_uniq",
-            "unique(session_id, participant_id)",
-            "A participant can only have one attendance line per " "session.",
-        ),
-    ]
-
     session_id = fields.Many2one(
         string="Session",
         comodel_name="school_extracurricular_session",
@@ -72,6 +64,52 @@ class SchoolExtracurricularSessionAttendance(models.Model):
         string="Note",
         help="Free-form notes about this participant's attendance.",
     )
+
+    @api.constrains("session_id", "participant_id")
+    def _check_participant_uniq(self):
+        """Reject a second attendance line for the same participant.
+
+        :raises ValidationError: when another attendance line already
+            exists for the same ``session_id``/``participant_id`` pair
+        """
+        for record in self.sudo():
+            if not record._check_participant_uniq_condition():
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular session attendance participant
+Database ID: %s
+Problem: Participant '%s' already has an attendance line on Session
+'%s'
+Solution: Select a Participant who does not yet have an attendance
+line on this Session
+"""
+                    )
+                    % (
+                        record.id,
+                        record.participant_id.display_name,
+                        record.session_id.display_name,
+                    )
+                )
+                raise ValidationError(error_message)
+
+    def _check_participant_uniq_condition(self):
+        """Tell whether this line is the only one for its pair.
+
+        :return: True when valid; never raises
+        """
+        self.ensure_one()
+        if not self.session_id or not self.participant_id:
+            return True
+        duplicate = self.search(
+            [
+                ("id", "!=", self.id),
+                ("session_id", "=", self.session_id.id),
+                ("participant_id", "=", self.participant_id.id),
+            ],
+            limit=1,
+        )
+        return not duplicate
 
     @api.constrains("session_id", "participant_id")
     def _check_participant_offering(self):

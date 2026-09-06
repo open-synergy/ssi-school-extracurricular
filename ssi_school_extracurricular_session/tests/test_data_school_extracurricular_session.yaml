@@ -1191,6 +1191,191 @@ scenarios:
           session_id: "REC: session_s8b.id"
           participant_id: "REC: participant_s8a.id"
 
+  - name: "Attendance duplicate participant rejected"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_s9"
+        values:
+          name: "Grade Type Session S9"
+          code: "EXTSESS-GT-S9"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_s9"
+        values:
+          name: "School Session S9"
+          code: "EXTSESS-SCH-S9"
+          grade_type_id: "REC: grade_type_s9.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_s9"
+        values:
+          name: "Category Session S9"
+          code: "EXTSESS-CAT-S9"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_s9"
+        values:
+          name: "Futsal Club Session S9"
+          code: "EXTSESS-EXT-S9"
+          category_id: "REC: category_s9.id"
+          school_id: "REC: school_s9.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_s9"
+        values:
+          name: "AY Session S9"
+          code: "EXTSESS-AY-S9"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_s9"
+        values:
+          name: "Term Session S9"
+          code: "EXTSESS-TERM-S9"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_s9.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_s9"
+        values:
+          name: "Teacher Employee Session S9"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_s9"
+        values:
+          name: "Teacher Session S9"
+          code: "EXTSESS-TCH-S9"
+          employee_id: "REC: employee_s9.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_s9"
+        values:
+          name: "Extracurricular Fee Session S9"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_s9"
+        values:
+          extracurricular_id: "REC: extracurricular_s9.id"
+          academic_year_id: "REC: academic_year_s9.id"
+          academic_term_id: "REC: academic_term_s9.id"
+          teacher_id: "REC: teacher_s9.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_s9.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_s9"
+        values:
+          name: "Grade Session S9"
+          code: "EXTSESS-GR-S9"
+          type_id: "REC: grade_type_s9.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_s9"
+        values:
+          name: "Grade Class Session S9"
+          code: "EXTSESS-GC-S9"
+          school_id: "REC: school_s9.id"
+          grade_id: "REC: grade_s9.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_s9"
+        values:
+          name: "Student Contact Session S9"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_s9"
+        values:
+          name: "Student Session S9"
+          code: "EXTSESS-ST-S9"
+          contact_id: "REC: contact_s9.id"
+          school_id: "REC: school_s9.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_s9"
+        values:
+          academic_year_id: "REC: academic_year_s9.id"
+          academic_term_id: "REC: academic_term_s9.id"
+          school_id: "REC: school_s9.id"
+          grade_id: "REC: grade_s9.id"
+          grade_class_id: "REC: grade_class_s9.id"
+          student_id: "REC: student_s9.id"
+
+      - step: "Setup - create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_s9"
+        values:
+          offering_id: "REC: offering_s9.id"
+          student_id: "REC: student_s9.id"
+          enrollment_id: "REC: enrollment_s9.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_s9.id"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+
+      - step: "Setup - create session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_s9"
+        values:
+          offering_id: "REC: offering_s9.id"
+          teacher_id: "REC: teacher_s9.id"
+          date: 2026-08-20
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Setup - create the first attendance line for the pair"
+        action: "create"
+        model: "school_extracurricular_session_attendance"
+        save_as: "attendance_s9"
+        values:
+          session_id: "REC: session_s9.id"
+          participant_id: "REC: participant_s9.id"
+
+      - step: "A second attendance line for the same pair must fail"
+        action: "create"
+        model: "school_extracurricular_session_attendance"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has an attendance line on Session"
+        values:
+          session_id: "REC: session_s9.id"
+          participant_id: "REC: participant_s9.id"
+
   - name: "Cancel rejected without a reason"
     steps:
       - step: "Setup - create grade type"
