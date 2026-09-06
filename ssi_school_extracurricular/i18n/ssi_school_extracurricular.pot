@@ -222,6 +222,11 @@ msgid "Account"
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_offering_view_form
+msgid "Accounting"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__receivable_journal_id
 msgid ""
 "Accounting journal used when invoicing this offering's fee separately. "
