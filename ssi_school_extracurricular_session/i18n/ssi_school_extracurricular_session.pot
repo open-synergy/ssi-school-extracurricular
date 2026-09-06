@@ -90,6 +90,19 @@ msgid ""
 "\n"
 "Context: Set extracurricular session attendance participant\n"
 "Database ID: %s\n"
+"Problem: Participant '%s' already has an attendance line on Session\n"
+"'%s'\n"
+"Solution: Select a Participant who does not yet have an attendance\n"
+"line on this Session\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_attendance.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session attendance participant\n"
+"Database ID: %s\n"
 "Problem: Participant '%s' does not belong to the Offering of Session\n"
 "'%s'\n"
 "Solution: Select a Participant who joined the same Offering as the\n"
@@ -117,11 +130,6 @@ msgid ""
 "Database ID: %s\n"
 "Problem: End Time '%s' is not later than Start Time '%s'\n"
 "Solution: Select an End Time that is later than the Start Time\n"
-msgstr ""
-
-#. module: ssi_school_extracurricular_session
-#: model:ir.model.constraint,message:ssi_school_extracurricular_session.constraint_school_extracurricular_session_attendance_session_participant_uniq
-msgid "A participant can only have one attendance line per session."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -233,6 +241,12 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_done_count
 msgid "Done Session Count"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
+msgid "Done Sessions"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -499,7 +513,13 @@ msgid "Planned Session"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
+msgid "Planned Sessions"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__present
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
 msgid "Present"
 msgstr ""
 
@@ -536,6 +556,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_session
 msgid "Sessions"
 msgstr ""
 
