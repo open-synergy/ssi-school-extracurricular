@@ -1451,3 +1451,294 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "but no Allocation"
+
+  - name: "Extracurricular Participant restart approval process grant"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ra"
+        values:
+          name: "Grade Type Participant RA"
+          code: "EXTPAR-GT-RA"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ra"
+        values:
+          name: "School Participant RA"
+          code: "EXTPAR-SCH-RA"
+          grade_type_id: "REC: grade_type_ra.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ra"
+        values:
+          name: "Category Participant RA"
+          code: "EXTPAR-CAT-RA"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ra"
+        values:
+          name: "Extracurricular Fee Participant RA"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ra"
+        values:
+          name: "Futsal Club Participant RA"
+          code: "EXTPAR-EXT-RA"
+          category_id: "REC: category_ra.id"
+          school_id: "REC: school_ra.id"
+          product_id: "REC: product_ra.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ra"
+        values:
+          name: "AY Participant RA"
+          code: "EXTPAR-AY-RA"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ra"
+        values:
+          name: "Term Participant RA"
+          code: "EXTPAR-TERM-RA"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ra.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ra"
+        values:
+          name: "Teacher Employee Participant RA"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ra"
+        values:
+          name: "Teacher Participant RA"
+          code: "EXTPAR-TCH-RA"
+          employee_id: "REC: employee_ra.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ra"
+        values:
+          name: "Grade Participant RA"
+          code: "EXTPAR-GRD-RA"
+          type_id: "REC: grade_type_ra.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ra"
+        values:
+          name: "Grade Class Participant RA"
+          code: "EXTPAR-GC-RA"
+          school_id: "REC: school_ra.id"
+          grade_id: "REC: grade_ra.id"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ra"
+        values:
+          extracurricular_id: "REC: extracurricular_ra.id"
+          academic_year_id: "REC: academic_year_ra.id"
+          academic_term_id: "REC: academic_term_ra.id"
+          teacher_id: "REC: teacher_ra.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ra.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact_ra"
+        values:
+          name: "Student Participant RA"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ra"
+        values:
+          name: "Student Participant RA"
+          code: "EXTPAR-STU-RA"
+          contact_id: "REC: student_contact_ra.id"
+          school_id: "REC: school_ra.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ra"
+        values:
+          academic_year_id: "REC: academic_year_ra.id"
+          academic_term_id: "REC: academic_term_ra.id"
+          school_id: "REC: school_ra.id"
+          grade_id: "REC: grade_ra.id"
+          grade_class_id: "REC: grade_class_ra.id"
+          student_id: "REC: student_ra.id"
+
+      - step: "Create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ra"
+        values:
+          offering_id: "REC: offering_ra.id"
+          student_id: "REC: student_ra.id"
+          enrollment_id: "REC: enrollment_ra.id"
+          billing_mode: "free"
+          product_id: "REC: product_ra.id"
+          price_unit: 600000.0
+
+      - step: "Create a user who is only a Participant User (not Officer)"
+        action: "create"
+        model: "res.users"
+        save_as: "participant_plain_user"
+        values:
+          name: "Participant Plain User RA"
+          login: "participant_plain_user_ra@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular.school_extracurricular_participant_user_group"
+
+      - step: "Create a user who is a Participant Officer"
+        action: "create"
+        model: "res.users"
+        save_as: "participant_officer_user"
+        values:
+          name: "Participant Officer User RA"
+          login: "participant_officer_user_ra@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular.school_extracurricular_participant_officer_group"
+
+      - step:
+          "Negative (c) - draft record grants no restart approval, even to an Officer"
+        action: "assert"
+        target: "participant_ra"
+        as_user: "participant_officer_user"
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: false
+
+      # `approval_template_school_extracurricular_participant` (see
+      # approval_template/school_extracurricular_participant.xml) matches
+      # every participant, so it is deactivated for the duration of this
+      # one `action_confirm` call to keep `approval_template_id` empty --
+      # the stalled-without-a-template scenario `restart_approval_ok`
+      # exists to recover from -- then reactivated immediately afterwards.
+      - step: "Get the module's approval.template for participant"
+        action: "ref"
+        xml_id: "ssi_school_extracurricular.approval_template_school_extracurricular_participant"
+        save_as: "approval_template_ra"
+
+      - step: "Deactivate the approval template"
+        action: "write"
+        target: "approval_template_ra"
+        values:
+          active: false
+
+      - step: "Confirm participant while no approval template matches"
+        action: "call"
+        target: "participant_ra"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+          approval_template_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Reactivate the approval template"
+        action: "write"
+        target: "approval_template_ra"
+        values:
+          active: true
+
+      - step:
+          "Positive - confirmed record with no template grants restart approval to an
+          Officer"
+        action: "assert"
+        target: "participant_ra"
+        as_user: "participant_officer_user"
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: true
+
+      - step: "Negative (a) - the same record grants nothing to a plain User"
+        action: "assert"
+        target: "participant_ra"
+        as_user: "participant_plain_user"
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: false
+
+      # admin is an Officer (via the Manager group's implied_ids and its
+      # explicit `users=` listing in
+      # security/res_groups/school_extracurricular_participant.xml), so it
+      # may click Restart Approval Process itself once a template is
+      # available again. The assert below is not decorative: it forces a
+      # `_refresh()` of the previous step's `as_user: participant_plain_user`
+      # cache before admin calls the method, since `restart_approval_ok` is a
+      # non-`depends_context` policy field and `_refresh()` only runs inside
+      # `_run_asserts`/`_action_search` -- never before a plain `call`.
+      - step: "Admin (Officer via the Manager group) is also granted restart approval"
+        action: "assert"
+        target: "participant_ra"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: true
+
+      - step: "Restart the approval process now that a template matches again"
+        action: "call"
+        target: "participant_ra"
+        method: "action_reload_approval_template"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+          approval_template_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step:
+          "Negative (b) - once approval_template_id is filled, restart approval is
+          denied again"
+        action: "assert"
+        target: "participant_ra"
+        as_user: "participant_officer_user"
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: false

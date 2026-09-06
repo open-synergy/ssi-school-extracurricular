@@ -195,6 +195,32 @@ class TestUiSchoolExtracurricularOffering(HttpSavepointCase):
         cls.offering_restart.with_user(cls.admin).action_reject_approval()
         cls.offering_restart.invalidate_cache()
 
+        # Pre-Condition for the restart-approval tour: ``restart_approval_ok``
+        # (see policy_template/school_extracurricular_offering.xml) only
+        # grants the button when the confirmed record has NO
+        # ``approval_template_id`` yet -- the stalled-without-a-template
+        # scenario the button exists to recover from. The module's own
+        # ``approval_template_school_extracurricular_offering`` matches
+        # every offering, so it is deactivated for the duration of this one
+        # ``action_confirm`` call to keep ``approval_template_id`` empty,
+        # then reactivated immediately so it is available again when the
+        # tour itself clicks Restart Approval Process.
+        approval_template = cls.env.ref(
+            "ssi_school_extracurricular"
+            ".approval_template_school_extracurricular_offering"
+        ).sudo()
+        cls.offering_restart_approval = cls._create_offering(
+            cls._create_teacher("TOUR-OFFERING-RESTART-APPROVAL")
+        )
+        approval_template.write({"active": False})
+        cls.offering_restart_approval.with_user(cls.admin).action_confirm()
+        approval_template.write({"active": True})
+        # Same non-stored, confirm-blind compute reasoning as
+        # ``offering_finish``/``offering_restart`` above: restart_approval_ok
+        # is cached from the draft-state evaluation and must be invalidated
+        # so the tour sees it re-evaluated for state ``confirm``.
+        cls.offering_restart_approval.invalidate_cache()
+
     def test_create(self):
         """Run the create tour for ``school_extracurricular_offering``.
 
@@ -291,5 +317,17 @@ class TestUiSchoolExtracurricularOffering(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_extracurricular_school_extracurricular_offering_restart",
+            login="admin",
+        )
+
+    def test_restart_approval(self):
+        """Run the restart approval process tour for the offering.
+
+        IK: docs/school_extracurricular_offering/14-restart-approval.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_school_extracurricular_offering"
+            "_restart_approval",
             login="admin",
         )
