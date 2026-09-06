@@ -316,6 +316,38 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         cls.participant_restart.with_user(cls.admin).action_reject_approval()
         cls.participant_restart.invalidate_cache()
 
+        # Pre-Condition for the restart-approval tour: ``restart_approval_ok``
+        # (see policy_template/school_extracurricular_participant.xml) only
+        # grants the button when the confirmed record has NO
+        # ``approval_template_id`` yet -- the stalled-without-a-template
+        # scenario the button exists to recover from. The module's own
+        # ``approval_template_school_extracurricular_participant`` matches
+        # every participant, so it is deactivated for the duration of this
+        # one ``action_confirm`` call to keep ``approval_template_id``
+        # empty, then reactivated immediately so it is available again when
+        # the tour itself clicks Restart Approval Process.
+        approval_template = cls.env.ref(
+            "ssi_school_extracurricular"
+            ".approval_template_school_extracurricular_participant"
+        ).sudo()
+        restart_approval_student = cls._create_student(
+            "TOUR-PARTICIPANT-RESTART-APPROVAL"
+        )
+        cls.participant_restart_approval = cls._create_participant(
+            restart_approval_student,
+            cls._create_enrollment(restart_approval_student),
+            "free",
+        )
+        approval_template.write({"active": False})
+        cls.participant_restart_approval.with_user(cls.admin).action_confirm()
+        approval_template.write({"active": True})
+        # Same non-stored, confirm-blind compute reasoning as
+        # ``participant_finish``/``participant_restart`` above:
+        # restart_approval_ok is cached from the draft-state evaluation and
+        # must be invalidated so the tour sees it re-evaluated for state
+        # ``confirm``.
+        cls.participant_restart_approval.invalidate_cache()
+
     def test_create(self):
         """Run the create tour for ``school_extracurricular_participant``.
 
@@ -412,5 +444,17 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_extracurricular_school_extracurricular_participant_restart",
+            login="admin",
+        )
+
+    def test_restart_approval(self):
+        """Run the restart approval process tour for the participant.
+
+        IK: docs/school_extracurricular_participant/14-restart-approval.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_school_extracurricular_participant"
+            "_restart_approval",
             login="admin",
         )
