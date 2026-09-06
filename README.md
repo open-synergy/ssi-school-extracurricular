@@ -23,7 +23,7 @@ addon | version | maintainers | summary
 --- | --- | --- | ---
 [ssi_school_extracurricular](ssi_school_extracurricular/) | 14.0.1.6.3 |  | School Extracurricular
 [ssi_school_extracurricular_operating_unit](ssi_school_extracurricular_operating_unit/) | 14.0.1.0.1 |  | School Extracurricular + Operating Unit
-[ssi_school_extracurricular_session](ssi_school_extracurricular_session/) | 14.0.1.1.1 |  | School Extracurricular Session
+[ssi_school_extracurricular_session](ssi_school_extracurricular_session/) | 14.0.1.1.2 |  | School Extracurricular Session
 [ssi_school_extracurricular_session_operating_unit](ssi_school_extracurricular_session_operating_unit/) | 14.0.1.0.1 |  | School Extracurricular Session + Operating Unit
 
 [//]: # (end addons)
