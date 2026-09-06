@@ -743,7 +743,21 @@ scenarios:
       # explicit `users=` listing in
       # security/res_groups/school_extracurricular_offering.xml), so it may
       # click Restart Approval Process itself once a template is available
-      # again.
+      # again. The assert below is not decorative: it forces a `_refresh()`
+      # of the previous step's `as_user: offering_plain_user` cache before
+      # admin calls the method, since `restart_approval_ok` is a
+      # non-`depends_context` policy field and `_refresh()` only runs inside
+      # `_run_asserts`/`_action_search` -- never before a plain `call`.
+      - step: "Admin (Officer via the Manager group) is also granted restart approval"
+        action: "assert"
+        target: "offering_ra"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          restart_approval_ok:
+            type: "value"
+            expected: true
+
       - step: "Restart the approval process now that a template matches again"
         action: "call"
         target: "offering_ra"
