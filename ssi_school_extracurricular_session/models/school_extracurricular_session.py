@@ -89,11 +89,25 @@ class SchoolExtracurricularSession(models.Model):
     teacher_id = fields.Many2one(
         string="Teacher",
         comodel_name="school_teacher",
-        required=True,
+        required=False,
         help=(
             "The coach/teacher running this session's meeting. "
             "Defaults to the Offering's Teacher when the Offering is "
-            "selected, but may be changed."
+            "selected, but may be changed. Exactly one of Teacher or "
+            "External Coach must be filled."
+        ),
+    )
+    coach_partner_id = fields.Many2one(
+        string="External Coach",
+        comodel_name="res.partner",
+        ondelete="restrict",
+        required=False,
+        help=(
+            "The external coach (person or institution, not a school "
+            "employee) running this session's meeting. Defaults to the "
+            "Offering's External Coach when the Offering is selected, "
+            "but may be changed. Exactly one of Teacher or External "
+            "Coach must be filled."
         ),
     )
     location = fields.Char(
@@ -143,6 +157,52 @@ class SchoolExtracurricularSession(models.Model):
         self.teacher_id = False
         if self.offering_id:
             self.teacher_id = self.offering_id.teacher_id
+
+    @api.onchange("offering_id")
+    def onchange_coach_partner_id(self):
+        self.coach_partner_id = False
+        if self.offering_id:
+            self.coach_partner_id = self.offering_id.coach_partner_id
+
+    @api.constrains("teacher_id", "coach_partner_id")
+    def _check_coach(self):
+        """Validate that exactly one coach reference is filled.
+
+        Rejects a record where both ``teacher_id`` and
+        ``coach_partner_id`` are empty, and a record where both are
+        filled -- exactly one of the two must identify the coach
+        running this session's meeting.
+
+        :raises ValidationError: on zero or two coach references filled
+        :return: None
+        """
+        for record in self.sudo():
+            if not record.teacher_id and not record.coach_partner_id:
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular session coach
+Database ID: %s
+Problem: Neither Teacher nor External Coach is filled
+Solution: Select either a Teacher or an External Coach
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
+            if record.teacher_id and record.coach_partner_id:
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular session coach
+Database ID: %s
+Problem: Both Teacher and External Coach are filled
+Solution: Select only one of Teacher or External Coach
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
 
     @api.constrains("time_start", "time_end")
     def _check_time_start_end(self):

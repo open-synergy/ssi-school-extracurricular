@@ -9,6 +9,8 @@
 
 - **Data:** At least one **Extracurricular Offering** record exists, with a Start Date
   and End Date the generated sessions' range must fall within.
+- **Data:** At least one **Teacher** record exists, or at least one **Contact**
+  (`res.partner`) to use as an External Coach.
 - **Access:** User is in group `Extracurricular Session - User`.
 
 ## Flow
@@ -23,8 +25,12 @@
      if needed. Must not be later than the Offering's End Date.
    - **Start Time** _(required)_ and **End Time** _(required)_: The time applied to
      every generated session.
-   - **Teacher** _(required)_: Automatically filled from the selected Offering's
-     Teacher. Change if needed.
+   - **Teacher** _(required if **External Coach** is empty)_: Automatically filled from
+     the selected Offering's Teacher. Change if needed.
+   - **External Coach** _(required if **Teacher** is empty)_: Automatically filled from
+     the selected Offering's External Coach. Change if needed. Exactly one of
+     **Teacher** or **External Coach** must be filled — clicking Generate is rejected
+     otherwise, since every generated session carries this same rule.
    - **Location**: The location applied to every generated session. Optional.
 3. In the **Weekdays** group, check at least one weekday — the wizard refuses to
    generate with none checked.

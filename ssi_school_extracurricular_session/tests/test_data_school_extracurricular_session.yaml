@@ -1500,3 +1500,449 @@ scenarios:
           state:
             type: "value"
             expected: "planned"
+
+  - name: "Session can be created with only an External Coach"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_s11"
+        values:
+          name: "Grade Type Session S11"
+          code: "EXTSESS-GT-S11"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_s11"
+        values:
+          name: "School Session S11"
+          code: "EXTSESS-SCH-S11"
+          grade_type_id: "REC: grade_type_s11.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_s11"
+        values:
+          name: "Category Session S11"
+          code: "EXTSESS-CAT-S11"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_s11"
+        values:
+          name: "Futsal Club Session S11"
+          code: "EXTSESS-EXT-S11"
+          category_id: "REC: category_s11.id"
+          school_id: "REC: school_s11.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_s11"
+        values:
+          name: "AY Session S11"
+          code: "EXTSESS-AY-S11"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_s11"
+        values:
+          name: "Term Session S11"
+          code: "EXTSESS-TERM-S11"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_s11.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_s11"
+        values:
+          name: "External Coach Session S11"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_s11"
+        values:
+          name: "Extracurricular Fee Session S11"
+
+      - step: "Setup - create offering with only an External Coach"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_s11"
+        values:
+          extracurricular_id: "REC: extracurricular_s11.id"
+          academic_year_id: "REC: academic_year_s11.id"
+          academic_term_id: "REC: academic_term_s11.id"
+          coach_partner_id: "REC: coach_partner_s11.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_s11.id"
+          price_unit: 150000.0
+
+      - step: "Create session with only coach_partner_id"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_s11"
+        values:
+          offering_id: "REC: offering_s11.id"
+          coach_partner_id: "REC: coach_partner_s11.id"
+          date: 2026-08-19
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Assert session is created with no teacher and the external coach set"
+        action: "assert"
+        target: "session_s11"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "planned"
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_s11"
+
+  - name: "Session rejects when Teacher and External Coach are both filled"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_s12"
+        values:
+          name: "Grade Type Session S12"
+          code: "EXTSESS-GT-S12"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_s12"
+        values:
+          name: "School Session S12"
+          code: "EXTSESS-SCH-S12"
+          grade_type_id: "REC: grade_type_s12.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_s12"
+        values:
+          name: "Category Session S12"
+          code: "EXTSESS-CAT-S12"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_s12"
+        values:
+          name: "Futsal Club Session S12"
+          code: "EXTSESS-EXT-S12"
+          category_id: "REC: category_s12.id"
+          school_id: "REC: school_s12.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_s12"
+        values:
+          name: "AY Session S12"
+          code: "EXTSESS-AY-S12"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_s12"
+        values:
+          name: "Term Session S12"
+          code: "EXTSESS-TERM-S12"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_s12.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_s12"
+        values:
+          name: "Teacher Employee Session S12"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_s12"
+        values:
+          name: "Teacher Session S12"
+          code: "EXTSESS-TCH-S12"
+          employee_id: "REC: employee_s12.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_s12"
+        values:
+          name: "External Coach Session S12"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_s12"
+        values:
+          name: "Extracurricular Fee Session S12"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_s12"
+        values:
+          extracurricular_id: "REC: extracurricular_s12.id"
+          academic_year_id: "REC: academic_year_s12.id"
+          academic_term_id: "REC: academic_term_s12.id"
+          teacher_id: "REC: teacher_s12.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_s12.id"
+          price_unit: 150000.0
+
+      - step: "Create session with both teacher_id and coach_partner_id must fail"
+        action: "create"
+        model: "school_extracurricular_session"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Both Teacher and External Coach are filled"
+        values:
+          offering_id: "REC: offering_s12.id"
+          teacher_id: "REC: teacher_s12.id"
+          coach_partner_id: "REC: coach_partner_s12.id"
+          date: 2026-08-19
+          time_start: 14.0
+          time_end: 15.5
+
+  - name: "Session rejects when Teacher and External Coach are both empty"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_s13"
+        values:
+          name: "Grade Type Session S13"
+          code: "EXTSESS-GT-S13"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_s13"
+        values:
+          name: "School Session S13"
+          code: "EXTSESS-SCH-S13"
+          grade_type_id: "REC: grade_type_s13.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_s13"
+        values:
+          name: "Category Session S13"
+          code: "EXTSESS-CAT-S13"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_s13"
+        values:
+          name: "Futsal Club Session S13"
+          code: "EXTSESS-EXT-S13"
+          category_id: "REC: category_s13.id"
+          school_id: "REC: school_s13.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_s13"
+        values:
+          name: "AY Session S13"
+          code: "EXTSESS-AY-S13"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_s13"
+        values:
+          name: "Term Session S13"
+          code: "EXTSESS-TERM-S13"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_s13.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_s13"
+        values:
+          name: "Teacher Employee Session S13"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_s13"
+        values:
+          name: "Teacher Session S13"
+          code: "EXTSESS-TCH-S13"
+          employee_id: "REC: employee_s13.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_s13"
+        values:
+          name: "Extracurricular Fee Session S13"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_s13"
+        values:
+          extracurricular_id: "REC: extracurricular_s13.id"
+          academic_year_id: "REC: academic_year_s13.id"
+          academic_term_id: "REC: academic_term_s13.id"
+          teacher_id: "REC: teacher_s13.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_s13.id"
+          price_unit: 150000.0
+
+      - step: "Create session without teacher_id and coach_partner_id must fail"
+        action: "create"
+        model: "school_extracurricular_session"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Neither Teacher nor External Coach is filled"
+        values:
+          offering_id: "REC: offering_s13.id"
+          date: 2026-08-19
+          time_start: 14.0
+          time_end: 15.5
+          # Kedua kunci ditulis eksplisit false agar masuk vals; tanpa ini
+          # @api.constrains("teacher_id", "coach_partner_id") tidak pernah
+          # terpanggil (T-06) dan step gagal "nothing was raised".
+          teacher_id: false
+          coach_partner_id: false
+
+  - name: "Session derives External Coach from the selected Offering"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_s14"
+        values:
+          name: "Grade Type Session S14"
+          code: "EXTSESS-GT-S14"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_s14"
+        values:
+          name: "School Session S14"
+          code: "EXTSESS-SCH-S14"
+          grade_type_id: "REC: grade_type_s14.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_s14"
+        values:
+          name: "Category Session S14"
+          code: "EXTSESS-CAT-S14"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_s14"
+        values:
+          name: "Futsal Club Session S14"
+          code: "EXTSESS-EXT-S14"
+          category_id: "REC: category_s14.id"
+          school_id: "REC: school_s14.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_s14"
+        values:
+          name: "AY Session S14"
+          code: "EXTSESS-AY-S14"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_s14"
+        values:
+          name: "Term Session S14"
+          code: "EXTSESS-TERM-S14"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_s14.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_s14"
+        values:
+          name: "External Coach Session S14"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_s14"
+        values:
+          name: "Extracurricular Fee Session S14"
+
+      - step: "Setup - create offering with only an External Coach"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_s14"
+        values:
+          extracurricular_id: "REC: extracurricular_s14.id"
+          academic_year_id: "REC: academic_year_s14.id"
+          academic_term_id: "REC: academic_term_s14.id"
+          coach_partner_id: "REC: coach_partner_s14.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_s14.id"
+          price_unit: 150000.0
+
+      - step: "Create session via form, only setting the Offering"
+        action: "form"
+        model: "school_extracurricular_session"
+        save_as: "session_s14"
+        values:
+          offering_id: "REC: offering_s14"
+          date: 2026-08-19
+          time_start: 14.0
+          time_end: 15.5
+        asserts:
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_s14"
+        save: true

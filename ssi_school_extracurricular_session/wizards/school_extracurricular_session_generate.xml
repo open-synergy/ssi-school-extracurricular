@@ -15,6 +15,7 @@
                 <field name="time_start" widget="float_time" />
                 <field name="time_end" widget="float_time" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
                 <field name="location" />
             </group>
             <group name="group_weekday" string="Weekdays" colspan="4" col="7">

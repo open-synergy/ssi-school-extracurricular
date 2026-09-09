@@ -11,6 +11,7 @@
             <field name="offering_id" />
             <field name="extracurricular_id" />
             <field name="teacher_id" />
+            <field name="coach_partner_id" />
             <field name="date" />
             <filter
                     name="filter_planned"
@@ -58,6 +59,7 @@
             <field name="offering_id" />
             <field name="extracurricular_id" />
             <field name="teacher_id" />
+            <field name="coach_partner_id" optional="hide" />
             <field name="time_start" widget="float_time" optional="hide" />
             <field name="time_end" widget="float_time" optional="hide" />
             <field name="location" optional="hide" />
@@ -113,6 +115,7 @@
                     <field name="school_id" />
                     <field name="academic_term_id" />
                     <field name="teacher_id" />
+                    <field name="coach_partner_id" />
                     <field name="date" />
                     <field name="time_start" widget="float_time" />
                     <field name="time_end" widget="float_time" />
