@@ -47,6 +47,13 @@ class SchoolExtracurricular(models.Model):  # pylint: disable=too-few-public-met
         ondelete="restrict",
         help="Default coach/teacher in charge of this extracurricular " "activity.",
     )
+    coach_partner_id = fields.Many2one(
+        string="External Coach",
+        comodel_name="res.partner",
+        ondelete="restrict",
+        help="Default external coach (person or institution, not a "
+        "school employee) in charge of this extracurricular activity.",
+    )
     product_id = fields.Many2one(
         string="Product",
         comodel_name="product.product",

@@ -153,14 +153,34 @@ class SchoolExtracurricularOffering(models.Model):
     teacher_id = fields.Many2one(
         string="Teacher",
         comodel_name="school_teacher",
-        required=True,
+        required=False,
         readonly=True,
         states={
             "draft": [
                 ("readonly", False),
             ],
         },
-        help="The coach/teacher in charge of this term's offering.",
+        help=(
+            "The coach/teacher in charge of this term's offering. "
+            "Exactly one of Teacher or External Coach must be filled."
+        ),
+    )
+    coach_partner_id = fields.Many2one(
+        string="External Coach",
+        comodel_name="res.partner",
+        ondelete="restrict",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "The external coach (person or institution, not a school "
+            "employee) in charge of this term's offering. Exactly one "
+            "of Teacher or External Coach must be filled."
+        ),
     )
     date_start = fields.Date(
         string="Start Date",
@@ -417,6 +437,54 @@ class SchoolExtracurricularOffering(models.Model):
         self.product_id = False
         if self.extracurricular_id:
             self.product_id = self.extracurricular_id.product_id
+
+    @api.onchange(
+        "extracurricular_id",
+    )
+    def onchange_coach_partner_id(self):
+        self.coach_partner_id = False
+        if self.extracurricular_id:
+            self.coach_partner_id = self.extracurricular_id.coach_partner_id
+
+    @api.constrains("teacher_id", "coach_partner_id")
+    def _check_coach(self):
+        """Validate that exactly one coach reference is filled.
+
+        Rejects a record where both ``teacher_id`` and
+        ``coach_partner_id`` are empty, and a record where both are
+        filled -- exactly one of the two must identify the coach in
+        charge of this term's offering.
+
+        :raises ValidationError: on zero or two coach references filled
+        :return: None
+        """
+        for record in self:
+            if not record.teacher_id and not record.coach_partner_id:
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular offering coach
+Database ID: %s
+Problem: Neither Teacher nor External Coach is filled
+Solution: Select either a Teacher or an External Coach
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
+            if record.teacher_id and record.coach_partner_id:
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular offering coach
+Database ID: %s
+Problem: Both Teacher and External Coach are filled
+Solution: Select only one of Teacher or External Coach
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
 
     @api.constrains("date_start", "date_end")
     def _check_date_start_end(self):

@@ -472,7 +472,8 @@ scenarios:
           quota_min: 10
           quota_max: 5
 
-  - name: "Extracurricular Offering rejects missing teacher"
+  - name:
+      "Extracurricular Offering rejects when Teacher and External Coach are both empty"
     steps:
       - step: "Setup - create grade type"
         action: "create"
@@ -537,19 +538,318 @@ scenarios:
         values:
           name: "Extracurricular Fee Offering No Teacher"
 
-      - step: "Create offering without teacher_id must fail"
-        action: "form"
+      - step: "Create offering without teacher_id and coach_partner_id must fail"
+        action: "create"
         model: "school_extracurricular_offering"
         expect_error:
-          type: "AssertionError"
-          message_contains: "is a required field"
+          type: "ValidationError"
+          message_contains: "Neither Teacher nor External Coach is filled"
         values:
-          extracurricular_id: "REC: extracurricular_notch"
-          academic_year_id: "REC: academic_year_notch"
-          academic_term_id: "REC: academic_term_notch"
+          extracurricular_id: "REC: extracurricular_notch.id"
+          academic_year_id: "REC: academic_year_notch.id"
+          academic_term_id: "REC: academic_term_notch.id"
           date_start: 2026-07-01
           date_end: 2026-12-31
-          product_id: "REC: product_notch"
+          product_id: "REC: product_notch.id"
+          price_unit: 150000.0
+          # Kedua kunci ditulis eksplisit false agar masuk vals; tanpa ini
+          # @api.constrains("teacher_id", "coach_partner_id") tidak pernah
+          # terpanggil (T-06) dan step gagal "nothing was raised".
+          teacher_id: false
+          coach_partner_id: false
+
+  - name:
+      "Extracurricular Offering rejects when Teacher and External Coach are both filled"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_both"
+        values:
+          name: "Grade Type Offering Both Coach"
+          code: "EXTOFF-GT-BC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_both"
+        values:
+          name: "School Offering Both Coach"
+          code: "EXTOFF-SCH-BC"
+          grade_type_id: "REC: grade_type_both.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_both"
+        values:
+          name: "Category Offering Both Coach"
+          code: "EXTOFF-CAT-BC"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_both"
+        values:
+          name: "Futsal Club Both Coach"
+          code: "EXTOFF-EXT-BC"
+          category_id: "REC: category_both.id"
+          school_id: "REC: school_both.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_both"
+        values:
+          name: "AY Offering Both Coach"
+          code: "EXTOFF-AY-BC"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_both"
+        values:
+          name: "Term Offering Both Coach"
+          code: "EXTOFF-TERM-BC"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_both.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_both"
+        values:
+          name: "Teacher Employee Offering Both Coach"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_both"
+        values:
+          name: "Teacher Offering Both Coach"
+          code: "EXTOFF-TCH-BC"
+          employee_id: "REC: employee_both.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_both"
+        values:
+          name: "External Coach Offering Both Coach"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_both"
+        values:
+          name: "Extracurricular Fee Offering Both Coach"
+
+      - step: "Create offering with both teacher_id and coach_partner_id must fail"
+        action: "create"
+        model: "school_extracurricular_offering"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Both Teacher and External Coach are filled"
+        values:
+          extracurricular_id: "REC: extracurricular_both.id"
+          academic_year_id: "REC: academic_year_both.id"
+          academic_term_id: "REC: academic_term_both.id"
+          teacher_id: "REC: teacher_both.id"
+          coach_partner_id: "REC: coach_partner_both.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_both.id"
+          price_unit: 150000.0
+
+  - name: "Extracurricular Offering can be created with only an External Coach"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ext"
+        values:
+          name: "Grade Type Offering External Coach"
+          code: "EXTOFF-GT-EC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ext"
+        values:
+          name: "School Offering External Coach"
+          code: "EXTOFF-SCH-EC"
+          grade_type_id: "REC: grade_type_ext.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ext"
+        values:
+          name: "Category Offering External Coach"
+          code: "EXTOFF-CAT-EC"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ext"
+        values:
+          name: "Futsal Club External Coach"
+          code: "EXTOFF-EXT-EC"
+          category_id: "REC: category_ext.id"
+          school_id: "REC: school_ext.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ext"
+        values:
+          name: "AY Offering External Coach"
+          code: "EXTOFF-AY-EC"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ext"
+        values:
+          name: "Term Offering External Coach"
+          code: "EXTOFF-TERM-EC"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ext.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_ext"
+        values:
+          name: "External Coach Offering External Coach"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ext"
+        values:
+          name: "Extracurricular Fee Offering External Coach"
+
+      - step: "Create offering with only coach_partner_id"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ext"
+        values:
+          extracurricular_id: "REC: extracurricular_ext.id"
+          academic_year_id: "REC: academic_year_ext.id"
+          academic_term_id: "REC: academic_term_ext.id"
+          coach_partner_id: "REC: coach_partner_ext.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ext.id"
+          price_unit: 150000.0
+
+      - step:
+          "Assert the offering is created with no teacher and the external coach set"
+        action: "assert"
+        target: "offering_ext"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_ext"
+
+  - name:
+      "Extracurricular Offering derives External Coach from the selected Extracurricular"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_onc"
+        values:
+          name: "Grade Type Offering Onchange Coach"
+          code: "EXTOFF-GT-OC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_onc"
+        values:
+          name: "School Offering Onchange Coach"
+          code: "EXTOFF-SCH-OC"
+          grade_type_id: "REC: grade_type_onc.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_onc"
+        values:
+          name: "Category Offering Onchange Coach"
+          code: "EXTOFF-CAT-OC"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_onc"
+        values:
+          name: "External Coach Offering Onchange Coach"
+
+      - step: "Setup - create extracurricular with a default External Coach"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_onc"
+        values:
+          name: "Futsal Club Onchange Coach"
+          code: "EXTOFF-EXT-OC"
+          category_id: "REC: category_onc.id"
+          school_id: "REC: school_onc.id"
+          coach_partner_id: "REC: coach_partner_onc.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_onc"
+        values:
+          name: "AY Offering Onchange Coach"
+          code: "EXTOFF-AY-OC"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_onc"
+        values:
+          name: "Term Offering Onchange Coach"
+          code: "EXTOFF-TERM-OC"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_onc.id"
+
+      - step: "Select the Extracurricular in the form and check the onchange"
+        action: "form"
+        model: "school_extracurricular_offering"
+        values:
+          extracurricular_id: "REC: extracurricular_onc"
+          academic_year_id: "REC: academic_year_onc"
+          academic_term_id: "REC: academic_term_onc"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          price_unit: 150000.0
+        asserts:
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_onc"
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+        save: false
 
   - name: "Extracurricular Offering restart approval process grant"
     steps:

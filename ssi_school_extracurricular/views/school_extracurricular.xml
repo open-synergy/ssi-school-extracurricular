@@ -44,6 +44,7 @@
                 <field name="category_id" />
                 <field name="school_id" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
             </xpath>
         </data>
     </field>
@@ -61,6 +62,7 @@
                 <field name="school_id" />
                 <field name="allowed_grade_ids" widget="many2many_tags" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
                 <field name="product_id" />
             </xpath>
         </data>

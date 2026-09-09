@@ -22,7 +22,10 @@
    - **School** _(required)_: The school that offers this activity.
    - **Allowed Grades**: The grades allowed to join this activity. Leave empty to allow
      every grade, not to allow none.
-   - **Teacher**: The default coach/teacher in charge of this activity. Optional.
+   - **Teacher**: The default coach/teacher in charge of this activity, when the coach
+     is a school employee. Optional.
+   - **External Coach**: The default external coach (person or institution, not a school
+     employee) in charge of this activity. Optional.
    - **Product**: The default product used to bill the fee of this activity. Optional.
 4. Click **Save**.
 
