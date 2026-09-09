@@ -552,6 +552,11 @@ scenarios:
           date_end: 2026-12-31
           product_id: "REC: product_notch.id"
           price_unit: 150000.0
+          # Kedua kunci ditulis eksplisit false agar masuk vals; tanpa ini
+          # @api.constrains("teacher_id", "coach_partner_id") tidak pernah
+          # terpanggil (T-06) dan step gagal "nothing was raised".
+          teacher_id: false
+          coach_partner_id: false
 
   - name:
       "Extracurricular Offering rejects when Teacher and External Coach are both filled"
