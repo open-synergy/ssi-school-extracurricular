@@ -12,5 +12,5 @@ class TestSchoolExtracurricularOffering(YamlTransactionCase):
     """Scenario tests for ``school_extracurricular_offering``."""
 
     def test_school_extracurricular_offering(self):
-        """Run the create, workflow, default and negative scenarios."""
+        """Run the create, workflow, default, negative, analytic tests."""
         self.run_yaml_scenario("test_data_school_extracurricular_offering.yaml")

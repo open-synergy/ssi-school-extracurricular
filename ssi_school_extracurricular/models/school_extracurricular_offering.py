@@ -399,6 +399,24 @@ class SchoolExtracurricularOffering(models.Model):
             "automatically confirmed once all its lines are created."
         ),
     )
+    analytic_account_id = fields.Many2one(
+        string="Analytic Account",
+        comodel_name="account.analytic.account",
+        ondelete="restrict",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Analytic account carrying this offering's cost dimension "
+            "(e.g. coach honorarium). Left empty, the offering derives "
+            "no cost analytics of its own; documents that require one, "
+            "such as an Outsource Work honorarium, raise their own "
+            "error when it is missing."
+        ),
+    )
 
     participant_ids = fields.One2many(
         string="Participants",

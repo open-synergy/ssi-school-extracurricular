@@ -1081,3 +1081,158 @@ scenarios:
           restart_approval_ok:
             type: "value"
             expected: false
+
+  - name: "Extracurricular Offering analytic account"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_aa"
+        values:
+          name: "Grade Type Offering AA"
+          code: "EXTOFF-GT-AA"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_aa"
+        values:
+          name: "School Offering AA"
+          code: "EXTOFF-SCH-AA"
+          grade_type_id: "REC: grade_type_aa.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_aa"
+        values:
+          name: "Category Offering AA"
+          code: "EXTOFF-CAT-AA"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_aa"
+        values:
+          name: "Futsal Club AA"
+          code: "EXTOFF-EXT-AA"
+          category_id: "REC: category_aa.id"
+          school_id: "REC: school_aa.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_aa"
+        values:
+          name: "AY Offering AA"
+          code: "EXTOFF-AY-AA"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_aa"
+        values:
+          name: "Term Offering AA"
+          code: "EXTOFF-TERM-AA"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_aa.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_aa"
+        values:
+          name: "Teacher Employee Offering AA"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_aa"
+        values:
+          name: "Teacher Offering AA"
+          code: "EXTOFF-TCH-AA"
+          employee_id: "REC: employee_aa.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_aa"
+        values:
+          name: "Extracurricular Fee Offering AA"
+
+      - step: "Setup - create analytic account"
+        action: "create"
+        model: "account.analytic.account"
+        save_as: "analytic_account_aa"
+        values:
+          name: "Analytic Account Offering AA"
+
+      - step: "Create offering without analytic_account_id"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_aa"
+        values:
+          extracurricular_id: "REC: extracurricular_aa.id"
+          academic_year_id: "REC: academic_year_aa.id"
+          academic_term_id: "REC: academic_term_aa.id"
+          teacher_id: "REC: teacher_aa.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_aa.id"
+          price_unit: 150000.0
+
+      - step: "Assert analytic_account_id is empty when not supplied at create"
+        action: "assert"
+        target: "offering_aa"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          analytic_account_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Fill analytic_account_id while the offering is still draft"
+        action: "write"
+        target: "offering_aa"
+        values:
+          analytic_account_id: "REC: analytic_account_aa.id"
+
+      - step: "Assert analytic_account_id was stored and reads back correctly"
+        action: "assert"
+        target: "offering_aa"
+        asserts:
+          analytic_account_id:
+            type: "m2o"
+            expected: "REC: analytic_account_aa"
+
+      - step: "Confirm offering with analytic_account_id set"
+        action: "call"
+        target: "offering_aa"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve offering with analytic_account_id set"
+        action: "call"
+        target: "offering_aa"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert analytic_account_id remains untouched after reaching open"
+        action: "assert"
+        target: "offering_aa"
+        asserts:
+          analytic_account_id:
+            type: "m2o"
+            expected: "REC: analytic_account_aa"
