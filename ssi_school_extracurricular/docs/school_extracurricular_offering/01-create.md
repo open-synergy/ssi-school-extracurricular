@@ -11,7 +11,8 @@
 - **Data:** At least one **Extracurricular** record exists.
 - **Data:** At least one **Academic Year** and one **Academic Term** (belonging to that
   year) exist.
-- **Data:** At least one **Teacher** record exists.
+- **Data:** At least one **Teacher** record exists, or at least one **Contact**
+  (`res.partner`) to use as an External Coach.
 - **Access:** User is in group `Extracurricular Offering - User`.
 
 ## Flow
@@ -20,11 +21,17 @@
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Extracurricular** _(required)_: The extracurricular activity being opened this
-     term.
+     term. Selecting it derives **Teacher** and **External Coach** from the
+     Extracurricular's own defaults, when set.
    - **Academic Year** _(required)_: The academic year this offering runs in.
    - **Academic Term** _(required)_: The academic term this offering runs in. Must
      belong to the selected Academic Year.
-   - **Teacher** _(required)_: The coach/teacher in charge of this term's offering.
+   - **Teacher** _(required if **External Coach** is empty)_: The coach/teacher in
+     charge of this term's offering, when the coach is a school employee.
+   - **External Coach** _(required if **Teacher** is empty)_: The external coach (person
+     or institution, not a school employee) in charge of this term's offering. Exactly
+     one of **Teacher** or **External Coach** must be filled; filling both, or leaving
+     both empty, is rejected on Save.
    - **Start Date** _(required)_: The date this term's offering starts running.
    - **End Date** _(required)_: The date this term's offering ends running. Must not be
      earlier than Start Date.

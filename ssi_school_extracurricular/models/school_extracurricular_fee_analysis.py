@@ -105,6 +105,12 @@ class SchoolExtracurricularFeeAnalysis(models.Model):
         readonly=True,
         help="The coach/teacher in charge of the joined offering.",
     )
+    coach_partner_id = fields.Many2one(
+        string="External Coach",
+        comodel_name="res.partner",
+        readonly=True,
+        help="The external coach in charge of the joined offering.",
+    )
     product_id = fields.Many2one(
         string="Product",
         comodel_name="product.product",
@@ -206,6 +212,7 @@ class SchoolExtracurricularFeeAnalysis(models.Model):
                 participant.academic_year_id AS academic_year_id,
                 participant.academic_term_id AS academic_term_id,
                 offering.teacher_id AS teacher_id,
+                offering.coach_partner_id AS coach_partner_id,
                 detail.product_id AS product_id,
                 detail.product_category_id AS product_category_id,
                 term.customer_invoice_id AS customer_invoice_id,
@@ -239,6 +246,7 @@ class SchoolExtracurricularFeeAnalysis(models.Model):
                 participant.academic_year_id AS academic_year_id,
                 participant.academic_term_id AS academic_term_id,
                 offering.teacher_id AS teacher_id,
+                offering.coach_partner_id AS coach_partner_id,
                 detail.product_id AS product_id,
                 detail.product_category_id AS product_category_id,
                 term.customer_invoice_id AS customer_invoice_id,

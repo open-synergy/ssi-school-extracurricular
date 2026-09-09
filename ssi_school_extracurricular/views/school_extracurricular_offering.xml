@@ -19,6 +19,7 @@
                 <field name="academic_year_id" />
                 <field name="academic_term_id" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
                 <group expand="0" string="Group By">
                     <filter
                             name="group_by_extracurricular_id"
@@ -54,6 +55,7 @@
                 <field name="school_id" />
                 <field name="academic_term_id" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
                 <field name="date_start" />
                 <field name="date_end" />
             </xpath>
@@ -73,6 +75,7 @@
                 <field name="category_id" />
                 <field name="school_id" />
                 <field name="teacher_id" />
+                <field name="coach_partner_id" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="academic_year_id" />

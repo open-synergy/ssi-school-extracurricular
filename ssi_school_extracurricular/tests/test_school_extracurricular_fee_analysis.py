@@ -14,5 +14,5 @@ class TestSchoolExtracurricularFeeAnalysis(
     """Scenario tests for ``school_extracurricular_fee_analysis``."""
 
     def test_school_extracurricular_fee_analysis(self):
-        """Run the Route A, Route B, and access-restriction scenarios."""
+        """Run the Route A/B, External Coach, and access-restriction scenarios."""
         self.run_yaml_scenario("test_data_school_extracurricular_fee_analysis.yaml")

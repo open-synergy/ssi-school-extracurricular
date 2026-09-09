@@ -59,7 +59,8 @@ odoo.define(
                 },
 
                 // Flow 3 — Fill in the required fields (Extracurricular, Academic Year,
-                // Academic Term, Teacher, Start Date, End Date, Price Unit).
+                // Academic Term, Teacher or External Coach, Start Date, End Date,
+                // Price Unit).
                 {
                     content: "Select the Extracurricular",
                     trigger: ".o_field_many2one[name='extracurricular_id'] input",

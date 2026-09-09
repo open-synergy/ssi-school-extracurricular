@@ -16,6 +16,7 @@
             <field name="academic_year_id" />
             <field name="academic_term_id" />
             <field name="product_id" />
+            <field name="coach_partner_id" />
             <filter
                     name="filter_route_enrollment"
                     string="Charged to Enrollment"
@@ -99,6 +100,7 @@
             <field name="academic_year_id" />
             <field name="academic_term_id" />
             <field name="product_id" />
+            <field name="coach_partner_id" />
             <field name="uom_quantity" />
             <field name="price_subtotal" sum="Untaxed" />
             <field name="price_tax" sum="Tax" />
