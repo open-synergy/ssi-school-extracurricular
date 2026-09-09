@@ -107,6 +107,28 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
+"Context: Set extracurricular offering coach\n"
+"Database ID: %s\n"
+"Problem: Both Teacher and External Coach are filled\n"
+"Solution: Select only one of Teacher or External Coach\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_offering.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular offering coach\n"
+"Database ID: %s\n"
+"Problem: Neither Teacher nor External Coach is filled\n"
+"Solution: Select either a Teacher or an External Coach\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_offering.py:0
+#, python-format
+msgid ""
+"\n"
 "Context: Set extracurricular offering period\n"
 "Database ID: %s\n"
 "Problem: End Date '%s' is earlier than Start Date '%s'\n"
@@ -676,6 +698,13 @@ msgid "Default coach/teacher in charge of this extracurricular activity."
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular__coach_partner_id
+msgid ""
+"Default external coach (person or institution, not a school employee) in "
+"charge of this extracurricular activity."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular__product_id
 msgid "Default product used to bill the fee of this extracurricular activity."
 msgstr ""
@@ -775,6 +804,13 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular.selection__school_extracurricular_offering__billing_frequency__recurring
 msgid "Every Payment Term"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__coach_partner_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__coach_partner_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__coach_partner_id
+msgid "External Coach"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -1817,7 +1853,9 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__teacher_id
-msgid "The coach/teacher in charge of this term's offering."
+msgid ""
+"The coach/teacher in charge of this term's offering. Exactly one of Teacher "
+"or External Coach must be filled."
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -1900,6 +1938,19 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__payment_term_id
 msgid "The enrollment payment term this participant's fee is allocated to."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__coach_partner_id
+msgid ""
+"The external coach (person or institution, not a school employee) in charge "
+"of this term's offering. Exactly one of Teacher or External Coach must be "
+"filled."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__coach_partner_id
+msgid "The external coach in charge of the joined offering."
 msgstr ""
 
 #. module: ssi_school_extracurricular
