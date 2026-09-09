@@ -309,6 +309,12 @@ scenarios:
           uom_quantity:
             type: "value"
             expected: 1.0
+          price_unit:
+            type: "value"
+            expected: 1.0
+          price_subtotal:
+            type: "value"
+            expected: 1.0
 
   - name: "Done with a present internal instructor alongside creates only one honor"
     steps:
@@ -617,6 +623,14 @@ scenarios:
         save_as: "honor6"
         limit: 1
         expect_count: 1
+
+      - step: "Assert the honor pricing matches the source data"
+        action: "assert"
+        target: "honor6"
+        asserts:
+          pricelist_id:
+            type: "m2o"
+            expected: "REC: pricelist"
 
       - step: "Search a journal for the outstanding type"
         action: "search"

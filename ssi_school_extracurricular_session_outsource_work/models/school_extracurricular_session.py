@@ -226,6 +226,13 @@ covers the session date
         turn needs ``usage_id`` -- already set in
         ``_prepare_outsource_work_data`` -- to resolve it.
 
+        ``onchange_pricelist_id`` is deliberately NOT called here: it
+        unconditionally clears ``pricelist_id`` and only refills it
+        from ``allowed_pricelist_ids[0]``, which this model's
+        configurator never populates. Calling it would discard the
+        pricelist ``_prepare_outsource_work_data`` already resolved
+        from the matching ``outsource_work_rate``.
+
         :param temp_record: an ``outsource_work`` record built with
             ``new()``
         :return: the same record, with the onchange-derived fields
@@ -234,7 +241,6 @@ covers the session date
         """
         temp_record.onchange_account_id()
         temp_record.onchange_uom_id()
-        temp_record.onchange_pricelist_id()
         temp_record.onchange_price_unit()
         return temp_record
 
