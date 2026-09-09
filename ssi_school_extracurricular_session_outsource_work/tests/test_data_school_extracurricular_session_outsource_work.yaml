@@ -106,12 +106,20 @@ setup:
       target: "rate"
       method: "action_confirm"
       as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
 
     - step: "Setup - approve the rate"
       action: "call"
       target: "rate"
       method: "action_approve_approval"
       as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "ready"
 
     - step: "Setup - open the rate"
       action: "call"
