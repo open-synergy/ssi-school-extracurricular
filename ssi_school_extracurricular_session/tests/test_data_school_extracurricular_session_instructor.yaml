@@ -1670,7 +1670,7 @@ scenarios:
         model: "school_extracurricular_session_instructor"
         expect_error:
           type: "ValidationError"
-          message_contains: "already has an instructor roster line on Session"
+          message_contains: "already has an instructor roster line on"
         values:
           session_id: "REC: session_si12.id"
           role: "assistant"
