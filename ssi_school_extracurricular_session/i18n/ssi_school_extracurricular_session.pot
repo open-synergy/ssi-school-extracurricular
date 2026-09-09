@@ -114,6 +114,28 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
+"Context: Set extracurricular session coach\n"
+"Database ID: %s\n"
+"Problem: Both Teacher and External Coach are filled\n"
+"Solution: Select only one of Teacher or External Coach\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session coach\n"
+"Database ID: %s\n"
+"Problem: Neither Teacher nor External Coach is filled\n"
+"Solution: Select either a Teacher or an External Coach\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
 "Context: Set extracurricular session date\n"
 "Database ID: %s\n"
 "Problem: Date '%s' is outside Offering '%s' period ('%s' - '%s')\n"
@@ -263,6 +285,12 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__excused
 msgid "Excused"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__coach_partner_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__coach_partner_id
+msgid "External Coach"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -614,7 +642,8 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__teacher_id
 msgid ""
 "The coach/teacher running this session's meeting. Defaults to the Offering's"
-" Teacher when the Offering is selected, but may be changed."
+" Teacher when the Offering is selected, but may be changed. Exactly one of "
+"Teacher or External Coach must be filled."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -625,6 +654,23 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_end
 msgid "The end time applied to every generated session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__coach_partner_id
+msgid ""
+"The external coach (person or institution, not a school employee) applied to"
+" every generated session. Exactly one of Teacher or External Coach must be "
+"filled."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__coach_partner_id
+msgid ""
+"The external coach (person or institution, not a school employee) running "
+"this session's meeting. Defaults to the Offering's External Coach when the "
+"Offering is selected, but may be changed. Exactly one of Teacher or External"
+" Coach must be filled."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -687,7 +733,9 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__teacher_id
-msgid "The teacher applied to every generated session."
+msgid ""
+"The teacher applied to every generated session. Exactly one of Teacher or "
+"External Coach must be filled."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
