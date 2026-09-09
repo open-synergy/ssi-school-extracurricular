@@ -365,9 +365,19 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__analytic_account_id
 msgid "Analytic Account"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__analytic_account_id
+msgid ""
+"Analytic account carrying this offering's cost dimension (e.g. coach "
+"honorarium). Left empty, the offering derives no cost analytics of its own; "
+"documents that require one, such as an Outsource Work honorarium, raise "
+"their own error when it is missing."
 msgstr ""
 
 #. module: ssi_school_extracurricular
