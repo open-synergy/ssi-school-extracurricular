@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record
+        id="school_extracurricular_offering_view_form_instructor_outsource_work"
+        model="ir.ui.view"
+    >
+    <field name="name">
+        school_extracurricular_offering - form - instructor - outsource work
+    </field>
+    <field name="model">school_extracurricular_offering</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school_extracurricular_session.school_extracurricular_offering_view_form_instructor"
+        />
+    <field name="arch" type="xml">
+        <xpath
+                expr="//field[@name='instructor_ids']/tree/field[@name='partner_id']"
+                position="after"
+            >
+            <field name="outsource_work_type_id" />
+            <field name="outsource_work_usage_id" />
+        </xpath>
+        <xpath
+                expr="//field[@name='instructor_ids']/form/group[@name='instructor_group_1']/field[@name='partner_id']"
+                position="after"
+            >
+            <field name="outsource_work_type_id" />
+            <field name="outsource_work_usage_id" />
+        </xpath>
+    </field>
+</record>
+</odoo>

@@ -1,0 +1,1016 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Setup - create external instructor contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "instructor"
+      values:
+        name: "External Instructor OW"
+        is_company: false
+
+    - step: "Setup - create internal teacher employee"
+      action: "create"
+      model: "hr.employee"
+      save_as: "internal_employee"
+      values:
+        name: "Internal Instructor Employee OW"
+
+    - step: "Setup - create internal teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "internal_teacher"
+      values:
+        name: "Internal Instructor OW"
+        code: "/"
+        employee_id: "REC: internal_employee.id"
+
+    - step: "Setup - search an account for the usage type"
+      action: "search"
+      model: "account.account"
+      domain: [["internal_type", "=", "payable"]]
+      save_as: "usage_account"
+      limit: 1
+
+    - step: "Setup - create analytic account for the offering"
+      action: "create"
+      model: "account.analytic.account"
+      save_as: "analytic_account"
+      values:
+        name: "Analytic Account OW"
+
+    - step: "Setup - create outsource work product"
+      action: "create"
+      model: "product.product"
+      save_as: "owt_product"
+      values:
+        name: "Instructor Honor Product OW"
+
+    - step: "Setup - create usage type"
+      action: "create"
+      model: "product.usage_type"
+      save_as: "usage_type"
+      values:
+        name: "Honor Usage OW"
+        code: "/"
+        account_id: "REC: usage_account.id"
+
+    - step: "Setup - create outsource work type category"
+      action: "create"
+      model: "outsource_work_type_category"
+      save_as: "owt_category"
+      values:
+        name: "Honor Category OW"
+        code: "/"
+
+    - step: "Setup - create outsource work type"
+      action: "create"
+      model: "outsource_work_type"
+      save_as: "owt_type"
+      values:
+        name: "Honor Type OW"
+        code: "/"
+        category_id: "REC: owt_category.id"
+        product_id: "REC: owt_product.id"
+
+    - step: "Setup - create pricelist"
+      action: "create"
+      model: "product.pricelist"
+      save_as: "pricelist"
+      values:
+        name: "Honor Pricelist OW"
+
+    - step: "Setup - create outsource work rate in draft"
+      action: "create"
+      model: "outsource_work_rate"
+      save_as: "rate"
+      as_user: "base.user_admin"
+      values:
+        partner_id: "REC: instructor.id"
+        date: 2026-01-01
+        date_start: 2026-01-01
+
+    - step: "Setup - add the rate detail line"
+      action: "create"
+      model: "outsource_work_rate_detail"
+      save_as: "rate_detail"
+      values:
+        rate_id: "REC: rate.id"
+        product_id: "REC: owt_product.id"
+        pricelist_id: "REC: pricelist.id"
+
+    - step: "Setup - confirm the rate"
+      action: "call"
+      target: "rate"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Setup - approve the rate"
+      action: "call"
+      target: "rate"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "ready"
+
+    - step: "Setup - open the rate"
+      action: "call"
+      target: "rate"
+      method: "action_open"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Grade Type OW"
+        code: "/"
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "School OW"
+        code: "/"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create extracurricular category"
+      action: "create"
+      model: "school_extracurricular_category"
+      save_as: "category"
+      values:
+        name: "Category OW"
+        code: "/"
+
+    - step: "Setup - create extracurricular product"
+      action: "create"
+      model: "product.product"
+      save_as: "extracurricular_product"
+      values:
+        name: "Extracurricular Fee OW"
+
+    - step: "Setup - create extracurricular"
+      action: "create"
+      model: "school_extracurricular"
+      save_as: "extracurricular"
+      values:
+        name: "Futsal Club OW"
+        code: "/"
+        category_id: "REC: category.id"
+        school_id: "REC: school.id"
+        product_id: "REC: extracurricular_product.id"
+
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "AY OW"
+        code: "/"
+        date_start: 2026-07-01
+        date_end: 2027-06-30
+
+    - step: "Setup - create academic term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "Term OW"
+        code: "/"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        year_id: "REC: academic_year.id"
+
+    - step: "Setup - create offering teacher employee"
+      action: "create"
+      model: "hr.employee"
+      save_as: "offering_teacher_employee"
+      values:
+        name: "Offering Teacher Employee OW"
+
+    - step: "Setup - create offering teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "offering_teacher"
+      values:
+        name: "Offering Teacher OW"
+        code: "/"
+        employee_id: "REC: offering_teacher_employee.id"
+
+    - step: "Setup - create offering with analytic account and instructor tracking"
+      action: "create"
+      model: "school_extracurricular_offering"
+      save_as: "offering"
+      values:
+        extracurricular_id: "REC: extracurricular.id"
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        teacher_id: "REC: offering_teacher.id"
+        date_start: 2026-07-01
+        date_end: 2026-12-31
+        product_id: "REC: extracurricular_product.id"
+        price_unit: 150000.0
+        participant_attendance_tracked: false
+        instructor_attendance_tracked: true
+        analytic_account_id: "REC: analytic_account.id"
+
+    - step: "Setup - add the external instructor roster template line"
+      action: "create"
+      model: "school_extracurricular_offering_instructor"
+      save_as: "offering_instructor"
+      values:
+        offering_id: "REC: offering.id"
+        role: "head"
+        partner_id: "REC: instructor.id"
+        outsource_work_type_id: "REC: owt_type.id"
+        outsource_work_usage_id: "REC: usage_type.id"
+
+scenarios:
+  - name: "Done with one present external instructor creates one honor"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session1"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-01
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session1.id"]
+        save_as: "line1"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line1"
+        values:
+          attendance_state: "present"
+
+      - step: "Mark the session done"
+        action: "call"
+        target: "session1"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Find the created honor document"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session1.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honor1"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the honor document matches the source data"
+        action: "assert"
+        target: "honor1"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          partner_id:
+            type: "m2o"
+            expected: "REC: instructor"
+          product_id:
+            type: "m2o"
+            expected: "REC: owt_product"
+          analytic_account_id:
+            type: "m2o"
+            expected: "REC: analytic_account"
+          pricelist_id:
+            type: "m2o"
+            expected: "REC: pricelist"
+          uom_quantity:
+            type: "value"
+            expected: 1.0
+          price_unit:
+            type: "value"
+            expected: 1.0
+          price_subtotal:
+            type: "value"
+            expected: 1.0
+
+  - name: "Done with a present internal instructor alongside creates only one honor"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session2"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-02
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied external instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session2.id"]
+        save_as: "line2_external"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the external instructor as present"
+        action: "write"
+        target: "line2_external"
+        values:
+          attendance_state: "present"
+
+      - step: "Add an internal instructor line, also present"
+        action: "create"
+        model: "school_extracurricular_session_instructor"
+        save_as: "line2_internal"
+        values:
+          session_id: "REC: session2.id"
+          role: "assistant"
+          teacher_id: "REC: internal_teacher.id"
+          attendance_state: "present"
+
+      - step: "Mark the session done"
+        action: "call"
+        target: "session2"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Only one honor document is created"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session2.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors2"
+        expect_count: 1
+
+  - name: "Done with the instructor absent creates no honor"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session3"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-03
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session3.id"]
+        save_as: "line3"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as absent"
+        action: "write"
+        target: "line3"
+        values:
+          attendance_state: "absent"
+
+      - step: "Mark the session done"
+        action: "call"
+        target: "session3"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "No honor document is created"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session3.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors3"
+        expect_count: 0
+
+  - name: "Restart then done again does not duplicate the honor"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session4"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-04
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session4.id"]
+        save_as: "line4"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line4"
+        values:
+          attendance_state: "present"
+
+      - step: "Mark the session done the first time"
+        action: "call"
+        target: "session4"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "One honor exists after the first Done"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session4.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors4_first"
+        expect_count: 1
+
+      - step: "Restart the session"
+        action: "call"
+        target: "session4"
+        method: "action_restart"
+        asserts:
+          state:
+            type: "value"
+            expected: "planned"
+
+      - step: "The honor is deleted by Restart"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session4.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors4_after_restart"
+        expect_count: 0
+
+      - step: "Mark the session done a second time"
+        action: "call"
+        target: "session4"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Exactly one honor exists after the second Done"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session4.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors4_second"
+        expect_count: 1
+
+  - name: "Cancelling a session with honors deletes them"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session5"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-05
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session5.id"]
+        save_as: "line5"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line5"
+        values:
+          attendance_state: "present"
+
+      - step: "Mark the session done"
+        action: "call"
+        target: "session5"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "One honor exists before cancelling"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session5.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors5_before"
+        expect_count: 1
+
+      - step: "Open the Cancel Session wizard"
+        action: "create"
+        model: "cancel_extracurricular_session"
+        save_as: "cancel_wizard5"
+        values:
+          session_id: "REC: session5.id"
+          cancel_reason: "Weather"
+
+      - step: "Confirm the cancellation"
+        action: "call"
+        target: "cancel_wizard5"
+        method: "action_confirm"
+
+      - step: "The session is cancelled"
+        action: "assert"
+        target: "session5"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "cancelled"
+
+      - step: "The honor is deleted by cancellation"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session5.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors5_after"
+        expect_count: 0
+
+  - name: "Cancelling is rejected while an honor already has an Outstanding"
+    steps:
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session6"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-06
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session6.id"]
+        save_as: "line6"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line6"
+        values:
+          attendance_state: "present"
+
+      - step: "Mark the session done"
+        action: "call"
+        target: "session6"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Find the created honor"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session6.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honor6"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the honor pricing matches the source data"
+        action: "assert"
+        target: "honor6"
+        asserts:
+          pricelist_id:
+            type: "m2o"
+            expected: "REC: pricelist"
+
+      - step: "Search a journal for the outstanding type"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "in", ["purchase", "general"]]]
+        save_as: "journal6"
+        limit: 1
+
+      - step: "Search a payable account for the outstanding type"
+        action: "search"
+        model: "account.account"
+        domain: [["internal_type", "=", "payable"]]
+        save_as: "payable_account6"
+        limit: 1
+
+      - step: "Create an outstanding type"
+        action: "create"
+        model: "outsource_work_outstanding_type"
+        save_as: "outstanding_type6"
+        values:
+          name: "Outstanding Type OW"
+          code: "/"
+          payable_journal_id: "REC: journal6.id"
+          payable_account_id: "REC: payable_account6.id"
+
+      - step: "Create an outstanding"
+        action: "create"
+        model: "outsource_work_outstanding"
+        save_as: "outstanding6"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "REC: instructor.id"
+          type_id: "REC: outstanding_type6.id"
+          date: 2026-08-06
+          date_start: 2026-08-01
+          date_end: 2026-08-31
+          date_due: 2026-08-31
+          currency_id: "EVAL: env.ref('base.IDR').id"
+          payable_journal_id: "REC: journal6.id"
+          payable_account_id: "REC: payable_account6.id"
+
+      - step: "Tie the honor to the outstanding directly, for this test only"
+        action: "write"
+        target: "honor6"
+        values:
+          outstanding_id: "REC: outstanding6.id"
+
+      - step: "Open the Cancel Session wizard"
+        action: "create"
+        model: "cancel_extracurricular_session"
+        save_as: "cancel_wizard6"
+        values:
+          session_id: "REC: session6.id"
+          cancel_reason: "Weather"
+
+      - step: "Confirming the cancellation is rejected"
+        action: "call"
+        target: "cancel_wizard6"
+        method: "action_confirm"
+        expect_error:
+          type: "UserError"
+          message_contains: "already has an Outstanding"
+
+      - step: "The session is still done"
+        action: "assert"
+        target: "session6"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "The honor was not deleted"
+        action: "search"
+        model: "outsource_work"
+        domain:
+          - ["work_object_id", "=", "REC: session6.id"]
+          - ["model_id.model", "=", "school_extracurricular_session"]
+        save_as: "honors6_after"
+        expect_count: 1
+
+  - name: "Roster template's outsource work fields are copied onto a new session"
+    steps:
+      - step: "Create a fresh session from the offering"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session7"
+        values:
+          offering_id: "REC: offering.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-07
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session7.id"]
+        save_as: "line7"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the outsource work fields were copied"
+        action: "assert"
+        target: "line7"
+        asserts:
+          outsource_work_type_id:
+            type: "m2o"
+            expected: "REC: owt_type"
+          outsource_work_usage_id:
+            type: "m2o"
+            expected: "REC: usage_type"
+
+  - name: "Done rejected when the offering has no Analytic Account"
+    steps:
+      - step: "Setup - create an offering without an Analytic Account"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering8"
+        values:
+          extracurricular_id: "REC: extracurricular.id"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          teacher_id: "REC: offering_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: extracurricular_product.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+
+      - step: "Setup - add the roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor8"
+        values:
+          offering_id: "REC: offering8.id"
+          role: "head"
+          partner_id: "REC: instructor.id"
+          outsource_work_type_id: "REC: owt_type.id"
+          outsource_work_usage_id: "REC: usage_type.id"
+
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session8"
+        values:
+          offering_id: "REC: offering8.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-08
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session8.id"]
+        save_as: "line8"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line8"
+        values:
+          attendance_state: "present"
+
+      - step: "Done is rejected"
+        action: "call"
+        target: "session8"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "has no Analytic Account"
+
+  - name: "Done rejected when the roster line has no Outsource Work Type"
+    steps:
+      - step: "Setup - create an offering with an Analytic Account"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering9"
+        values:
+          extracurricular_id: "REC: extracurricular.id"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          teacher_id: "REC: offering_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: extracurricular_product.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+          analytic_account_id: "REC: analytic_account.id"
+
+      - step: "Setup - add a roster template line without an Outsource Work Type"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor9"
+        values:
+          offering_id: "REC: offering9.id"
+          role: "head"
+          partner_id: "REC: instructor.id"
+          outsource_work_usage_id: "REC: usage_type.id"
+
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session9"
+        values:
+          offering_id: "REC: offering9.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-09
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session9.id"]
+        save_as: "line9"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line9"
+        values:
+          attendance_state: "present"
+
+      - step: "Done is rejected"
+        action: "call"
+        target: "session9"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "has no Outsource Work Type"
+
+  - name: "Done rejected when the roster line has no Outsource Work Usage"
+    steps:
+      - step: "Setup - create an offering with an Analytic Account"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering10"
+        values:
+          extracurricular_id: "REC: extracurricular.id"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          teacher_id: "REC: offering_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: extracurricular_product.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+          analytic_account_id: "REC: analytic_account.id"
+
+      - step: "Setup - add a roster template line without an Outsource Work Usage"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor10"
+        values:
+          offering_id: "REC: offering10.id"
+          role: "head"
+          partner_id: "REC: instructor.id"
+          outsource_work_type_id: "REC: owt_type.id"
+
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session10"
+        values:
+          offering_id: "REC: offering10.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-10
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session10.id"]
+        save_as: "line10"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line10"
+        values:
+          attendance_state: "present"
+
+      - step: "Done is rejected"
+        action: "call"
+        target: "session10"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "has no Outsource Work Usage"
+
+  - name: "Done rejected when no open Outsource Work Rate covers the date"
+    steps:
+      - step: "Setup - create a product with no matching rate detail"
+        action: "create"
+        model: "product.product"
+        save_as: "owt_product11"
+        values:
+          name: "Honor Product Without Rate OW"
+
+      - step: "Setup - create an outsource work type for that product"
+        action: "create"
+        model: "outsource_work_type"
+        save_as: "owt_type11"
+        values:
+          name: "Honor Type Without Rate OW"
+          code: "/"
+          category_id: "REC: owt_category.id"
+          product_id: "REC: owt_product11.id"
+
+      - step: "Setup - create an offering with an Analytic Account"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering11"
+        values:
+          extracurricular_id: "REC: extracurricular.id"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          teacher_id: "REC: offering_teacher.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: extracurricular_product.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+          analytic_account_id: "REC: analytic_account.id"
+
+      - step: "Setup - add a roster template line pointing at the unrated product"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor11"
+        values:
+          offering_id: "REC: offering11.id"
+          role: "head"
+          partner_id: "REC: instructor.id"
+          outsource_work_type_id: "REC: owt_type11.id"
+          outsource_work_usage_id: "REC: usage_type.id"
+
+      - step: "Create the session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session11"
+        values:
+          offering_id: "REC: offering11.id"
+          teacher_id: "REC: offering_teacher.id"
+          date: 2026-08-11
+          time_start: 9.0
+          time_end: 10.0
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session11.id"]
+        save_as: "line11"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor as present"
+        action: "write"
+        target: "line11"
+        values:
+          attendance_state: "present"
+
+      - step: "Done is rejected"
+        action: "call"
+        target: "session11"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "No open Outsource Work Rate covers"
