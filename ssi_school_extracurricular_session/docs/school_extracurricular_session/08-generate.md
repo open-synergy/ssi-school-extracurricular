@@ -39,8 +39,9 @@
 ## Post-Condition
 
 - One **Planned** session is created for every date within the selected range whose
-  weekday is checked. A candidate date that already has a session for the same Offering
-  and Start Time is skipped, so running the wizard again with the same parameters does
-  not duplicate sessions.
+  weekday is checked, each carrying a copy of the Offering's Instructor roster (empty if
+  the Offering's roster is empty). A candidate date that already has a session for the
+  same Offering and Start Time is skipped, so running the wizard again with the same
+  parameters does not duplicate sessions.
 - No window is opened afterward; the wizard dialog closes. The generated sessions appear
   in the **Extracurricular Sessions** list once opened or refreshed.

@@ -151,6 +151,17 @@ class SchoolExtracurricularSession(models.Model):
         inverse_name="session_id",
         help="The attendance of each participant at this meeting.",
     )
+    instructor_ids = fields.One2many(
+        string="Instructors",
+        comodel_name="school_extracurricular_session_instructor",
+        inverse_name="session_id",
+        help=(
+            "The instructors staffing this session's meeting, copied "
+            "from the Offering's Instructor roster when this session "
+            "is created, either through the form or through the "
+            "session generator."
+        ),
+    )
 
     @api.onchange("offering_id")
     def onchange_teacher_id(self):
@@ -163,6 +174,22 @@ class SchoolExtracurricularSession(models.Model):
         self.coach_partner_id = False
         if self.offering_id:
             self.coach_partner_id = self.offering_id.coach_partner_id
+
+    @api.onchange("offering_id")
+    def onchange_instructor_ids(self):
+        """Copy the Offering's Instructor roster onto a new session.
+
+        Runs only while ``instructor_ids`` is still empty, so a user
+        who already edited the roster by hand before changing the
+        Offering does not have their edits silently discarded.
+
+        :return: None
+        """
+        if self.offering_id and not self.instructor_ids:
+            self.instructor_ids = [
+                (0, 0, self._prepare_session_instructor_data(template_line))
+                for template_line in self.offering_id.instructor_ids
+            ]
 
     @api.constrains("teacher_id", "coach_partner_id")
     def _check_coach(self):
@@ -275,10 +302,59 @@ Date
             return True
         return self.offering_id.date_start <= self.date <= self.offering_id.date_end
 
+    @api.model
+    def create(self, vals):
+        """Create a session, copying the Offering's Instructor roster.
+
+        Side effect: when ``instructor_ids`` is not given in ``vals``,
+        populates it from the selected Offering's Instructor roster
+        via ``_prepare_session_instructor_data`` -- the same
+        extension point used by ``onchange_instructor_ids``, so the
+        session generator wizard is served automatically without
+        being touched.
+
+        :param vals: values for the new record
+        :return: the created record
+        :rtype: recordset
+        """
+        if vals.get("offering_id") and "instructor_ids" not in vals:
+            offering = self.env["school_extracurricular_offering"].browse(
+                vals["offering_id"]
+            )
+            vals["instructor_ids"] = [
+                (0, 0, self._prepare_session_instructor_data(template_line))
+                for template_line in offering.instructor_ids
+            ]
+        return super().create(vals)
+
+    def _prepare_session_instructor_data(self, template_line):
+        """Build the values of one session instructor line.
+
+        Extension point: override to carry extra fields from the
+        Offering's ``school_extracurricular_offering_instructor``
+        template line into the generated
+        ``school_extracurricular_session_instructor`` line. Called
+        once per template line, both by ``onchange_instructor_ids``
+        and by ``create()`` -- do not inline this into either caller.
+
+        :param template_line: the
+            ``school_extracurricular_offering_instructor`` template
+            line being copied
+        :return: dict of ``school_extracurricular_session_instructor``
+            values, without ``session_id``
+        """
+        return {
+            "sequence": template_line.sequence,
+            "role": template_line.role,
+            "teacher_id": template_line.teacher_id.id,
+            "partner_id": template_line.partner_id.id,
+        }
+
     def action_done(self):
         """Mark this session's meeting as done.
 
-        :return: nothing; rejected when there is no attendance line
+        :return: nothing; rejected when the Offering's tracked
+            attendance is not recorded
         """
         for record in self.sudo():
             record._done()
@@ -286,12 +362,20 @@ Date
     def _done(self):
         """Move this session to ``done``.
 
+        The gate is conditional on the Offering's two tracking
+        switches: neither is checked unconditionally, matching what
+        the Offering declares it administers.
+
         Side effect: writes ``state`` on this session.
 
-        :raises UserError: when ``attendance_ids`` is empty
+        :raises UserError: when ``participant_attendance_tracked`` is
+            enabled and ``attendance_ids`` is empty, or when
+            ``instructor_attendance_tracked`` is enabled and
+            ``instructor_ids`` is empty or has a line with a blank
+            ``attendance_state``
         """
         self.ensure_one()
-        if not self.attendance_ids:
+        if self.offering_id.participant_attendance_tracked and not self.attendance_ids:
             error_message = (
                 _(
                     """
@@ -305,6 +389,38 @@ session as done
                 % (self.id,)
             )
             raise UserError(error_message)
+        if self.offering_id.instructor_attendance_tracked:
+            if not self.instructor_ids:
+                error_message = (
+                    _(
+                        """
+Context: Mark extracurricular session as done
+Database ID: %s
+Problem: Session has no instructor roster line
+Solution: Record at least one instructor roster line before marking
+the session as done
+"""
+                    )
+                    % (self.id,)
+                )
+                raise UserError(error_message)
+            unset_attendance = self.instructor_ids.filtered(
+                lambda line: not line.attendance_state
+            )
+            if unset_attendance:
+                error_message = (
+                    _(
+                        """
+Context: Mark extracurricular session as done
+Database ID: %s
+Problem: An instructor roster line has no Attendance recorded
+Solution: Record the Attendance of every instructor roster line
+before marking the session as done
+"""
+                    )
+                    % (self.id,)
+                )
+                raise UserError(error_message)
         self.write({"state": "done"})
 
     def action_cancel(self):
@@ -331,6 +447,29 @@ session as done
             "target": "new",
             "context": {"default_session_id": self.id},
         }
+
+    def _cancel(self, cancel_reason):
+        """Move this session to ``cancelled`` with the given reason.
+
+        Extension point: called by
+        ``cancel_extracurricular_session.action_confirm`` instead of
+        that wizard writing to this session directly, so other
+        modules may override it to react to a session being
+        cancelled.
+
+        Side effect: writes ``state`` and ``cancel_reason`` on this
+        session.
+
+        :param cancel_reason: the reason text supplied by the wizard
+        :return: None
+        """
+        self.ensure_one()
+        self.write(
+            {
+                "state": "cancelled",
+                "cancel_reason": cancel_reason,
+            }
+        )
 
     def action_fill_attendance(self):
         """Fill this session's attendance from its active participants.

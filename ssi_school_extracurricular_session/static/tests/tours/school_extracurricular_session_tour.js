@@ -104,6 +104,22 @@ odoo.define(
                         // Assertion only; do not trigger the default click action.
                     },
                 },
+
+                // Flow 3 (Instructors tab) — auto-filled and visible on
+                // the saved record.
+                {
+                    content: "Open the Instructors tab",
+                    trigger: ".o_notebook .nav-link:contains(Instructors)",
+                    extra_trigger: ".o_form_view.o_form_readonly",
+                },
+                {
+                    content: "Instructors tab is displayed",
+                    trigger:
+                        ".o_notebook .tab-pane.active .o_field_widget[name='instructor_ids']",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
             ]
         );
 
