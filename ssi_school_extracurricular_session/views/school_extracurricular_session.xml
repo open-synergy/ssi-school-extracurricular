@@ -147,6 +147,28 @@
                             </form>
                         </field>
                     </page>
+                    <page name="instructor" string="Instructors">
+                        <field name="instructor_ids">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle" />
+                                <field name="role" />
+                                <field name="teacher_id" />
+                                <field name="partner_id" />
+                                <field name="attendance_state" />
+                                <field name="note" />
+                            </tree>
+                            <form>
+                                <group name="instructor_group_1">
+                                    <field name="sequence" />
+                                    <field name="role" />
+                                    <field name="teacher_id" />
+                                    <field name="partner_id" />
+                                    <field name="attendance_state" />
+                                    <field name="note" />
+                                </group>
+                            </form>
+                        </field>
+                    </page>
                     <page name="description" string="Description">
                         <field name="description" />
                         <field

@@ -39,8 +39,9 @@ class CancelExtracurricularSession(models.TransientModel):
     def _cancel_session(self):
         """Move the linked session to ``cancelled`` with the reason.
 
-        Side effect: writes ``state`` and ``cancel_reason`` on the
-        linked ``school_extracurricular_session``.
+        Side effect: calls ``_cancel()`` on the linked
+        ``school_extracurricular_session``, which writes ``state``
+        and ``cancel_reason`` on it.
 
         :raises UserError: when ``cancel_reason`` is empty
         """
@@ -58,9 +59,4 @@ Solution: Fill in a Cancel Reason before cancelling the session
                 % (self.session_id.id,)
             )
             raise UserError(error_message)
-        self.session_id.write(
-            {
-                "state": "cancelled",
-                "cancel_reason": self.cancel_reason,
-            }
-        )
+        self.session_id._cancel(self.cancel_reason)

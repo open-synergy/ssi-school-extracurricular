@@ -1,0 +1,1677 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Offering created without tracking switches keeps their defaults"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si1"
+        values:
+          name: "Grade Type Session Instructor SI1"
+          code: "EXTSESSINS-GT-SI1"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si1"
+        values:
+          name: "School Session Instructor SI1"
+          code: "EXTSESSINS-SCH-SI1"
+          grade_type_id: "REC: grade_type_si1.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si1"
+        values:
+          name: "Category Session Instructor SI1"
+          code: "EXTSESSINS-CAT-SI1"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si1"
+        values:
+          name: "Futsal Club Session Instructor SI1"
+          code: "EXTSESSINS-EXT-SI1"
+          category_id: "REC: category_si1.id"
+          school_id: "REC: school_si1.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si1"
+        values:
+          name: "AY Session Instructor SI1"
+          code: "EXTSESSINS-AY-SI1"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si1"
+        values:
+          name: "Term Session Instructor SI1"
+          code: "EXTSESSINS-TERM-SI1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si1.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si1"
+        values:
+          name: "Teacher Employee Session Instructor SI1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si1"
+        values:
+          name: "Teacher Session Instructor SI1"
+          code: "EXTSESSINS-TCH-SI1"
+          employee_id: "REC: employee_si1.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si1"
+        values:
+          name: "Extracurricular Fee Session Instructor SI1"
+
+      - step: "Create offering without setting either tracking switch"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si1"
+        values:
+          extracurricular_id: "REC: extracurricular_si1.id"
+          academic_year_id: "REC: academic_year_si1.id"
+          academic_term_id: "REC: academic_term_si1.id"
+          teacher_id: "REC: teacher_si1.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si1.id"
+          price_unit: 150000.0
+
+      - step: "Assert the tracking switches keep their defaults"
+        action: "assert"
+        target: "offering_si1"
+        asserts:
+          participant_attendance_tracked:
+            type: "value"
+            expected: true
+          instructor_attendance_tracked:
+            type: "value"
+            expected: false
+
+  - name: "Session created via create copies a two-line Instructor roster"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si2"
+        values:
+          name: "Grade Type Session Instructor SI2"
+          code: "EXTSESSINS-GT-SI2"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si2"
+        values:
+          name: "School Session Instructor SI2"
+          code: "EXTSESSINS-SCH-SI2"
+          grade_type_id: "REC: grade_type_si2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si2"
+        values:
+          name: "Category Session Instructor SI2"
+          code: "EXTSESSINS-CAT-SI2"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si2"
+        values:
+          name: "Futsal Club Session Instructor SI2"
+          code: "EXTSESSINS-EXT-SI2"
+          category_id: "REC: category_si2.id"
+          school_id: "REC: school_si2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si2"
+        values:
+          name: "AY Session Instructor SI2"
+          code: "EXTSESSINS-AY-SI2"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si2"
+        values:
+          name: "Term Session Instructor SI2"
+          code: "EXTSESSINS-TERM-SI2"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si2.id"
+
+      - step: "Setup - create employee for offering teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si2"
+        values:
+          name: "Offering Teacher Employee Session Instructor SI2"
+
+      - step: "Setup - create offering teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si2"
+        values:
+          name: "Offering Teacher Session Instructor SI2"
+          code: "EXTSESSINS-TCH-SI2"
+          employee_id: "REC: employee_si2.id"
+
+      - step: "Setup - create head instructor employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_head_si2"
+        values:
+          name: "Head Instructor Employee SI2"
+
+      - step: "Setup - create head instructor teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_head_si2"
+        values:
+          name: "Head Instructor SI2"
+          code: "EXTSESSINS-TCH-HEAD-SI2"
+          employee_id: "REC: employee_head_si2.id"
+
+      - step: "Setup - create assistant instructor contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner_assistant_si2"
+        values:
+          name: "Assistant Instructor SI2"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si2"
+        values:
+          name: "Extracurricular Fee Session Instructor SI2"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si2"
+        values:
+          extracurricular_id: "REC: extracurricular_si2.id"
+          academic_year_id: "REC: academic_year_si2.id"
+          academic_term_id: "REC: academic_term_si2.id"
+          teacher_id: "REC: teacher_si2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si2.id"
+          price_unit: 150000.0
+
+      - step: "Setup - add head instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_head_si2"
+        values:
+          offering_id: "REC: offering_si2.id"
+          role: "head"
+          teacher_id: "REC: teacher_head_si2.id"
+
+      - step: "Setup - add assistant instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_assistant_si2"
+        values:
+          offering_id: "REC: offering_si2.id"
+          role: "assistant"
+          partner_id: "REC: partner_assistant_si2.id"
+
+      - step: "Create session via create, only setting the Offering"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si2"
+        values:
+          offering_id: "REC: offering_si2.id"
+          teacher_id: "REC: teacher_si2.id"
+          date: 2026-08-03
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Assert the session's Instructor roster has two lines"
+        action: "assert"
+        target: "session_si2"
+        asserts:
+          instructor_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Find the copied head instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session_si2.id"]
+          - ["role", "=", "head"]
+        save_as: "copied_head_si2"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the copied head instructor line matches the template"
+        action: "assert"
+        target: "copied_head_si2"
+        asserts:
+          teacher_id:
+            type: "m2o"
+            expected: "REC: teacher_head_si2"
+          attendance_state:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Find the copied assistant instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session_si2.id"]
+          - ["role", "=", "assistant"]
+        save_as: "copied_assistant_si2"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the copied assistant instructor line matches the template"
+        action: "assert"
+        target: "copied_assistant_si2"
+        asserts:
+          partner_id:
+            type: "m2o"
+            expected: "REC: partner_assistant_si2"
+          attendance_state:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Generator produces sessions that each carry a copy of the roster"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si3"
+        values:
+          name: "Grade Type Session Instructor SI3"
+          code: "EXTSESSINS-GT-SI3"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si3"
+        values:
+          name: "School Session Instructor SI3"
+          code: "EXTSESSINS-SCH-SI3"
+          grade_type_id: "REC: grade_type_si3.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si3"
+        values:
+          name: "Category Session Instructor SI3"
+          code: "EXTSESSINS-CAT-SI3"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si3"
+        values:
+          name: "Futsal Club Session Instructor SI3"
+          code: "EXTSESSINS-EXT-SI3"
+          category_id: "REC: category_si3.id"
+          school_id: "REC: school_si3.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si3"
+        values:
+          name: "AY Session Instructor SI3"
+          code: "EXTSESSINS-AY-SI3"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si3"
+        values:
+          name: "Term Session Instructor SI3"
+          code: "EXTSESSINS-TERM-SI3"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si3.id"
+
+      - step: "Setup - create employee for offering teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si3"
+        values:
+          name: "Offering Teacher Employee Session Instructor SI3"
+
+      - step: "Setup - create offering teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si3"
+        values:
+          name: "Offering Teacher Session Instructor SI3"
+          code: "EXTSESSINS-TCH-SI3"
+          employee_id: "REC: employee_si3.id"
+
+      - step: "Setup - create head instructor employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_head_si3"
+        values:
+          name: "Head Instructor Employee SI3"
+
+      - step: "Setup - create head instructor teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_head_si3"
+        values:
+          name: "Head Instructor SI3"
+          code: "EXTSESSINS-TCH-HEAD-SI3"
+          employee_id: "REC: employee_head_si3.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si3"
+        values:
+          name: "Extracurricular Fee Session Instructor SI3"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si3"
+        values:
+          extracurricular_id: "REC: extracurricular_si3.id"
+          academic_year_id: "REC: academic_year_si3.id"
+          academic_term_id: "REC: academic_term_si3.id"
+          teacher_id: "REC: teacher_si3.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si3.id"
+          price_unit: 150000.0
+
+      - step: "Setup - add head instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_si3"
+        values:
+          offering_id: "REC: offering_si3.id"
+          role: "head"
+          teacher_id: "REC: teacher_head_si3.id"
+
+      - step: "Create generate wizard for a single Monday"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_si3"
+        values:
+          offering_id: "REC: offering_si3.id"
+          date_start: 2026-08-03
+          date_end: 2026-08-03
+          time_start: 14.0
+          time_end: 15.5
+          teacher_id: "REC: teacher_si3.id"
+          mon: true
+
+      - step: "Run the generator"
+        action: "call"
+        target: "wizard_si3"
+        method: "action_generate"
+
+      - step: "Find the generated session"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain:
+          - ["offering_id", "=", "REC: offering_si3.id"]
+        save_as: "generated_si3"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the generated session's Instructor roster has one line"
+        action: "assert"
+        target: "generated_si3"
+        asserts:
+          instructor_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Find the copied instructor line on the generated session"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: generated_si3.id"]
+        save_as: "copied_si3"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the copied instructor line matches the template"
+        action: "assert"
+        target: "copied_si3"
+        asserts:
+          role:
+            type: "value"
+            expected: "head"
+          teacher_id:
+            type: "m2o"
+            expected: "REC: teacher_head_si3"
+
+  - name: "Session created with instructor_ids explicit is not overwritten"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si4"
+        values:
+          name: "Grade Type Session Instructor SI4"
+          code: "EXTSESSINS-GT-SI4"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si4"
+        values:
+          name: "School Session Instructor SI4"
+          code: "EXTSESSINS-SCH-SI4"
+          grade_type_id: "REC: grade_type_si4.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si4"
+        values:
+          name: "Category Session Instructor SI4"
+          code: "EXTSESSINS-CAT-SI4"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si4"
+        values:
+          name: "Futsal Club Session Instructor SI4"
+          code: "EXTSESSINS-EXT-SI4"
+          category_id: "REC: category_si4.id"
+          school_id: "REC: school_si4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si4"
+        values:
+          name: "AY Session Instructor SI4"
+          code: "EXTSESSINS-AY-SI4"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si4"
+        values:
+          name: "Term Session Instructor SI4"
+          code: "EXTSESSINS-TERM-SI4"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si4.id"
+
+      - step: "Setup - create employee for offering teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si4"
+        values:
+          name: "Offering Teacher Employee Session Instructor SI4"
+
+      - step: "Setup - create offering teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si4"
+        values:
+          name: "Offering Teacher Session Instructor SI4"
+          code: "EXTSESSINS-TCH-SI4"
+          employee_id: "REC: employee_si4.id"
+
+      - step: "Setup - create template head instructor employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_head_si4"
+        values:
+          name: "Template Head Instructor Employee SI4"
+
+      - step: "Setup - create template head instructor teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_head_si4"
+        values:
+          name: "Template Head Instructor SI4"
+          code: "EXTSESSINS-TCH-HEAD-SI4"
+          employee_id: "REC: employee_head_si4.id"
+
+      - step: "Setup - create explicit assistant contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner_explicit_si4"
+        values:
+          name: "Explicit Assistant Instructor SI4"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si4"
+        values:
+          name: "Extracurricular Fee Session Instructor SI4"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si4"
+        values:
+          extracurricular_id: "REC: extracurricular_si4.id"
+          academic_year_id: "REC: academic_year_si4.id"
+          academic_term_id: "REC: academic_term_si4.id"
+          teacher_id: "REC: teacher_si4.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si4.id"
+          price_unit: 150000.0
+
+      - step: "Setup - add a template roster line that must NOT be copied"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_si4"
+        values:
+          offering_id: "REC: offering_si4.id"
+          role: "head"
+          teacher_id: "REC: teacher_head_si4.id"
+
+      - step: "Create session with instructor_ids explicit"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si4"
+        values:
+          offering_id: "REC: offering_si4.id"
+          teacher_id: "REC: teacher_si4.id"
+          date: 2026-08-04
+          time_start: 14.0
+          time_end: 15.5
+          instructor_ids:
+            - - 0
+              - 0
+              - role: "assistant"
+                partner_id: "REC: partner_explicit_si4.id"
+
+      - step: "Assert the session's Instructor roster has exactly the explicit line"
+        action: "assert"
+        target: "session_si4"
+        asserts:
+          instructor_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Find the session's single instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session_si4.id"]
+        save_as: "line_si4"
+        limit: 1
+        expect_count: 1
+
+      - step: "Assert the line is the explicit one, not the template's"
+        action: "assert"
+        target: "line_si4"
+        asserts:
+          role:
+            type: "value"
+            expected: "assistant"
+          partner_id:
+            type: "m2o"
+            expected: "REC: partner_explicit_si4"
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Done with both tracking switches off requires no attendance at all"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si5"
+        values:
+          name: "Grade Type Session Instructor SI5"
+          code: "EXTSESSINS-GT-SI5"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si5"
+        values:
+          name: "School Session Instructor SI5"
+          code: "EXTSESSINS-SCH-SI5"
+          grade_type_id: "REC: grade_type_si5.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si5"
+        values:
+          name: "Category Session Instructor SI5"
+          code: "EXTSESSINS-CAT-SI5"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si5"
+        values:
+          name: "Futsal Club Session Instructor SI5"
+          code: "EXTSESSINS-EXT-SI5"
+          category_id: "REC: category_si5.id"
+          school_id: "REC: school_si5.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si5"
+        values:
+          name: "AY Session Instructor SI5"
+          code: "EXTSESSINS-AY-SI5"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si5"
+        values:
+          name: "Term Session Instructor SI5"
+          code: "EXTSESSINS-TERM-SI5"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si5.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si5"
+        values:
+          name: "Teacher Employee Session Instructor SI5"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si5"
+        values:
+          name: "Teacher Session Instructor SI5"
+          code: "EXTSESSINS-TCH-SI5"
+          employee_id: "REC: employee_si5.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si5"
+        values:
+          name: "Extracurricular Fee Session Instructor SI5"
+
+      - step: "Setup - create offering with both tracking switches off"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si5"
+        values:
+          extracurricular_id: "REC: extracurricular_si5.id"
+          academic_year_id: "REC: academic_year_si5.id"
+          academic_term_id: "REC: academic_term_si5.id"
+          teacher_id: "REC: teacher_si5.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si5.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: false
+
+      - step: "Create session without attendance or instructor roster"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si5"
+        values:
+          offering_id: "REC: offering_si5.id"
+          teacher_id: "REC: teacher_si5.id"
+          date: 2026-08-05
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Done must succeed with neither attendance recorded"
+        action: "call"
+        target: "session_si5"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Done with instructor tracking on and roster fully attended"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si6"
+        values:
+          name: "Grade Type Session Instructor SI6"
+          code: "EXTSESSINS-GT-SI6"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si6"
+        values:
+          name: "School Session Instructor SI6"
+          code: "EXTSESSINS-SCH-SI6"
+          grade_type_id: "REC: grade_type_si6.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si6"
+        values:
+          name: "Category Session Instructor SI6"
+          code: "EXTSESSINS-CAT-SI6"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si6"
+        values:
+          name: "Futsal Club Session Instructor SI6"
+          code: "EXTSESSINS-EXT-SI6"
+          category_id: "REC: category_si6.id"
+          school_id: "REC: school_si6.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si6"
+        values:
+          name: "AY Session Instructor SI6"
+          code: "EXTSESSINS-AY-SI6"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si6"
+        values:
+          name: "Term Session Instructor SI6"
+          code: "EXTSESSINS-TERM-SI6"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si6.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si6"
+        values:
+          name: "Teacher Employee Session Instructor SI6"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si6"
+        values:
+          name: "Teacher Session Instructor SI6"
+          code: "EXTSESSINS-TCH-SI6"
+          employee_id: "REC: employee_si6.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si6"
+        values:
+          name: "Extracurricular Fee Session Instructor SI6"
+
+      - step: "Setup - create offering tracking instructor attendance only"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si6"
+        values:
+          extracurricular_id: "REC: extracurricular_si6.id"
+          academic_year_id: "REC: academic_year_si6.id"
+          academic_term_id: "REC: academic_term_si6.id"
+          teacher_id: "REC: teacher_si6.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si6.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+
+      - step: "Setup - add head instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_si6"
+        values:
+          offering_id: "REC: offering_si6.id"
+          role: "head"
+          teacher_id: "REC: teacher_si6.id"
+
+      - step: "Create session copying the roster"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si6"
+        values:
+          offering_id: "REC: offering_si6.id"
+          teacher_id: "REC: teacher_si6.id"
+          date: 2026-08-06
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Find the copied instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session_si6.id"]
+        save_as: "line_si6"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record the instructor's attendance"
+        action: "write"
+        target: "line_si6"
+        values:
+          attendance_state: "present"
+
+      - step: "Done must succeed once the roster is fully attended"
+        action: "call"
+        target: "session_si6"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          attendance_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Done rejected when participant attendance is tracked and empty"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si7"
+        values:
+          name: "Grade Type Session Instructor SI7"
+          code: "EXTSESSINS-GT-SI7"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si7"
+        values:
+          name: "School Session Instructor SI7"
+          code: "EXTSESSINS-SCH-SI7"
+          grade_type_id: "REC: grade_type_si7.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si7"
+        values:
+          name: "Category Session Instructor SI7"
+          code: "EXTSESSINS-CAT-SI7"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si7"
+        values:
+          name: "Futsal Club Session Instructor SI7"
+          code: "EXTSESSINS-EXT-SI7"
+          category_id: "REC: category_si7.id"
+          school_id: "REC: school_si7.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si7"
+        values:
+          name: "AY Session Instructor SI7"
+          code: "EXTSESSINS-AY-SI7"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si7"
+        values:
+          name: "Term Session Instructor SI7"
+          code: "EXTSESSINS-TERM-SI7"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si7.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si7"
+        values:
+          name: "Teacher Employee Session Instructor SI7"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si7"
+        values:
+          name: "Teacher Session Instructor SI7"
+          code: "EXTSESSINS-TCH-SI7"
+          employee_id: "REC: employee_si7.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si7"
+        values:
+          name: "Extracurricular Fee Session Instructor SI7"
+
+      - step: "Setup - create offering tracking participant attendance explicitly"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si7"
+        values:
+          extracurricular_id: "REC: extracurricular_si7.id"
+          academic_year_id: "REC: academic_year_si7.id"
+          academic_term_id: "REC: academic_term_si7.id"
+          teacher_id: "REC: teacher_si7.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si7.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: true
+          instructor_attendance_tracked: false
+
+      - step: "Create session without attendance"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si7"
+        values:
+          offering_id: "REC: offering_si7.id"
+          teacher_id: "REC: teacher_si7.id"
+          date: 2026-08-07
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Done must be rejected without an attendance line"
+        action: "call"
+        target: "session_si7"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "no attendance line"
+
+  - name: "Done rejected when instructor attendance is tracked and roster empty"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si8"
+        values:
+          name: "Grade Type Session Instructor SI8"
+          code: "EXTSESSINS-GT-SI8"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si8"
+        values:
+          name: "School Session Instructor SI8"
+          code: "EXTSESSINS-SCH-SI8"
+          grade_type_id: "REC: grade_type_si8.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si8"
+        values:
+          name: "Category Session Instructor SI8"
+          code: "EXTSESSINS-CAT-SI8"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si8"
+        values:
+          name: "Futsal Club Session Instructor SI8"
+          code: "EXTSESSINS-EXT-SI8"
+          category_id: "REC: category_si8.id"
+          school_id: "REC: school_si8.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si8"
+        values:
+          name: "AY Session Instructor SI8"
+          code: "EXTSESSINS-AY-SI8"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si8"
+        values:
+          name: "Term Session Instructor SI8"
+          code: "EXTSESSINS-TERM-SI8"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si8.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si8"
+        values:
+          name: "Teacher Employee Session Instructor SI8"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si8"
+        values:
+          name: "Teacher Session Instructor SI8"
+          code: "EXTSESSINS-TCH-SI8"
+          employee_id: "REC: employee_si8.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si8"
+        values:
+          name: "Extracurricular Fee Session Instructor SI8"
+
+      - step: "Setup - create offering tracking instructor attendance only"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si8"
+        values:
+          extracurricular_id: "REC: extracurricular_si8.id"
+          academic_year_id: "REC: academic_year_si8.id"
+          academic_term_id: "REC: academic_term_si8.id"
+          teacher_id: "REC: teacher_si8.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si8.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+
+      - step: "Create session with no Instructor roster at all"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si8"
+        values:
+          offering_id: "REC: offering_si8.id"
+          teacher_id: "REC: teacher_si8.id"
+          date: 2026-08-08
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Done must be rejected without any instructor roster line"
+        action: "call"
+        target: "session_si8"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "no instructor roster line"
+
+  - name: "Done rejected when a roster line has a blank Attendance"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si9"
+        values:
+          name: "Grade Type Session Instructor SI9"
+          code: "EXTSESSINS-GT-SI9"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si9"
+        values:
+          name: "School Session Instructor SI9"
+          code: "EXTSESSINS-SCH-SI9"
+          grade_type_id: "REC: grade_type_si9.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si9"
+        values:
+          name: "Category Session Instructor SI9"
+          code: "EXTSESSINS-CAT-SI9"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si9"
+        values:
+          name: "Futsal Club Session Instructor SI9"
+          code: "EXTSESSINS-EXT-SI9"
+          category_id: "REC: category_si9.id"
+          school_id: "REC: school_si9.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si9"
+        values:
+          name: "AY Session Instructor SI9"
+          code: "EXTSESSINS-AY-SI9"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si9"
+        values:
+          name: "Term Session Instructor SI9"
+          code: "EXTSESSINS-TERM-SI9"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si9.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si9"
+        values:
+          name: "Teacher Employee Session Instructor SI9"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si9"
+        values:
+          name: "Teacher Session Instructor SI9"
+          code: "EXTSESSINS-TCH-SI9"
+          employee_id: "REC: employee_si9.id"
+
+      - step: "Setup - create second instructor contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner_si9"
+        values:
+          name: "Assistant Instructor SI9"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si9"
+        values:
+          name: "Extracurricular Fee Session Instructor SI9"
+
+      - step: "Setup - create offering tracking instructor attendance only"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si9"
+        values:
+          extracurricular_id: "REC: extracurricular_si9.id"
+          academic_year_id: "REC: academic_year_si9.id"
+          academic_term_id: "REC: academic_term_si9.id"
+          teacher_id: "REC: teacher_si9.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si9.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: true
+
+      - step: "Setup - add head instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_head_si9"
+        values:
+          offering_id: "REC: offering_si9.id"
+          role: "head"
+          teacher_id: "REC: teacher_si9.id"
+
+      - step: "Setup - add assistant instructor roster template line"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        save_as: "offering_instructor_assistant_si9"
+        values:
+          offering_id: "REC: offering_si9.id"
+          role: "assistant"
+          partner_id: "REC: partner_si9.id"
+
+      - step: "Create session copying the two-line roster"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si9"
+        values:
+          offering_id: "REC: offering_si9.id"
+          teacher_id: "REC: teacher_si9.id"
+          date: 2026-08-09
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Find the copied head instructor line"
+        action: "search"
+        model: "school_extracurricular_session_instructor"
+        domain:
+          - ["session_id", "=", "REC: session_si9.id"]
+          - ["role", "=", "head"]
+        save_as: "line_head_si9"
+        limit: 1
+        expect_count: 1
+
+      - step: "Record only the head instructor's attendance"
+        action: "write"
+        target: "line_head_si9"
+        values:
+          attendance_state: "present"
+
+      - step: "Done must be rejected while the assistant line is blank"
+        action: "call"
+        target: "session_si9"
+        method: "action_done"
+        expect_error:
+          type: "UserError"
+          message_contains: "no Attendance recorded"
+
+  - name: "Roster line rejected when Teacher and Contact are both filled"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si10"
+        values:
+          name: "Grade Type Session Instructor SI10"
+          code: "EXTSESSINS-GT-SI10"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si10"
+        values:
+          name: "School Session Instructor SI10"
+          code: "EXTSESSINS-SCH-SI10"
+          grade_type_id: "REC: grade_type_si10.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si10"
+        values:
+          name: "Category Session Instructor SI10"
+          code: "EXTSESSINS-CAT-SI10"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si10"
+        values:
+          name: "Futsal Club Session Instructor SI10"
+          code: "EXTSESSINS-EXT-SI10"
+          category_id: "REC: category_si10.id"
+          school_id: "REC: school_si10.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si10"
+        values:
+          name: "AY Session Instructor SI10"
+          code: "EXTSESSINS-AY-SI10"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si10"
+        values:
+          name: "Term Session Instructor SI10"
+          code: "EXTSESSINS-TERM-SI10"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si10.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si10"
+        values:
+          name: "Teacher Employee Session Instructor SI10"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si10"
+        values:
+          name: "Teacher Session Instructor SI10"
+          code: "EXTSESSINS-TCH-SI10"
+          employee_id: "REC: employee_si10.id"
+
+      - step: "Setup - create instructor teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_instructor_si10"
+        values:
+          name: "Instructor Teacher SI10"
+          code: "EXTSESSINS-TCH-INS-SI10"
+          employee_id: "REC: employee_si10.id"
+
+      - step: "Setup - create instructor contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner_instructor_si10"
+        values:
+          name: "Instructor Contact SI10"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si10"
+        values:
+          name: "Extracurricular Fee Session Instructor SI10"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si10"
+        values:
+          extracurricular_id: "REC: extracurricular_si10.id"
+          academic_year_id: "REC: academic_year_si10.id"
+          academic_term_id: "REC: academic_term_si10.id"
+          teacher_id: "REC: teacher_si10.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si10.id"
+          price_unit: 150000.0
+
+      - step: "Roster line with both Teacher and Contact filled must fail"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Both Teacher and Contact are filled"
+        values:
+          offering_id: "REC: offering_si10.id"
+          role: "head"
+          teacher_id: "REC: teacher_instructor_si10.id"
+          partner_id: "REC: partner_instructor_si10.id"
+
+  - name: "Roster line rejected when Teacher and Contact are both empty"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si11"
+        values:
+          name: "Grade Type Session Instructor SI11"
+          code: "EXTSESSINS-GT-SI11"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si11"
+        values:
+          name: "School Session Instructor SI11"
+          code: "EXTSESSINS-SCH-SI11"
+          grade_type_id: "REC: grade_type_si11.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si11"
+        values:
+          name: "Category Session Instructor SI11"
+          code: "EXTSESSINS-CAT-SI11"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si11"
+        values:
+          name: "Futsal Club Session Instructor SI11"
+          code: "EXTSESSINS-EXT-SI11"
+          category_id: "REC: category_si11.id"
+          school_id: "REC: school_si11.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si11"
+        values:
+          name: "AY Session Instructor SI11"
+          code: "EXTSESSINS-AY-SI11"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si11"
+        values:
+          name: "Term Session Instructor SI11"
+          code: "EXTSESSINS-TERM-SI11"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si11.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si11"
+        values:
+          name: "Teacher Employee Session Instructor SI11"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si11"
+        values:
+          name: "Teacher Session Instructor SI11"
+          code: "EXTSESSINS-TCH-SI11"
+          employee_id: "REC: employee_si11.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si11"
+        values:
+          name: "Extracurricular Fee Session Instructor SI11"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si11"
+        values:
+          extracurricular_id: "REC: extracurricular_si11.id"
+          academic_year_id: "REC: academic_year_si11.id"
+          academic_term_id: "REC: academic_term_si11.id"
+          teacher_id: "REC: teacher_si11.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si11.id"
+          price_unit: 150000.0
+
+      - step: "Roster line with neither Teacher nor Contact filled must fail"
+        action: "create"
+        model: "school_extracurricular_offering_instructor"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Neither Teacher nor Contact is filled"
+        values:
+          offering_id: "REC: offering_si11.id"
+          role: "head"
+          # Kedua kunci ditulis eksplisit false agar masuk vals; tanpa ini
+          # @api.constrains("teacher_id", "partner_id") tidak pernah
+          # terpanggil (T-06) dan step gagal "nothing was raised".
+          teacher_id: false
+          partner_id: false
+
+  - name: "Second roster line for the same person on one session is rejected"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_si12"
+        values:
+          name: "Grade Type Session Instructor SI12"
+          code: "EXTSESSINS-GT-SI12"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_si12"
+        values:
+          name: "School Session Instructor SI12"
+          code: "EXTSESSINS-SCH-SI12"
+          grade_type_id: "REC: grade_type_si12.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_si12"
+        values:
+          name: "Category Session Instructor SI12"
+          code: "EXTSESSINS-CAT-SI12"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_si12"
+        values:
+          name: "Futsal Club Session Instructor SI12"
+          code: "EXTSESSINS-EXT-SI12"
+          category_id: "REC: category_si12.id"
+          school_id: "REC: school_si12.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_si12"
+        values:
+          name: "AY Session Instructor SI12"
+          code: "EXTSESSINS-AY-SI12"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_si12"
+        values:
+          name: "Term Session Instructor SI12"
+          code: "EXTSESSINS-TERM-SI12"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_si12.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_si12"
+        values:
+          name: "Teacher Employee Session Instructor SI12"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_si12"
+        values:
+          name: "Teacher Session Instructor SI12"
+          code: "EXTSESSINS-TCH-SI12"
+          employee_id: "REC: employee_si12.id"
+
+      - step: "Setup - create instructor teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_instructor_si12"
+        values:
+          name: "Instructor Teacher SI12"
+          code: "EXTSESSINS-TCH-INS-SI12"
+          employee_id: "REC: employee_si12.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_si12"
+        values:
+          name: "Extracurricular Fee Session Instructor SI12"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_si12"
+        values:
+          extracurricular_id: "REC: extracurricular_si12.id"
+          academic_year_id: "REC: academic_year_si12.id"
+          academic_term_id: "REC: academic_term_si12.id"
+          teacher_id: "REC: teacher_si12.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_si12.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_si12"
+        values:
+          offering_id: "REC: offering_si12.id"
+          teacher_id: "REC: teacher_si12.id"
+          date: 2026-08-12
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Setup - create the first instructor line for the person"
+        action: "create"
+        model: "school_extracurricular_session_instructor"
+        save_as: "instructor_line_si12"
+        values:
+          session_id: "REC: session_si12.id"
+          role: "head"
+          teacher_id: "REC: teacher_instructor_si12.id"
+
+      - step: "A second instructor line for the same person must fail"
+        action: "create"
+        model: "school_extracurricular_session_instructor"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already has an instructor roster line on Session"
+        values:
+          session_id: "REC: session_si12.id"
+          role: "assistant"
+          teacher_id: "REC: teacher_instructor_si12.id"

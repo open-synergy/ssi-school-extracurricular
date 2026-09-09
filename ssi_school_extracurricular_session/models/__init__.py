@@ -2,6 +2,8 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from . import school_extracurricular_offering_instructor
+from . import school_extracurricular_session_instructor
 from . import school_extracurricular_session
 from . import school_extracurricular_session_attendance
 from . import school_extracurricular_offering

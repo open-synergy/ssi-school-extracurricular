@@ -35,4 +35,39 @@
         </xpath>
     </field>
 </record>
+
+<record id="school_extracurricular_offering_view_form_instructor" model="ir.ui.view">
+    <field name="name">school_extracurricular_offering - form - instructor</field>
+    <field name="model">school_extracurricular_offering</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school_extracurricular.school_extracurricular_offering_view_form"
+        />
+    <field name="arch" type="xml">
+        <xpath expr="//page[@name='participant']" position="after">
+            <page name="instructor" string="Instructors">
+                <group name="instructor_setting" string="Attendance Tracking">
+                    <field name="participant_attendance_tracked" />
+                    <field name="instructor_attendance_tracked" />
+                </group>
+                <field name="instructor_ids">
+                    <tree editable="bottom">
+                        <field name="sequence" widget="handle" />
+                        <field name="role" />
+                        <field name="teacher_id" />
+                        <field name="partner_id" />
+                    </tree>
+                    <form>
+                        <group name="instructor_group_1">
+                            <field name="sequence" />
+                            <field name="role" />
+                            <field name="teacher_id" />
+                            <field name="partner_id" />
+                        </group>
+                    </form>
+                </field>
+            </page>
+        </xpath>
+    </field>
+</record>
 </odoo>

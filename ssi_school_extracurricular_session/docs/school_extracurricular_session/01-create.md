@@ -36,8 +36,12 @@
      starts and ends. End Time must be later than Start Time.
    - **Location**: Where the meeting takes place. Optional.
    - **Topic**: A short label for what the meeting covers. Optional.
+   - **Instructors** (tab): Automatically filled with a copy of the selected Offering's
+     Instructor roster, if it has one -- each copied line's Attendance is left blank. No
+     manual entry is needed at this step.
 4. Click **Save**.
 
 ## Post-Condition
 
-- A new record is created in **Planned** status.
+- A new record is created in **Planned** status, carrying a copy of the Offering's
+  Instructor roster (empty if the Offering's roster is empty).

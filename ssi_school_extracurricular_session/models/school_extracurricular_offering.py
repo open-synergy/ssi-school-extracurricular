@@ -65,6 +65,34 @@ class SchoolExtracurricularOffering(models.Model):
             )
             record.session_done_count = result
 
+    instructor_ids = fields.One2many(
+        string="Instructors",
+        comodel_name="school_extracurricular_offering_instructor",
+        inverse_name="offering_id",
+        help=(
+            "The instructor roster template for this offering, copied "
+            "onto every session created under it."
+        ),
+    )
+    participant_attendance_tracked = fields.Boolean(
+        string="Track Participant Attendance",
+        default=True,
+        help=(
+            "If enabled, a session under this offering may only be "
+            "marked Done once at least one participant attendance "
+            "line is recorded on it."
+        ),
+    )
+    instructor_attendance_tracked = fields.Boolean(
+        string="Track Instructor Attendance",
+        default=False,
+        help=(
+            "If enabled, a session under this offering may only be "
+            "marked Done once its instructor roster is not empty and "
+            "every roster line has its Attendance recorded."
+        ),
+    )
+
     def action_view_session(self):
         """Open this offering's sessions, in any state.
 
