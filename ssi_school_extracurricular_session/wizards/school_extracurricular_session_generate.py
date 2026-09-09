@@ -61,8 +61,22 @@ class SchoolExtracurricularSessionGenerate(models.TransientModel):
     teacher_id = fields.Many2one(
         string="Teacher",
         comodel_name="school_teacher",
-        required=True,
-        help="The teacher applied to every generated session.",
+        required=False,
+        help=(
+            "The teacher applied to every generated session. Exactly "
+            "one of Teacher or External Coach must be filled."
+        ),
+    )
+    coach_partner_id = fields.Many2one(
+        string="External Coach",
+        comodel_name="res.partner",
+        ondelete="restrict",
+        required=False,
+        help=(
+            "The external coach (person or institution, not a school "
+            "employee) applied to every generated session. Exactly "
+            "one of Teacher or External Coach must be filled."
+        ),
     )
     location = fields.Char(
         string="Location",
@@ -121,6 +135,12 @@ class SchoolExtracurricularSessionGenerate(models.TransientModel):
         self.teacher_id = False
         if self.offering_id:
             self.teacher_id = self.offering_id.teacher_id
+
+    @api.onchange("offering_id")
+    def onchange_coach_partner_id(self):
+        self.coach_partner_id = False
+        if self.offering_id:
+            self.coach_partner_id = self.offering_id.coach_partner_id
 
     def action_generate(self):
         """Generate this offering's sessions from the weekly pattern.
@@ -278,5 +298,6 @@ within it
             "time_start": self.time_start,
             "time_end": self.time_end,
             "teacher_id": self.teacher_id.id,
+            "coach_partner_id": self.coach_partner_id.id,
             "location": self.location,
         }

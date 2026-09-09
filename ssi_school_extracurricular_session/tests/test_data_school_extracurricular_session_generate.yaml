@@ -493,3 +493,253 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "No date in the range matches"
+
+  - name: "Generate sessions using only an External Coach"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg5"
+        values:
+          name: "Grade Type Session Generate SG5"
+          code: "EXTSESSGEN-GT-SG5"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg5"
+        values:
+          name: "School Session Generate SG5"
+          code: "EXTSESSGEN-SCH-SG5"
+          grade_type_id: "REC: grade_type_sg5.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg5"
+        values:
+          name: "Category Session Generate SG5"
+          code: "EXTSESSGEN-CAT-SG5"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg5"
+        values:
+          name: "Futsal Club Session Generate SG5"
+          code: "EXTSESSGEN-EXT-SG5"
+          category_id: "REC: category_sg5.id"
+          school_id: "REC: school_sg5.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg5"
+        values:
+          name: "AY Session Generate SG5"
+          code: "EXTSESSGEN-AY-SG5"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg5"
+        values:
+          name: "Term Session Generate SG5"
+          code: "EXTSESSGEN-TERM-SG5"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg5.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_sg5"
+        values:
+          name: "External Coach Session Generate SG5"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg5"
+        values:
+          name: "Extracurricular Fee Session Generate SG5"
+
+      - step: "Setup - create offering with only an External Coach"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg5"
+        values:
+          extracurricular_id: "REC: extracurricular_sg5.id"
+          academic_year_id: "REC: academic_year_sg5.id"
+          academic_term_id: "REC: academic_term_sg5.id"
+          coach_partner_id: "REC: coach_partner_sg5.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sg5.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard with only coach_partner_id, checking Tuesday"
+        action: "create"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg5"
+        values:
+          offering_id: "REC: offering_sg5.id"
+          date_start: 2026-08-01
+          date_end: 2026-08-14
+          time_start: 14.0
+          time_end: 15.5
+          coach_partner_id: "REC: coach_partner_sg5.id"
+          tue: true
+
+      - step: "Run the generator"
+        action: "call"
+        target: "wizard_sg5"
+        method: "action_generate"
+
+      - step: "Search sessions generated for the offering"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain: [["offering_id", "=", "REC: offering_sg5.id"]]
+        save_as: "generated_sg5"
+        expect_count: 2
+
+      - step: "Search the first generated session, ordered by date"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain: [["offering_id", "=", "REC: offering_sg5.id"]]
+        order: "date asc"
+        limit: 1
+        save_as: "generated_sg5_first"
+        expect_count: 1
+
+      - step: "Search the second generated session, ordered by date"
+        action: "search"
+        model: "school_extracurricular_session"
+        domain:
+          [["offering_id", "=", "REC: offering_sg5.id"], ["date", "=", "2026-08-11"]]
+        save_as: "generated_sg5_second"
+        expect_count: 1
+
+      - step: "Assert the first generated session has no teacher and the coach set"
+        action: "assert"
+        target: "generated_sg5_first"
+        asserts:
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_sg5"
+
+      - step: "Assert the second generated session has no teacher and the coach set"
+        action: "assert"
+        target: "generated_sg5_second"
+        asserts:
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_sg5"
+
+  - name: "Generate wizard derives External Coach from the selected Offering"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sg6"
+        values:
+          name: "Grade Type Session Generate SG6"
+          code: "EXTSESSGEN-GT-SG6"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sg6"
+        values:
+          name: "School Session Generate SG6"
+          code: "EXTSESSGEN-SCH-SG6"
+          grade_type_id: "REC: grade_type_sg6.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sg6"
+        values:
+          name: "Category Session Generate SG6"
+          code: "EXTSESSGEN-CAT-SG6"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sg6"
+        values:
+          name: "Futsal Club Session Generate SG6"
+          code: "EXTSESSGEN-EXT-SG6"
+          category_id: "REC: category_sg6.id"
+          school_id: "REC: school_sg6.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sg6"
+        values:
+          name: "AY Session Generate SG6"
+          code: "EXTSESSGEN-AY-SG6"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sg6"
+        values:
+          name: "Term Session Generate SG6"
+          code: "EXTSESSGEN-TERM-SG6"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sg6.id"
+
+      - step: "Setup - create external coach partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "coach_partner_sg6"
+        values:
+          name: "External Coach Session Generate SG6"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sg6"
+        values:
+          name: "Extracurricular Fee Session Generate SG6"
+
+      - step: "Setup - create offering with only an External Coach"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sg6"
+        values:
+          extracurricular_id: "REC: extracurricular_sg6.id"
+          academic_year_id: "REC: academic_year_sg6.id"
+          academic_term_id: "REC: academic_term_sg6.id"
+          coach_partner_id: "REC: coach_partner_sg6.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sg6.id"
+          price_unit: 150000.0
+
+      - step: "Create generate wizard via form, only setting the Offering"
+        action: "form"
+        model: "school_extracurricular_session_generate"
+        save_as: "wizard_sg6"
+        values:
+          offering_id: "REC: offering_sg6"
+        asserts:
+          teacher_id:
+            type: "value"
+            operator: "is_falsy"
+          coach_partner_id:
+            type: "m2o"
+            expected: "REC: coach_partner_sg6"
