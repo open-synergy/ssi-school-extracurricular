@@ -111,6 +111,7 @@
                     <group name="accounting_1" colspan="4" col="2">
                         <field name="receivable_journal_id" />
                         <field name="receivable_account_id" />
+                        <field name="analytic_account_id" />
                     </group>
                 </page>
                 <page name="participant" string="Participants">

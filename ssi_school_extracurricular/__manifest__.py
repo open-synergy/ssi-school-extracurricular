@@ -11,6 +11,7 @@
     "installable": True,
     "application": True,
     "depends": [
+        "analytic",
         "ssi_school",
         "ssi_master_data_mixin",
         "ssi_transaction_confirm_mixin",
