@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo14-addon-ssi_school_extracurricular_operating_unit',
         'odoo14-addon-ssi_school_extracurricular_session',
         'odoo14-addon-ssi_school_extracurricular_session_operating_unit',
+        'odoo14-addon-ssi_school_extracurricular_session_outsource_work',
     ],
     classifiers=[
         'Programming Language :: Python',

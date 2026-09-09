@@ -25,6 +25,7 @@ addon | version | maintainers | summary
 [ssi_school_extracurricular_operating_unit](ssi_school_extracurricular_operating_unit/) | 14.0.1.0.1 |  | School Extracurricular + Operating Unit
 [ssi_school_extracurricular_session](ssi_school_extracurricular_session/) | 14.0.1.3.0 |  | School Extracurricular Session
 [ssi_school_extracurricular_session_operating_unit](ssi_school_extracurricular_session_operating_unit/) | 14.0.1.0.1 |  | School Extracurricular Session + Operating Unit
+[ssi_school_extracurricular_session_outsource_work](ssi_school_extracurricular_session_outsource_work/) | 14.0.1.0.0 |  | School Extracurricular Session - Outsource Work Integration
 
 [//]: # (end addons)
 
