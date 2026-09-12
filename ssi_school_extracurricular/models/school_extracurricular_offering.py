@@ -418,6 +418,16 @@ class SchoolExtracurricularOffering(models.Model):
         ),
     )
 
+    group_ids = fields.One2many(
+        string="Groups",
+        comodel_name="school_extracurricular_offering_group",
+        inverse_name="offering_id",
+        help=(
+            "The batches this offering is divided into, each with "
+            "its own quota and coach(es). Left empty, this offering "
+            "runs as a single batch."
+        ),
+    )
     participant_ids = fields.One2many(
         string="Participants",
         comodel_name="school_extracurricular_participant",

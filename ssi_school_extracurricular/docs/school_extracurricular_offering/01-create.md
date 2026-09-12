@@ -48,6 +48,13 @@
    - On the **Billing** tab: **Price Unit** _(required)_ and, when Billing Mode is
      Separate Invoice, **Customer Invoice Type**, **Receivable Journal**, and
      **Receivable Account**.
+   - On the **Groups** tab _(optional)_: add one or more **Group** lines to split this
+     offering into batches, each with its own quota and coach(es) -- useful when one
+     activity runs as several classes (e.g. "Mini Soccer 1", "Mini Soccer 2"). Leave
+     this tab empty when the offering runs as a single batch. Each Group line requires
+     **Name** _(required)_; **Code**, **Teachers**, and **Maximum Quota** are optional.
+     A Group's **Maximum Quota** of 0 means no upper limit for that Group, independent
+     of the offering's own Maximum Quota.
 4. Click **Save**.
 
 ## Post-Condition

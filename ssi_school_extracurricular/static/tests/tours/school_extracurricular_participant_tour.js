@@ -72,6 +72,17 @@ odoo.define(
                     in_modal: false,
                 },
                 {
+                    content: "Select the Group",
+                    trigger: ".o_field_many2one[name='group_id'] input",
+                    run: "text TOUR-PARTICIPANT-GROUP",
+                },
+                {
+                    content: "Pick the Group from the dropdown",
+                    trigger:
+                        ".ui-autocomplete .ui-menu-item a:contains(TOUR-PARTICIPANT-GROUP)",
+                    in_modal: false,
+                },
+                {
                     content: "Select the Student",
                     trigger: ".o_field_many2one[name='student_id'] input",
                     run: "text TOUR-PARTICIPANT-CREATE-STUDENT",
@@ -177,6 +188,17 @@ odoo.define(
                     trigger: "input.o_field_widget[name='price_unit']",
                     extra_trigger: ".o_form_view.o_form_editable",
                     run: "text 250000.0",
+                },
+                {
+                    content: "Select the Group",
+                    trigger: ".o_field_many2one[name='group_id'] input",
+                    run: "text TOUR-PARTICIPANT-GROUP",
+                },
+                {
+                    content: "Pick the Group from the dropdown",
+                    trigger:
+                        ".ui-autocomplete .ui-menu-item a:contains(TOUR-PARTICIPANT-GROUP)",
+                    in_modal: false,
                 },
 
                 // Flow 4 — Click Save.

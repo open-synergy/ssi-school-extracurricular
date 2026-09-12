@@ -5,6 +5,7 @@
 from . import test_school_extracurricular_category
 from . import test_school_extracurricular
 from . import test_school_extracurricular_offering
+from . import test_school_extracurricular_offering_group
 from . import test_school_extracurricular_participant
 from . import test_school_extracurricular_payment_term
 from . import test_school_extracurricular_create_due_invoice

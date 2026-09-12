@@ -17,6 +17,7 @@
 1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Find and open the record to edit.
 3. Change the required fields.
+   - **Group** may also be changed, to a Group belonging to the same Offering.
 4. Click **Save**.
 
 ## Post-Condition

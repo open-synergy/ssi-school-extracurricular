@@ -221,6 +221,13 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
             }
         )
 
+        cls.group = cls.env["school_extracurricular_offering_group"].create(
+            {
+                "offering_id": cls.offering.id,
+                "name": "TOUR-PARTICIPANT-GROUP",
+            }
+        )
+
         create_student = cls._create_student("TOUR-PARTICIPANT-CREATE-STUDENT")
         create_enrollment = cls._create_enrollment(create_student)
         create_enrollment.write({"name": "TOUR-PARTICIPANT-ENROLLMENT"})

@@ -153,6 +153,22 @@ class SchoolExtracurricularParticipant(models.Model):
         },
         help="The student joining this extracurricular offering.",
     )
+    group_id = fields.Many2one(
+        string="Group",
+        comodel_name="school_extracurricular_offering_group",
+        ondelete="restrict",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "The batch of the selected Offering this participant is "
+            "placed in. Must belong to the same Offering. Left "
+            "empty, this participant is not placed in any batch."
+        ),
+    )
     enrollment_id = fields.Many2one(
         string="Enrollment",
         comodel_name="school_enrollment",
@@ -509,6 +525,48 @@ Offering
                 )
                 raise ValidationError(error_message)
 
+    @api.constrains("group_id", "offering_id")
+    def _check_group_offering_match(self):
+        """Reject a participant whose Group belongs to another Offering.
+
+        :raises ValidationError: when the condition method returns
+            False
+        :return: None
+        """
+        for record in self.sudo():
+            if not record._check_group_offering_match_condition():
+                error_message = (
+                    _(
+                        """
+Context: Set extracurricular participant group
+Database ID: %s
+Problem: Group '%s' does not belong to Offering '%s'
+Solution: Select a Group that belongs to the selected Offering
+"""
+                    )
+                    % (
+                        record.id,
+                        record.group_id.name,
+                        record.offering_id.name,
+                    )
+                )
+                raise ValidationError(error_message)
+
+    def _check_group_offering_match_condition(self):
+        """Tell whether ``group_id`` belongs to ``offering_id``.
+
+        Extension point: override to relax or tighten the rule
+        without touching the error message. A record without a
+        Group, or without an Offering yet, is always valid.
+
+        :return: True when valid; never raises
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self.group_id or not self.offering_id:
+            return True
+        return self.group_id.offering_id == self.offering_id
+
     @api.constrains("state", "student_id", "offering_id")
     def _check_duplicate_open_participant(self):
         """Validate that a student has one active participant per offering.
@@ -594,6 +652,54 @@ existing participant before opening a new one
                 % {
                     "id": self.id,
                     "offering": self.offering_id.name,
+                    "quota": quota_max,
+                }
+            )
+            raise UserError(error_message)
+
+    @ssi_decorator.pre_open_check()
+    def _15_check_group_quota(self):
+        """Block opening this participant when the group's quota is full.
+
+        Compares the number of ``open`` participants already on the
+        Group against ``group_id.quota_max``. A ``quota_max`` of 0
+        means unlimited, so no check is performed in that case. A
+        participant without a Group is not affected. Runs after the
+        Offering's own quota check and before the allocation check.
+
+        :raises UserError: when the group's maximum quota is already
+            reached
+        :return: None
+        """
+        self.ensure_one()
+        if not self.group_id:
+            return
+        quota_max = self.group_id.quota_max
+        if quota_max <= 0:
+            return
+        open_count = self.search_count(
+            [
+                ("id", "!=", self.id),
+                ("group_id", "=", self.group_id.id),
+                ("state", "=", "open"),
+            ]
+        )
+        if open_count >= quota_max:
+            error_message = (
+                _(
+                    """
+Context: Open extracurricular participant
+Database ID: %(id)s
+Problem: Group '%(group)s' has reached its maximum quota of
+%(quota)s
+Solution: Increase the Group's Maximum Quota, place this participant
+in a different Group, or cancel an existing participant in the Group
+before opening a new one
+"""
+                )
+                % {
+                    "id": self.id,
+                    "group": self.group_id.name,
                     "quota": quota_max,
                 }
             )
