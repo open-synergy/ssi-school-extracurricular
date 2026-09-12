@@ -1,0 +1,1576 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Extracurricular Offering Group - two groups each fill their own quota"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gq"
+        values:
+          name: "Grade Type Group GQ"
+          code: "EXTGRP-GT-GQ"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gq"
+        values:
+          name: "School Group GQ"
+          code: "EXTGRP-SCH-GQ"
+          grade_type_id: "REC: grade_type_gq.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gq"
+        values:
+          name: "Category Group GQ"
+          code: "EXTGRP-CAT-GQ"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gq"
+        values:
+          name: "Futsal Club Group GQ"
+          code: "EXTGRP-EXT-GQ"
+          category_id: "REC: category_gq.id"
+          school_id: "REC: school_gq.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gq"
+        values:
+          name: "AY Group GQ"
+          code: "EXTGRP-AY-GQ"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gq"
+        values:
+          name: "Term Group GQ"
+          code: "EXTGRP-TERM-GQ"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gq.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gq"
+        values:
+          name: "Teacher Employee Group GQ"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gq"
+        values:
+          name: "Teacher Group GQ"
+          code: "EXTGRP-TCH-GQ"
+          employee_id: "REC: employee_gq.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gq"
+        values:
+          name: "Extracurricular Fee Group GQ"
+
+      - step: "Setup - create offering with no offering-level quota limit"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gq"
+        values:
+          extracurricular_id: "REC: extracurricular_gq.id"
+          academic_year_id: "REC: academic_year_gq.id"
+          academic_term_id: "REC: academic_term_gq.id"
+          teacher_id: "REC: teacher_gq.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gq.id"
+          price_unit: 150000.0
+
+      - step: "Create Group A with quota_max 1"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gq_a"
+        values:
+          offering_id: "REC: offering_gq.id"
+          name: "Group GQ A"
+          quota_max: 1
+
+      - step: "Create Group B with quota_max 1"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gq_b"
+        values:
+          offering_id: "REC: offering_gq.id"
+          name: "Group GQ B"
+          quota_max: 1
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gq"
+        values:
+          name: "Grade Group GQ"
+          code: "EXTGRP-GR-GQ"
+          type_id: "REC: grade_type_gq.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gq"
+        values:
+          name: "Grade Class Group GQ"
+          code: "EXTGRP-GC-GQ"
+          school_id: "REC: school_gq.id"
+          grade_id: "REC: grade_gq.id"
+
+      - step: "Setup - create contact of first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gq_a"
+        values:
+          name: "Student Contact Group GQ A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gq_a"
+        values:
+          name: "Student Group GQ A"
+          code: "EXTGRP-ST-GQ-A"
+          contact_id: "REC: contact_gq_a.id"
+          school_id: "REC: school_gq.id"
+
+      - step: "Setup - create enrollment for first student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gq_a"
+        values:
+          academic_year_id: "REC: academic_year_gq.id"
+          academic_term_id: "REC: academic_term_gq.id"
+          school_id: "REC: school_gq.id"
+          grade_id: "REC: grade_gq.id"
+          grade_class_id: "REC: grade_class_gq.id"
+          student_id: "REC: student_gq_a.id"
+
+      - step: "Setup - create contact of second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gq_b"
+        values:
+          name: "Student Contact Group GQ B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gq_b"
+        values:
+          name: "Student Group GQ B"
+          code: "EXTGRP-ST-GQ-B"
+          contact_id: "REC: contact_gq_b.id"
+          school_id: "REC: school_gq.id"
+
+      - step: "Setup - create enrollment for second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gq_b"
+        values:
+          academic_year_id: "REC: academic_year_gq.id"
+          academic_term_id: "REC: academic_term_gq.id"
+          school_id: "REC: school_gq.id"
+          grade_id: "REC: grade_gq.id"
+          grade_class_id: "REC: grade_class_gq.id"
+          student_id: "REC: student_gq_b.id"
+
+      - step: "Create participant A placed in Group A"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gq_a"
+        values:
+          offering_id: "REC: offering_gq.id"
+          group_id: "REC: group_gq_a.id"
+          student_id: "REC: student_gq_a.id"
+          enrollment_id: "REC: enrollment_gq_a.id"
+          billing_mode: "free"
+          product_id: "REC: product_gq.id"
+          price_unit: 150000.0
+
+      - step: "Create participant B placed in Group B"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gq_b"
+        values:
+          offering_id: "REC: offering_gq.id"
+          group_id: "REC: group_gq_b.id"
+          student_id: "REC: student_gq_b.id"
+          enrollment_id: "REC: enrollment_gq_b.id"
+          billing_mode: "free"
+          product_id: "REC: product_gq.id"
+          price_unit: 150000.0
+
+      - step: "Confirm participant A"
+        action: "call"
+        target: "participant_gq_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant A - Group A quota now full"
+        action: "call"
+        target: "participant_gq_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm participant B"
+        action: "call"
+        target: "participant_gq_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant B - Group B has its own separate quota"
+        action: "call"
+        target: "participant_gq_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert Group A participant_count reflects its own open participant"
+        action: "assert"
+        target: "group_gq_a"
+        asserts:
+          participant_count:
+            type: "value"
+            expected: 1
+
+      - step: "Assert Group B participant_count reflects its own open participant"
+        action: "assert"
+        target: "group_gq_b"
+        asserts:
+          participant_count:
+            type: "value"
+            expected: 1
+
+  - name: "Extracurricular Offering Group - quota_max 0 means unlimited"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gu"
+        values:
+          name: "Grade Type Group GU"
+          code: "EXTGRP-GT-GU"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gu"
+        values:
+          name: "School Group GU"
+          code: "EXTGRP-SCH-GU"
+          grade_type_id: "REC: grade_type_gu.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gu"
+        values:
+          name: "Category Group GU"
+          code: "EXTGRP-CAT-GU"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gu"
+        values:
+          name: "Futsal Club Group GU"
+          code: "EXTGRP-EXT-GU"
+          category_id: "REC: category_gu.id"
+          school_id: "REC: school_gu.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gu"
+        values:
+          name: "AY Group GU"
+          code: "EXTGRP-AY-GU"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gu"
+        values:
+          name: "Term Group GU"
+          code: "EXTGRP-TERM-GU"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gu.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gu"
+        values:
+          name: "Teacher Employee Group GU"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gu"
+        values:
+          name: "Teacher Group GU"
+          code: "EXTGRP-TCH-GU"
+          employee_id: "REC: employee_gu.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gu"
+        values:
+          name: "Extracurricular Fee Group GU"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gu"
+        values:
+          extracurricular_id: "REC: extracurricular_gu.id"
+          academic_year_id: "REC: academic_year_gu.id"
+          academic_term_id: "REC: academic_term_gu.id"
+          teacher_id: "REC: teacher_gu.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gu.id"
+          price_unit: 150000.0
+
+      - step: "Create Group with quota_max 0 (unlimited)"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gu"
+        values:
+          offering_id: "REC: offering_gu.id"
+          name: "Group GU Unlimited"
+          quota_max: 0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gu"
+        values:
+          name: "Grade Group GU"
+          code: "EXTGRP-GR-GU"
+          type_id: "REC: grade_type_gu.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gu"
+        values:
+          name: "Grade Class Group GU"
+          code: "EXTGRP-GC-GU"
+          school_id: "REC: school_gu.id"
+          grade_id: "REC: grade_gu.id"
+
+      - step: "Setup - create contact of first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gu_a"
+        values:
+          name: "Student Contact Group GU A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gu_a"
+        values:
+          name: "Student Group GU A"
+          code: "EXTGRP-ST-GU-A"
+          contact_id: "REC: contact_gu_a.id"
+          school_id: "REC: school_gu.id"
+
+      - step: "Setup - create enrollment for first student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gu_a"
+        values:
+          academic_year_id: "REC: academic_year_gu.id"
+          academic_term_id: "REC: academic_term_gu.id"
+          school_id: "REC: school_gu.id"
+          grade_id: "REC: grade_gu.id"
+          grade_class_id: "REC: grade_class_gu.id"
+          student_id: "REC: student_gu_a.id"
+
+      - step: "Setup - create contact of second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gu_b"
+        values:
+          name: "Student Contact Group GU B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gu_b"
+        values:
+          name: "Student Group GU B"
+          code: "EXTGRP-ST-GU-B"
+          contact_id: "REC: contact_gu_b.id"
+          school_id: "REC: school_gu.id"
+
+      - step: "Setup - create enrollment for second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gu_b"
+        values:
+          academic_year_id: "REC: academic_year_gu.id"
+          academic_term_id: "REC: academic_term_gu.id"
+          school_id: "REC: school_gu.id"
+          grade_id: "REC: grade_gu.id"
+          grade_class_id: "REC: grade_class_gu.id"
+          student_id: "REC: student_gu_b.id"
+
+      - step: "Setup - create contact of third student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gu_c"
+        values:
+          name: "Student Contact Group GU C"
+
+      - step: "Setup - create third student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gu_c"
+        values:
+          name: "Student Group GU C"
+          code: "EXTGRP-ST-GU-C"
+          contact_id: "REC: contact_gu_c.id"
+          school_id: "REC: school_gu.id"
+
+      - step: "Setup - create enrollment for third student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gu_c"
+        values:
+          academic_year_id: "REC: academic_year_gu.id"
+          academic_term_id: "REC: academic_term_gu.id"
+          school_id: "REC: school_gu.id"
+          grade_id: "REC: grade_gu.id"
+          grade_class_id: "REC: grade_class_gu.id"
+          student_id: "REC: student_gu_c.id"
+
+      - step: "Create and open participant 1 in the unlimited group"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gu_1"
+        values:
+          offering_id: "REC: offering_gu.id"
+          group_id: "REC: group_gu.id"
+          student_id: "REC: student_gu_a.id"
+          enrollment_id: "REC: enrollment_gu_a.id"
+          billing_mode: "free"
+          product_id: "REC: product_gu.id"
+          price_unit: 150000.0
+
+      - step: "Confirm participant 1"
+        action: "call"
+        target: "participant_gu_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 1"
+        action: "call"
+        target: "participant_gu_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create and open participant 2 in the unlimited group"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gu_2"
+        values:
+          offering_id: "REC: offering_gu.id"
+          group_id: "REC: group_gu.id"
+          student_id: "REC: student_gu_b.id"
+          enrollment_id: "REC: enrollment_gu_b.id"
+          billing_mode: "free"
+          product_id: "REC: product_gu.id"
+          price_unit: 150000.0
+
+      - step: "Confirm participant 2"
+        action: "call"
+        target: "participant_gu_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 2"
+        action: "call"
+        target: "participant_gu_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create and open a third participant, still not rejected"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gu_3"
+        values:
+          offering_id: "REC: offering_gu.id"
+          group_id: "REC: group_gu.id"
+          student_id: "REC: student_gu_c.id"
+          enrollment_id: "REC: enrollment_gu_c.id"
+          billing_mode: "free"
+          product_id: "REC: product_gu.id"
+          price_unit: 150000.0
+
+      - step: "Confirm participant 3"
+        action: "call"
+        target: "participant_gu_3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant 3 - unlimited quota does not reject a third join"
+        action: "call"
+        target: "participant_gu_3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the unlimited group counts all three open participants"
+        action: "assert"
+        target: "group_gu"
+        asserts:
+          participant_count:
+            type: "value"
+            expected: 3
+
+  - name: "Extracurricular Offering Group - participant_count only counts open"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gc"
+        values:
+          name: "Grade Type Group GC"
+          code: "EXTGRP-GT-GC"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gc"
+        values:
+          name: "School Group GC"
+          code: "EXTGRP-SCH-GC"
+          grade_type_id: "REC: grade_type_gc.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gc"
+        values:
+          name: "Category Group GC"
+          code: "EXTGRP-CAT-GC"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gc"
+        values:
+          name: "Futsal Club Group GC"
+          code: "EXTGRP-EXT-GC"
+          category_id: "REC: category_gc.id"
+          school_id: "REC: school_gc.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gc"
+        values:
+          name: "AY Group GC"
+          code: "EXTGRP-AY-GC"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gc"
+        values:
+          name: "Term Group GC"
+          code: "EXTGRP-TERM-GC"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gc.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gc"
+        values:
+          name: "Teacher Employee Group GC"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gc"
+        values:
+          name: "Teacher Group GC"
+          code: "EXTGRP-TCH-GC"
+          employee_id: "REC: employee_gc.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gc"
+        values:
+          name: "Extracurricular Fee Group GC"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gc"
+        values:
+          extracurricular_id: "REC: extracurricular_gc.id"
+          academic_year_id: "REC: academic_year_gc.id"
+          academic_term_id: "REC: academic_term_gc.id"
+          teacher_id: "REC: teacher_gc.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gc.id"
+          price_unit: 150000.0
+
+      - step: "Create Group"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gc"
+        values:
+          offering_id: "REC: offering_gc.id"
+          name: "Group GC"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gc"
+        values:
+          name: "Grade Group GC"
+          code: "EXTGRP-GR-GC"
+          type_id: "REC: grade_type_gc.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gc"
+        values:
+          name: "Grade Class Group GC"
+          code: "EXTGRP-GC-GC"
+          school_id: "REC: school_gc.id"
+          grade_id: "REC: grade_gc.id"
+
+      - step: "Setup - create contact of first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gc_a"
+        values:
+          name: "Student Contact Group GC A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gc_a"
+        values:
+          name: "Student Group GC A"
+          code: "EXTGRP-ST-GC-A"
+          contact_id: "REC: contact_gc_a.id"
+          school_id: "REC: school_gc.id"
+
+      - step: "Setup - create enrollment for first student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gc_a"
+        values:
+          academic_year_id: "REC: academic_year_gc.id"
+          academic_term_id: "REC: academic_term_gc.id"
+          school_id: "REC: school_gc.id"
+          grade_id: "REC: grade_gc.id"
+          grade_class_id: "REC: grade_class_gc.id"
+          student_id: "REC: student_gc_a.id"
+
+      - step: "Setup - create contact of second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gc_b"
+        values:
+          name: "Student Contact Group GC B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gc_b"
+        values:
+          name: "Student Group GC B"
+          code: "EXTGRP-ST-GC-B"
+          contact_id: "REC: contact_gc_b.id"
+          school_id: "REC: school_gc.id"
+
+      - step: "Setup - create enrollment for second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gc_b"
+        values:
+          academic_year_id: "REC: academic_year_gc.id"
+          academic_term_id: "REC: academic_term_gc.id"
+          school_id: "REC: school_gc.id"
+          grade_id: "REC: grade_gc.id"
+          grade_class_id: "REC: grade_class_gc.id"
+          student_id: "REC: student_gc_b.id"
+
+      - step: "Create and open participant A"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gc_a"
+        values:
+          offering_id: "REC: offering_gc.id"
+          group_id: "REC: group_gc.id"
+          student_id: "REC: student_gc_a.id"
+          enrollment_id: "REC: enrollment_gc_a.id"
+          billing_mode: "free"
+          product_id: "REC: product_gc.id"
+          price_unit: 150000.0
+
+      - step: "Confirm participant A"
+        action: "call"
+        target: "participant_gc_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant A"
+        action: "call"
+        target: "participant_gc_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create participant B, left in draft"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gc_b"
+        values:
+          offering_id: "REC: offering_gc.id"
+          group_id: "REC: group_gc.id"
+          student_id: "REC: student_gc_b.id"
+          enrollment_id: "REC: enrollment_gc_b.id"
+          billing_mode: "free"
+          product_id: "REC: product_gc.id"
+          price_unit: 150000.0
+
+      - step: "Assert draft participant B does not count"
+        action: "assert"
+        target: "participant_gc_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Assert group participant_count is 1, not 2"
+        action: "assert"
+        target: "group_gc"
+        asserts:
+          participant_count:
+            type: "value"
+            expected: 1
+
+  - name: "Extracurricular Offering Group - participant without a Group still opens"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gn"
+        values:
+          name: "Grade Type Group GN"
+          code: "EXTGRP-GT-GN"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gn"
+        values:
+          name: "School Group GN"
+          code: "EXTGRP-SCH-GN"
+          grade_type_id: "REC: grade_type_gn.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gn"
+        values:
+          name: "Category Group GN"
+          code: "EXTGRP-CAT-GN"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gn"
+        values:
+          name: "Futsal Club Group GN"
+          code: "EXTGRP-EXT-GN"
+          category_id: "REC: category_gn.id"
+          school_id: "REC: school_gn.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gn"
+        values:
+          name: "AY Group GN"
+          code: "EXTGRP-AY-GN"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gn"
+        values:
+          name: "Term Group GN"
+          code: "EXTGRP-TERM-GN"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gn.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gn"
+        values:
+          name: "Teacher Employee Group GN"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gn"
+        values:
+          name: "Teacher Group GN"
+          code: "EXTGRP-TCH-GN"
+          employee_id: "REC: employee_gn.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gn"
+        values:
+          name: "Extracurricular Fee Group GN"
+
+      - step: "Setup - create offering with a Group present but unused"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gn"
+        values:
+          extracurricular_id: "REC: extracurricular_gn.id"
+          academic_year_id: "REC: academic_year_gn.id"
+          academic_term_id: "REC: academic_term_gn.id"
+          teacher_id: "REC: teacher_gn.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gn.id"
+          price_unit: 150000.0
+          quota_max: 1
+
+      - step: "Create a Group on the offering, but no participant uses it"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gn"
+        values:
+          offering_id: "REC: offering_gn.id"
+          name: "Group GN Unused"
+          quota_max: 1
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gn"
+        values:
+          name: "Grade Group GN"
+          code: "EXTGRP-GR-GN"
+          type_id: "REC: grade_type_gn.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gn"
+        values:
+          name: "Grade Class Group GN"
+          code: "EXTGRP-GC-GN"
+          school_id: "REC: school_gn.id"
+          grade_id: "REC: grade_gn.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gn"
+        values:
+          name: "Student Contact Group GN"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gn"
+        values:
+          name: "Student Group GN"
+          code: "EXTGRP-ST-GN"
+          contact_id: "REC: contact_gn.id"
+          school_id: "REC: school_gn.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gn"
+        values:
+          academic_year_id: "REC: academic_year_gn.id"
+          academic_term_id: "REC: academic_term_gn.id"
+          school_id: "REC: school_gn.id"
+          grade_id: "REC: grade_gn.id"
+          grade_class_id: "REC: grade_class_gn.id"
+          student_id: "REC: student_gn.id"
+
+      - step: "Create participant without a Group"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gn"
+        values:
+          offering_id: "REC: offering_gn.id"
+          student_id: "REC: student_gn.id"
+          enrollment_id: "REC: enrollment_gn.id"
+          billing_mode: "free"
+          product_id: "REC: product_gn.id"
+          price_unit: 150000.0
+
+      - step: "Assert group_id is empty"
+        action: "assert"
+        target: "participant_gn"
+        asserts:
+          group_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Confirm participant without a Group"
+        action: "call"
+        target: "participant_gn"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step:
+          "Approve participant without a Group - the Group's own quota is not checked"
+        action: "call"
+        target: "participant_gn"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Extracurricular Offering Group - rejects opening beyond the group quota"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gf"
+        values:
+          name: "Grade Type Group GF"
+          code: "EXTGRP-GT-GF"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gf"
+        values:
+          name: "School Group GF"
+          code: "EXTGRP-SCH-GF"
+          grade_type_id: "REC: grade_type_gf.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gf"
+        values:
+          name: "Category Group GF"
+          code: "EXTGRP-CAT-GF"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gf"
+        values:
+          name: "Futsal Club Group GF"
+          code: "EXTGRP-EXT-GF"
+          category_id: "REC: category_gf.id"
+          school_id: "REC: school_gf.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gf"
+        values:
+          name: "AY Group GF"
+          code: "EXTGRP-AY-GF"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gf"
+        values:
+          name: "Term Group GF"
+          code: "EXTGRP-TERM-GF"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gf.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gf"
+        values:
+          name: "Teacher Employee Group GF"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gf"
+        values:
+          name: "Teacher Group GF"
+          code: "EXTGRP-TCH-GF"
+          employee_id: "REC: employee_gf.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gf"
+        values:
+          name: "Extracurricular Fee Group GF"
+
+      - step:
+          "Setup - create offering whose own quota is wide open (higher than the
+          group's)"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gf"
+        values:
+          extracurricular_id: "REC: extracurricular_gf.id"
+          academic_year_id: "REC: academic_year_gf.id"
+          academic_term_id: "REC: academic_term_gf.id"
+          teacher_id: "REC: teacher_gf.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gf.id"
+          price_unit: 150000.0
+          quota_max: 10
+
+      - step: "Create Group with quota_max 1, tighter than the offering's own quota"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gf"
+        values:
+          offering_id: "REC: offering_gf.id"
+          name: "Group GF"
+          quota_max: 1
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gf"
+        values:
+          name: "Grade Group GF"
+          code: "EXTGRP-GR-GF"
+          type_id: "REC: grade_type_gf.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gf"
+        values:
+          name: "Grade Class Group GF"
+          code: "EXTGRP-GC-GF"
+          school_id: "REC: school_gf.id"
+          grade_id: "REC: grade_gf.id"
+
+      - step: "Setup - create contact of first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gf_a"
+        values:
+          name: "Student Contact Group GF A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gf_a"
+        values:
+          name: "Student Group GF A"
+          code: "EXTGRP-ST-GF-A"
+          contact_id: "REC: contact_gf_a.id"
+          school_id: "REC: school_gf.id"
+
+      - step: "Setup - create enrollment for first student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gf_a"
+        values:
+          academic_year_id: "REC: academic_year_gf.id"
+          academic_term_id: "REC: academic_term_gf.id"
+          school_id: "REC: school_gf.id"
+          grade_id: "REC: grade_gf.id"
+          grade_class_id: "REC: grade_class_gf.id"
+          student_id: "REC: student_gf_a.id"
+
+      - step: "Setup - create contact of second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gf_b"
+        values:
+          name: "Student Contact Group GF B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gf_b"
+        values:
+          name: "Student Group GF B"
+          code: "EXTGRP-ST-GF-B"
+          contact_id: "REC: contact_gf_b.id"
+          school_id: "REC: school_gf.id"
+
+      - step: "Setup - create enrollment for second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gf_b"
+        values:
+          academic_year_id: "REC: academic_year_gf.id"
+          academic_term_id: "REC: academic_term_gf.id"
+          school_id: "REC: school_gf.id"
+          grade_id: "REC: grade_gf.id"
+          grade_class_id: "REC: grade_class_gf.id"
+          student_id: "REC: student_gf_b.id"
+
+      - step: "Create first participant filling the group's quota"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gf_1"
+        values:
+          offering_id: "REC: offering_gf.id"
+          group_id: "REC: group_gf.id"
+          student_id: "REC: student_gf_a.id"
+          enrollment_id: "REC: enrollment_gf_a.id"
+          billing_mode: "free"
+          product_id: "REC: product_gf.id"
+          price_unit: 150000.0
+
+      - step: "Confirm first participant"
+        action: "call"
+        target: "participant_gf_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve first participant, Group quota now full"
+        action: "call"
+        target: "participant_gf_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second participant for the same Group"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_gf_2"
+        values:
+          offering_id: "REC: offering_gf.id"
+          group_id: "REC: group_gf.id"
+          student_id: "REC: student_gf_b.id"
+          enrollment_id: "REC: enrollment_gf_b.id"
+          billing_mode: "free"
+          product_id: "REC: product_gf.id"
+          price_unit: 150000.0
+
+      - step: "Confirm second participant"
+        action: "call"
+        target: "participant_gf_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step:
+          "Opening the second participant must fail on the Group's quota, though the
+          Offering's own quota still has room"
+        action: "call"
+        target: "participant_gf_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Group 'Group GF' has reached its maximum quota"
+
+  - name: "Extracurricular Offering Group - rejects a Group from another Offering"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gm"
+        values:
+          name: "Grade Type Group GM"
+          code: "EXTGRP-GT-GM"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gm"
+        values:
+          name: "School Group GM"
+          code: "EXTGRP-SCH-GM"
+          grade_type_id: "REC: grade_type_gm.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gm"
+        values:
+          name: "Category Group GM"
+          code: "EXTGRP-CAT-GM"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gm"
+        values:
+          name: "Futsal Club Group GM"
+          code: "EXTGRP-EXT-GM"
+          category_id: "REC: category_gm.id"
+          school_id: "REC: school_gm.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gm"
+        values:
+          name: "AY Group GM"
+          code: "EXTGRP-AY-GM"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gm"
+        values:
+          name: "Term Group GM"
+          code: "EXTGRP-TERM-GM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gm.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gm"
+        values:
+          name: "Teacher Employee Group GM"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gm"
+        values:
+          name: "Teacher Group GM"
+          code: "EXTGRP-TCH-GM"
+          employee_id: "REC: employee_gm.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gm"
+        values:
+          name: "Extracurricular Fee Group GM"
+
+      - step: "Setup - create Offering A, owner of the Group used below"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gm_a"
+        values:
+          extracurricular_id: "REC: extracurricular_gm.id"
+          academic_year_id: "REC: academic_year_gm.id"
+          academic_term_id: "REC: academic_term_gm.id"
+          teacher_id: "REC: teacher_gm.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gm.id"
+          price_unit: 150000.0
+
+      - step: "Create Group on Offering A"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gm_a"
+        values:
+          offering_id: "REC: offering_gm_a.id"
+          name: "Group GM A"
+
+      - step: "Setup - create Offering B, unrelated to the Group above"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gm_b"
+        values:
+          extracurricular_id: "REC: extracurricular_gm.id"
+          academic_year_id: "REC: academic_year_gm.id"
+          academic_term_id: "REC: academic_term_gm.id"
+          teacher_id: "REC: teacher_gm.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gm.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_gm"
+        values:
+          name: "Grade Group GM"
+          code: "EXTGRP-GR-GM"
+          type_id: "REC: grade_type_gm.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_gm"
+        values:
+          name: "Grade Class Group GM"
+          code: "EXTGRP-GC-GM"
+          school_id: "REC: school_gm.id"
+          grade_id: "REC: grade_gm.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_gm"
+        values:
+          name: "Student Contact Group GM"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gm"
+        values:
+          name: "Student Group GM"
+          code: "EXTGRP-ST-GM"
+          contact_id: "REC: contact_gm.id"
+          school_id: "REC: school_gm.id"
+
+      - step: "Setup - create enrollment on Offering B's term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_gm"
+        values:
+          academic_year_id: "REC: academic_year_gm.id"
+          academic_term_id: "REC: academic_term_gm.id"
+          school_id: "REC: school_gm.id"
+          grade_id: "REC: grade_gm.id"
+          grade_class_id: "REC: grade_class_gm.id"
+          student_id: "REC: student_gm.id"
+
+      - step:
+          "Create a participant on Offering B pointing to Offering A's Group must fail"
+        action: "create"
+        model: "school_extracurricular_participant"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not belong to Offering"
+        values:
+          offering_id: "REC: offering_gm_b.id"
+          group_id: "REC: group_gm_a.id"
+          student_id: "REC: student_gm.id"
+          enrollment_id: "REC: enrollment_gm.id"
+          billing_mode: "free"
+          product_id: "REC: product_gm.id"
+          price_unit: 150000.0
+
+  - name:
+      "Extracurricular Offering Group - rejects a duplicate Code in the same Offering"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_gd"
+        values:
+          name: "Grade Type Group GD"
+          code: "EXTGRP-GT-GD"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_gd"
+        values:
+          name: "School Group GD"
+          code: "EXTGRP-SCH-GD"
+          grade_type_id: "REC: grade_type_gd.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_gd"
+        values:
+          name: "Category Group GD"
+          code: "EXTGRP-CAT-GD"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_gd"
+        values:
+          name: "Futsal Club Group GD"
+          code: "EXTGRP-EXT-GD"
+          category_id: "REC: category_gd.id"
+          school_id: "REC: school_gd.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_gd"
+        values:
+          name: "AY Group GD"
+          code: "EXTGRP-AY-GD"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_gd"
+        values:
+          name: "Term Group GD"
+          code: "EXTGRP-TERM-GD"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_gd.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_gd"
+        values:
+          name: "Teacher Employee Group GD"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_gd"
+        values:
+          name: "Teacher Group GD"
+          code: "EXTGRP-TCH-GD"
+          employee_id: "REC: employee_gd.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_gd"
+        values:
+          name: "Extracurricular Fee Group GD"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_gd"
+        values:
+          extracurricular_id: "REC: extracurricular_gd.id"
+          academic_year_id: "REC: academic_year_gd.id"
+          academic_term_id: "REC: academic_term_gd.id"
+          teacher_id: "REC: teacher_gd.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_gd.id"
+          price_unit: 150000.0
+
+      - step: "Create first Group with Code G1"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        save_as: "group_gd_1"
+        values:
+          offering_id: "REC: offering_gd.id"
+          name: "Group GD 1"
+          code: "G1"
+
+      - step: "Create a second Group with the same Code G1 must fail"
+        action: "create"
+        model: "school_extracurricular_offering_group"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already used by another group"
+        values:
+          offering_id: "REC: offering_gd.id"
+          name: "Group GD 2"
+          code: "G1"

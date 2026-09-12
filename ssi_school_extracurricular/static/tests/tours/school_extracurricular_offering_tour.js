@@ -125,6 +125,20 @@ odoo.define(
                     trigger: "input.o_field_widget[name='price_unit']",
                     run: "text 150000.0",
                 },
+                {
+                    content: "Switch to the Groups tab",
+                    trigger: ".o_notebook .nav-link:contains(Groups)",
+                    extra_trigger: ".o_form_view.o_form_editable",
+                },
+                {
+                    content: "Click Add a line to create a Group",
+                    trigger: ".o_field_x2many .o_field_x2many_list_row_add a",
+                },
+                {
+                    content: "Fill in the Group Name",
+                    trigger: ".o_selected_row .o_field_widget[name='name']",
+                    run: "text TOUR-OFFERING-GROUP",
+                },
 
                 // Flow 4 — Click Save.
                 {
@@ -214,6 +228,20 @@ odoo.define(
                     trigger: "input.o_field_widget[name='price_unit']",
                     extra_trigger: ".o_form_view.o_form_editable",
                     run: "text 175000.0",
+                },
+                {
+                    content: "Switch to the Groups tab",
+                    trigger: ".o_notebook .nav-link:contains(Groups)",
+                    extra_trigger: ".o_form_view.o_form_editable",
+                },
+                {
+                    content: "Click Add a line to create a Group",
+                    trigger: ".o_field_x2many .o_field_x2many_list_row_add a",
+                },
+                {
+                    content: "Fill in the Group Name",
+                    trigger: ".o_selected_row .o_field_widget[name='name']",
+                    run: "text TOUR-OFFERING-EDIT-GROUP",
                 },
 
                 // Flow 4 — Click Save.

@@ -114,6 +114,29 @@
                         <field name="analytic_account_id" />
                     </group>
                 </page>
+                <page name="group" string="Groups">
+                    <field name="group_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="teacher_ids" widget="many2many_tags" />
+                            <field name="quota_max" />
+                            <field name="participant_count" />
+                        </tree>
+                        <form>
+                            <group name="group_group_1">
+                                <field name="name" />
+                                <field name="code" />
+                                <field name="sequence" />
+                                <field name="teacher_ids" widget="many2many_tags" />
+                                <field name="quota_max" />
+                                <field name="participant_count" />
+                                <field name="active" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
                 <page name="participant" string="Participants">
                     <field
                             name="participant_ids"
@@ -121,6 +144,7 @@
                         >
                         <tree>
                             <field name="student_id" />
+                            <field name="group_id" />
                             <field name="enrollment_id" />
                             <field name="date_join" />
                             <field name="date_leave" />

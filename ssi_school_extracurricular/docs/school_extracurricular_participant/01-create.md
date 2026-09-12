@@ -21,6 +21,10 @@
 2. Click the **New** button. **(14.0: "Create")**
 3. Fill in the required fields:
    - **Offering** _(required)_: The term's offering this participant is joining.
+   - **Group** _(optional)_: The batch of the selected Offering this participant is
+     placed in, when the Offering is divided into Groups (see the Offering's
+     `01-create`). Only Groups belonging to the selected Offering may be chosen. Leave
+     empty when the Offering is not divided into Groups.
    - **Student** _(required)_: The student joining this extracurricular offering.
    - **Enrollment** _(required)_: The student's enrollment for the same academic term as
      the selected Offering.

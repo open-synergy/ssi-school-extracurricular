@@ -51,6 +51,7 @@
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="offering_id" />
                 <field name="student_id" />
+                <field name="group_id" />
                 <field name="school_id" />
                 <field name="academic_term_id" />
                 <field name="date_join" />
@@ -72,6 +73,7 @@
                 <field name="extracurricular_id" />
                 <field name="school_id" />
                 <field name="student_id" />
+                <field name="group_id" domain="[('offering_id','=',offering_id)]" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="enrollment_id" />

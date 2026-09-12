@@ -17,6 +17,8 @@
 1. Open the **School > Extracurricular > Extracurricular Offerings** menu.
 2. Find and open the record to edit.
 3. Change the required fields.
+   - On the **Groups** tab: add, edit, or remove **Group** lines the same way as in
+     `01-create`.
 4. Click **Save**.
 
 ## Post-Condition
