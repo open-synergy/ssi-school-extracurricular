@@ -136,7 +136,7 @@ odoo.define(
                 },
                 {
                     content: "Fill in the Group Name",
-                    trigger: ".o_selected_row .o_field_widget[name='name'] input",
+                    trigger: ".o_selected_row .o_field_widget[name='name']",
                     run: "text TOUR-OFFERING-GROUP",
                 },
 
@@ -240,7 +240,7 @@ odoo.define(
                 },
                 {
                     content: "Fill in the Group Name",
-                    trigger: ".o_selected_row .o_field_widget[name='name'] input",
+                    trigger: ".o_selected_row .o_field_widget[name='name']",
                     run: "text TOUR-OFFERING-EDIT-GROUP",
                 },
 
