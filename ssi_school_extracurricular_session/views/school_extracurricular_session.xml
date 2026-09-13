@@ -227,6 +227,36 @@
                                 />
                         </group>
                     </page>
+                    <page name="tier_validation" string="Approvals">
+                        <group>
+                            <field name="approval_template_id" />
+                            <field
+                                    name="active_approver_partner_ids"
+                                    widget="many2many_tags"
+                                />
+                        </group>
+                        <field
+                                name="approval_ids"
+                                attrs="{'invisible':[('approval_ids','=',[])]}"
+                                nolabel="1"
+                            />
+                    </page>
+                    <page name="policy" string="Policies" groups="base.group_system">
+                        <group name="policy_1" colspan="4" col="2">
+                            <field name="policy_template_id" />
+                            <button
+                                    name="action_reload_policy_template"
+                                    type="object"
+                                    string="Reload Template Policy"
+                                    icon="fa-refresh"
+                                    class="oe_highlight"
+                                />
+                            <field name="confirm_ok" />
+                            <field name="approve_ok" />
+                            <field name="reject_ok" />
+                            <field name="restart_approval_ok" />
+                        </group>
+                    </page>
                 </notebook>
             </sheet>
         </form>
