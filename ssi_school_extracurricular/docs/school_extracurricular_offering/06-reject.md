@@ -1,6 +1,6 @@
 # Reject Extracurricular Offering
 
-> **Module:** ssi_school_extracurricular\
+> **Module:** `ssi_school_extracurricular`\
 > **Model:** `school_extracurricular_offering`\
 > **Menu:** School > Extracurricular > Extracurricular Offerings\
 > **Actor:** user in group `Extracurricular Offering - Officer`\
