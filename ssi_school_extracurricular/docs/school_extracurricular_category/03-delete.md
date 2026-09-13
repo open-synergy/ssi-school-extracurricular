@@ -1,6 +1,6 @@
 # Delete Extracurricular Category
 
-> **Module:** ssi_school_extracurricular\
+> **Module:** `ssi_school_extracurricular`\
 > **Model:** `school_extracurricular_category`\
 > **Menu:** School > Configuration > Extracurricular > Categories\
 > **Actor:** user in group `Extracurricular Category`\

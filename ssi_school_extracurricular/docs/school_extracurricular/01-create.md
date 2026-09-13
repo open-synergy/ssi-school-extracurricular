@@ -1,6 +1,6 @@
 # Create Extracurricular
 
-> **Module:** ssi_school_extracurricular\
+> **Module:** `ssi_school_extracurricular`\
 > **Model:** `school_extracurricular`\
 > **Menu:** School > Configuration > Extracurricular > Extracurriculars\
 > **Actor:** user in group `Extracurricular`
