@@ -1,6 +1,6 @@
 # Create Extracurricular Session
 
-> **Module:** ssi_school_extracurricular_session_operating_unit\
+> **Module:** `ssi_school_extracurricular_session_operating_unit`\
 > **Extends:** ssi_school_extracurricular_session — model `school_extracurricular_session`,
 > aksi `01-create`
 
