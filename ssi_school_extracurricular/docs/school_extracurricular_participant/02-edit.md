@@ -1,6 +1,6 @@
 # Edit Extracurricular Participant
 
-> **Module:** ssi_school_extracurricular\
+> **Module:** `ssi_school_extracurricular`\
 > **Model:** `school_extracurricular_participant`\
 > **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - User`\

@@ -1,6 +1,6 @@
 # Create Due Invoice — Extracurricular
 
-> **Module:** ssi_school_extracurricular\
+> **Module:** `ssi_school_extracurricular`\
 > **Model:** `school_extracurricular_create_due_invoice`\
 > **Menu:** School > Extracurricular > Create Due Invoice\
 > **Actor:** user in group `Extracurricular Participant - User`
