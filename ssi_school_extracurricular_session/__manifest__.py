@@ -11,6 +11,7 @@
     "installable": True,
     "application": True,
     "depends": [
+        "mail",
         "ssi_school_extracurricular",
         "ssi_policy_mixin",
         "ssi_multiple_approval_mixin",

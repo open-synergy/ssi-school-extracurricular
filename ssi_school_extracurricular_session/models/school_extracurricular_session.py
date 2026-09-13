@@ -34,6 +34,8 @@ class SchoolExtracurricularSession(models.Model):
 
     _name = "school_extracurricular_session"
     _inherit = [
+        "mail.activity.mixin",
+        "mail.thread",
         "mixin.policy",
         "mixin.multiple_approval",
     ]
