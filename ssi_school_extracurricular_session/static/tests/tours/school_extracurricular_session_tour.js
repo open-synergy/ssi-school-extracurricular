@@ -775,6 +775,17 @@ odoo.define(
                         // Assertion only; do not trigger the default click action.
                     },
                 },
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
 
                 // Flow 3 — Fill in the Journal tab's Journal - Material and
                 // Journal - Activity.
@@ -877,6 +888,17 @@ odoo.define(
                 {
                     content: "Record form is open",
                     trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },

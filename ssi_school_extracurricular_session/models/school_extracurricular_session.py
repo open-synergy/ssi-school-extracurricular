@@ -490,14 +490,17 @@ Date
             record._confirm()
 
     def _confirm(self):
-        """Move this session to ``confirm``.
+        """Move this session to ``confirm`` and raise its approval request.
 
-        The only gate is that the journal is filled -- writing
-        ``state`` to ``confirm`` triggers
-        ``mixin.multiple_approval.write()`` to raise the approval
-        request on its own; no approval-creation call is made here.
+        The gate is that the journal is filled. ``mixin.multiple_approval``
+        does not raise the approval on its own from ``write()`` --
+        ``_compute_need_validation`` evaluates ``state == confirm`` before
+        ``write()`` runs, so it is always False at that point. This method
+        therefore calls ``action_request_approval()`` explicitly, right
+        after ``state`` is written to ``confirm``.
 
-        Side effect: writes ``state`` on this session.
+        Side effect: writes ``state`` on this session and creates its
+        approval request.
 
         :raises UserError: when ``journal_material`` or
             ``journal_activity`` is empty
@@ -517,6 +520,7 @@ Solution: Fill in both journal fields before confirming this session
             )
             raise UserError(error_message)
         self.write({"state": "confirm"})
+        self.action_request_approval()
 
     @ssi_decorator.pre_approve_check()
     def _10_check_monitoring(self):
