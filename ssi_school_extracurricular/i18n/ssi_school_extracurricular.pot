@@ -71,6 +71,20 @@ msgid ""
 "\n"
 "Context: Open extracurricular participant\n"
 "Database ID: %(id)s\n"
+"Problem: Group '%(group)s' has reached its maximum quota of\n"
+"%(quota)s\n"
+"Solution: Increase the Group's Maximum Quota, place this participant\n"
+"in a different Group, or cancel an existing participant in the Group\n"
+"before opening a new one\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Open extracurricular participant\n"
+"Database ID: %(id)s\n"
 "Problem: Offering '%(offering)s' has reached its maximum quota of\n"
 "%(quota)s\n"
 "Solution: Increase the Offering's Maximum Quota, or cancel an\n"
@@ -122,6 +136,18 @@ msgid ""
 "Database ID: %s\n"
 "Problem: Neither Teacher nor External Coach is filled\n"
 "Solution: Select either a Teacher or an External Coach\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_offering_group.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular offering group\n"
+"Database ID: %s\n"
+"Problem: Code '%s' is already used by another group on the same\n"
+"Offering\n"
+"Solution: Use a different Code, or leave it empty\n"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -208,6 +234,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular participant group\n"
+"Database ID: %s\n"
+"Problem: Group '%s' does not belong to Offering '%s'\n"
+"Solution: Select a Group that belongs to the selected Offering\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__customer_invoice_id
 msgid "# Customer Invoice"
 msgstr ""
@@ -266,6 +303,7 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__active
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__active
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__active
 msgid "Active"
 msgstr ""
 
@@ -574,6 +612,7 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__code
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__code
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__code
 msgid "Code"
 msgstr ""
 
@@ -632,6 +671,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__create_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__create_uid
@@ -645,6 +685,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__create_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__create_date
@@ -733,6 +774,11 @@ msgid "Detail"
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__sequence
+msgid "Determines the display order of an Offering's groups."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_customer_invoice_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term__display_name
@@ -742,6 +788,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__display_name
@@ -893,6 +940,11 @@ msgid "Extracurricular Offering - Workflow"
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model,name:ssi_school_extracurricular.model_school_extracurricular_offering_group
+msgid "Extracurricular Offering Group"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.actions.act_window,name:ssi_school_extracurricular.school_extracurricular_offering_action
 #: model:ir.ui.menu,name:ssi_school_extracurricular.menu_extracurricular_offering
 msgid "Extracurricular Offerings"
@@ -990,12 +1042,23 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__group_id
+msgid "Group"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_category_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_fee_analysis_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_offering_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_participant_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_view_search
 msgid "Group By"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__group_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_offering_view_form
+msgid "Groups"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -1028,6 +1091,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__id
@@ -1119,6 +1183,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term____last_update
@@ -1132,6 +1197,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__write_uid
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__write_uid
@@ -1145,6 +1211,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__write_date
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__write_date
@@ -1217,6 +1284,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__quota_max
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__quota_max
 msgid "Maximum Quota"
 msgstr ""
 
@@ -1252,6 +1320,7 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__name
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_category_view_search
 msgid "Name"
 msgstr ""
@@ -1342,6 +1411,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__participant_count
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__participant_count
 msgid "Number of participants currently in ``open`` state."
 msgstr ""
 
@@ -1355,6 +1425,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__offering_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__offering_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__offering_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_participant_view_search
 msgid "Offering"
@@ -1379,6 +1450,13 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__code
+msgid ""
+"Optional short code for this group. When filled, it must be unique among the"
+" groups of the same Offering."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_payment_term__sequence
 msgid ""
 "Order of the payment term within the participant. Lower values appear first."
@@ -1391,11 +1469,13 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__participant_count
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__participant_count
 msgid "Participant Count"
 msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__participant_ids
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__participant_ids
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_offering_view_form
 msgid "Participants"
 msgstr ""
@@ -1638,10 +1718,16 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__sequence
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__sequence
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__sequence
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__sequence
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__sequence
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__active
+msgid "Set to false to archive this group without deleting it."
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -1758,6 +1844,11 @@ msgid "Teacher"
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering_group__teacher_ids
+msgid "Teachers"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term__name
 msgid "Term"
 msgstr ""
@@ -1810,6 +1901,21 @@ msgstr ""
 msgid ""
 "The addendum fee line created on the payment term from this allocation, "
 "automatically populated when the participant is opened."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__group_id
+msgid ""
+"The batch of the selected Offering this participant is placed in. Must "
+"belong to the same Offering. Left empty, this participant is not placed in "
+"any batch."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__group_ids
+msgid ""
+"The batches this offering is divided into, each with its own quota and "
+"coach(es). Left empty, this offering runs as a single batch."
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -2031,6 +2137,18 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__name
+msgid "The label of this group, e.g. 'Mini Soccer 1'."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__quota_max
+msgid ""
+"The maximum number of participants allowed to join this group. A value of 0 "
+"means there is no upper limit."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__quota_max
 msgid ""
 "The maximum number of students allowed to join this offering. A value of 0 "
@@ -2040,6 +2158,11 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__quota_min
 msgid "The minimum number of students required to run this offering."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__participant_ids
+msgid "The participants currently placed in this group."
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -2148,8 +2271,21 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__teacher_ids
+msgid ""
+"The teacher(s) coaching this group. Left empty, this does NOT mean the group"
+" has no coach -- it means the group is coached by the Offering's own "
+"Teacher."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__offering_id
 msgid "The term's offering the participant joined."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__offering_id
+msgid "The term's offering this group is a batch of."
 msgstr ""
 
 #. module: ssi_school_extracurricular
