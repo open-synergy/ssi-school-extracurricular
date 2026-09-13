@@ -16,7 +16,8 @@
 1. Open the **School > Extracurricular > Extracurricular Session > Extracurricular
    Sessions** menu.
 2. Find and open the record to edit.
-3. Change the required fields.
+3. Change the required fields, including the **Journal** tab's **Journal - Material**
+   and **Journal - Activity**, if needed.
 4. Click **Save**.
 
 ## Post-Condition

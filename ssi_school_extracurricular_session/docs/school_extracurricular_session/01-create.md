@@ -36,6 +36,9 @@
      starts and ends. End Time must be later than Start Time.
    - **Location**: Where the meeting takes place. Optional.
    - **Topic**: A short label for what the meeting covers. Optional.
+   - **Journal** (tab): **Journal - Material** and **Journal - Activity**. Both are
+     optional at this step -- they are only required before this session can be
+     confirmed (see `09-confirm.md`).
    - **Instructors** (tab): Automatically filled with a copy of the selected Offering's
      Instructor roster, if it has one -- each copied line's Attendance is left blank. No
      manual entry is needed at this step.

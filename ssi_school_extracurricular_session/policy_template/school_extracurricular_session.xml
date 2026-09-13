@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="policy_template_school_extracurricular_session" model="policy.template">
+    <field name="name">Standard</field>
+    <field name="model_id" ref="model_school_extracurricular_session" />
+    <field
+            name="state_field_id"
+            search="[('model_id.model','=','school_extracurricular_session'),('name','=','state')]"
+        />
+    <field name="sequence" eval="100" />
+    <field name="python_code">result=True</field>
+</record>
+
+<!-- Confirm -->
+<record
+        id="policy_template_school_extracurricular_session_confirm"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_extracurricular_session" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_extracurricular_session'),('name','=','confirm_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_extracurricular_session'),('value','=','planned')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_extracurricular_session_user_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Approve -->
+<record
+        id="policy_template_school_extracurricular_session_approve"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_extracurricular_session" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_extracurricular_session'),('name','=','approve_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_extracurricular_session'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_extracurricular_session_monitor_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Reject -->
+<record
+        id="policy_template_school_extracurricular_session_reject"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_extracurricular_session" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_extracurricular_session'),('name','=','reject_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_extracurricular_session'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_extracurricular_session_monitor_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Restart Approval -->
+<record
+        id="policy_template_school_extracurricular_session_restart_approval"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_extracurricular_session" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_extracurricular_session'),('name','=','restart_approval_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_extracurricular_session'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_extracurricular_session_monitor_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+</odoo>

@@ -12,6 +12,8 @@
     "application": True,
     "depends": [
         "ssi_school_extracurricular",
+        "ssi_policy_mixin",
+        "ssi_multiple_approval_mixin",
         "web_tour",
     ],
     "data": [
@@ -20,6 +22,8 @@
         "security/ir_model_access/school_extracurricular_session.xml",
         "security/ir_model_access/cancel_extracurricular_session.xml",
         "security/ir_model_access/school_extracurricular_session_generate.xml",
+        "approval_template/school_extracurricular_session.xml",
+        "policy_template/school_extracurricular_session.xml",
         "menu.xml",
         "views/school_extracurricular_session.xml",
         "views/school_extracurricular_offering.xml",

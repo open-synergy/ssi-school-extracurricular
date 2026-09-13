@@ -218,6 +218,37 @@ class TestUiSchoolExtracurricularSession(HttpSavepointCase):
         # IK/tour and is not this fixture's concern.
         cls.session_restart.write({"state": "done"})
 
+        # Confirm Pre-Condition: status is Planned with an empty
+        # journal -- the tour fills it in and clicks Confirm itself.
+        cls.session_confirm = cls._create_session(
+            cls._create_teacher("TOUR-SESSION-CONFIRM"), "2026-08-14"
+        )
+
+        # Approve Pre-Condition: status is Confirm, reached the same way
+        # the 09-confirm tour reaches it (journal filled, then
+        # action_confirm as a genuine actor) -- not by writing ``state``
+        # directly, so ``mixin.multiple_approval.write()`` raises the
+        # approval the same way a real Confirm click would. It also
+        # needs an attendance line, since Approve moves it straight to
+        # Done through ``_after_approved_method`` and the shared
+        # Offering tracks participant attendance.
+        cls.session_approve = cls._create_session(
+            cls._create_teacher("TOUR-SESSION-APPROVE"), "2026-08-15"
+        )
+        cls.env["school_extracurricular_session_attendance"].create(
+            {
+                "session_id": cls.session_approve.id,
+                "participant_id": cls.participant.id,
+            }
+        )
+        cls.session_approve.write(
+            {
+                "journal_material": "Passing drills and small-sided games.",
+                "journal_activity": "Warm-up, drills, scrimmage, cool-down.",
+            }
+        )
+        cls.session_approve.with_user(cls.admin).action_confirm()
+
     def test_create(self):
         """Run the create tour for ``school_extracurricular_session``.
 
@@ -303,5 +334,27 @@ class TestUiSchoolExtracurricularSession(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_extracurricular_session_school_extracurricular_session_generate",
+            login="admin",
+        )
+
+    def test_confirm(self):
+        """Run the confirm tour for ``school_extracurricular_session``.
+
+        IK: docs/school_extracurricular_session/09-confirm.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_session_school_extracurricular_session_confirm",
+            login="admin",
+        )
+
+    def test_approve(self):
+        """Run the approve tour for ``school_extracurricular_session``.
+
+        IK: docs/school_extracurricular_session/10-approve.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_session_school_extracurricular_session_approve",
             login="admin",
         )
