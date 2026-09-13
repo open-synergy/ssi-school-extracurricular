@@ -1,6 +1,6 @@
 # Create Extracurricular Offering
 
-> **Module:** ssi_school_extracurricular_operating_unit\
+> **Module:** `ssi_school_extracurricular_operating_unit`\
 > **Extends:** ssi_school_extracurricular — model `school_extracurricular_offering`, aksi
 > `01-create`
 

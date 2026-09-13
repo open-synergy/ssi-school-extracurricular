@@ -1,6 +1,6 @@
 # Create Due Invoice — Extracurricular
 
-> **Module:** ssi_school_extracurricular_operating_unit\
+> **Module:** `ssi_school_extracurricular_operating_unit`\
 > **Extends:** ssi_school_extracurricular — model `school_extracurricular_create_due_invoice`,
 > aksi `01-create-invoice`
 
