@@ -249,6 +249,18 @@ class TestUiSchoolExtracurricularSession(HttpSavepointCase):
         )
         cls.session_approve.with_user(cls.admin).action_confirm()
 
+        # Reload Template Policy Pre-Condition is "usable in any state" and
+        # does not depend on any particular value -- ``mixin.policy.create``
+        # already auto-assigned this session's ``policy_template_id`` to the
+        # module's one active ``policy.template`` ("Standard"). Blank it
+        # here so the tour's post-click gate (that template's name
+        # reappearing in the field) is impossible to match before Reload
+        # Template Policy is actually clicked.
+        cls.session_reload_policy = cls._create_session(
+            cls._create_teacher("TOUR-SESSION-RELOAD-POLICY"), "2026-08-16"
+        )
+        cls.session_reload_policy.write({"policy_template_id": False})
+
     def test_create(self):
         """Run the create tour for ``school_extracurricular_session``.
 
@@ -356,5 +368,16 @@ class TestUiSchoolExtracurricularSession(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_extracurricular_session_school_extracurricular_session_approve",
+            login="admin",
+        )
+
+    def test_reload_template_policy(self):
+        """Run the reload template policy tour for ``school_extracurricular_session``.
+
+        IK: docs/school_extracurricular_session/11-reload-template-policy.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_session_reload_template_policy",
             login="admin",
         )

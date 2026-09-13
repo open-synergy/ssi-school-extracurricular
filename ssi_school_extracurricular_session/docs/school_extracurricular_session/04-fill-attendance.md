@@ -1,6 +1,6 @@
 # Fill Attendance — Extracurricular Session
 
-> **Module:** ssi_school_extracurricular_session\
+> **Module:** `ssi_school_extracurricular_session`\
 > **Model:** `school_extracurricular_session`\
 > **Menu:** School > Extracurricular > Extracurricular Session > Extracurricular
 > Sessions\

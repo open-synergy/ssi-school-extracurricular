@@ -953,5 +953,90 @@ odoo.define(
                 },
             ]
         );
+
+        // IK: docs/school_extracurricular_session/11-reload-template-policy.md
+        tour.register(
+            "ssi_school_extracurricular_session_reload_template_policy",
+            {
+                test: true,
+                url: "/web",
+            },
+            [
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
+                tour.stepUtils.showAppsMenuItem(),
+                {
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                {
+                    content: "Open the Extracurricular Sessions menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session"]',
+                },
+                {
+                    content: "Extracurricular Sessions list is displayed",
+                    trigger:
+                        ".o_control_panel .breadcrumb-item.active:contains(Extracurricular Sessions)",
+                    extra_trigger: ".o_list_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 2 — Open the record whose policy template should be
+                // re-evaluated.
+                {
+                    content: "Open the session to reload",
+                    trigger:
+                        ".o_data_row:contains(TOUR-SESSION-RELOAD-POLICY) .o_data_cell:first",
+                    extra_trigger: ".o_list_view",
+                },
+                {
+                    content: "Record form is open",
+                    trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 3 — On the Policies tab, click Reload Template Policy.
+                {
+                    content: "Open the Policies tab",
+                    trigger: ".o_notebook .nav-link:contains(Policies)",
+                    extra_trigger: ".o_form_view",
+                },
+                {
+                    content: "Click the Reload Template Policy button",
+                    trigger:
+                        ".tab-pane.active button[name='action_reload_policy_template']",
+                    extra_trigger: ".o_form_view",
+                },
+                // Gate: `action_reload_policy_template` sits inside a
+                // <sheet> notebook page, not the statusbar/button box, so
+                // it is never `disabled` while the RPC runs -- `:enabled`
+                // would match instantly and gate nothing (patterns-
+                // advanced-gotchas.md §P "Batasan penting"). The fixture
+                // blanks Policy Template before this tour runs (see
+                // setUpClass), so its name text is a delta-data gate that
+                // is impossible to match before Reload actually re-writes
+                // the field.
+                {
+                    content: "Policy Template is reloaded",
+                    trigger:
+                        ".tab-pane.active .o_field_widget[name='policy_template_id']:contains(Standard)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+            ]
+        );
     }
 );
