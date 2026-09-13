@@ -1,6 +1,6 @@
 # Generate Extracurricular Sessions
 
-> **Module:** ssi_school_extracurricular_session\
+> **Module:** `ssi_school_extracurricular_session`\
 > **Model:** `school_extracurricular_session_generate`\
 > **Menu:** School > Extracurricular > Extracurricular Session > Generate Sessions\
 > **Actor:** user in group `Extracurricular Session - User`
