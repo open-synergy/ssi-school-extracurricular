@@ -14,6 +14,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Approve extracurricular session\n"
+"Database ID: %s\n"
+"Problem: Coach Present is unchecked and Monitoring Note is empty\n"
+"Solution: Check Coach Present, or fill in a Monitoring Note\n"
+"explaining why the meeting still counts as held\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: code:addons/ssi_school_extracurricular_session/wizards/cancel_extracurricular_session.py:0
 #, python-format
 msgid ""
@@ -22,6 +34,17 @@ msgid ""
 "Database ID: %s\n"
 "Problem: Cancel Reason is empty\n"
 "Solution: Fill in a Cancel Reason before cancelling the session\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Confirm extracurricular session\n"
+"Database ID: %s\n"
+"Problem: Journal - Material or Journal - Activity is empty\n"
+"Solution: Fill in both journal fields before confirming this session\n"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -252,9 +275,98 @@ msgid "Academic Term"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approval_ids
+msgid "Active Approvals"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_partner_ids
+msgid "Active Partners"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_user_ids
+msgid "Active Users"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_template_id
+msgid "Approval Configuration"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_template_id
+msgid "Approval Template"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approvals"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approve"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approve this session. Are you sure?"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approved
+msgid "Approved"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_offering_instructor__role__assistant
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__role__assistant
 msgid "Assistant Instructor"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_attachment_count
+msgid "Attachment Count"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -273,6 +385,26 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_instructor
 msgid "Attendance Tracking"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approve_ok
+msgid "Can Approve"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__confirm_ok
+msgid "Can Confirm"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__reject_ok
+msgid "Can Reject"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__restart_approval_ok
+msgid "Can Restart Approval"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -300,8 +432,28 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__is_teacher_present
+msgid "Coach Present"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__confirm
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.cancel_extracurricular_session_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
 msgid "Confirm"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Confirm this session's journal. Are you sure?"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -455,6 +607,26 @@ msgid "Fill Attendance"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__note
 msgid "Free-form notes about this instructor's attendance."
 msgstr ""
@@ -549,6 +721,27 @@ msgid "ID"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__participant_attendance_tracked
 msgid ""
 "If enabled, a session under this offering may only be marked Done once at "
@@ -569,6 +762,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_instructor
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
 msgid "Instructors"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Journal"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_activity
+msgid "Journal - Activity"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_material
+msgid "Journal - Material"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -616,8 +829,23 @@ msgid "Location"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_manager_group
 msgid "Manager"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_ids
+msgid "Messages"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -626,9 +854,79 @@ msgid "Monday"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_monitor_group
+msgid "Monitor"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Monitoring"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__monitoring_note
+msgid "Monitoring Note"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__next_approval_ids
+msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__note
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__note
 msgid "Note"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__present_count
+msgid "Number of attendance lines whose Attendance is Present or Late."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -656,6 +954,11 @@ msgstr ""
 msgid ""
 "Number of this participant's attendance lines marked Present or Late on a "
 "Done session."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread_counter
+msgid "Number of unread messages"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -692,9 +995,10 @@ msgstr ""
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__state
 msgid ""
-"Planned = the meeting has not happened yet or is being recorded. Done = the "
-"meeting took place and its attendance is final. Cancelled = the meeting did "
-"not take place."
+"Planned = the meeting has not happened yet or is being recorded. Confirm = "
+"the journal is filled and is awaiting the Monitor's verification. Done = the"
+" meeting took place and its attendance is final. Cancelled = the meeting did"
+" not take place. Reject = the Monitor did not verify the meeting as claimed."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -708,6 +1012,16 @@ msgid "Planned Sessions"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Policies"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__policy_template_id
+msgid "Policy Template"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__present
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__attendance_state__present
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
@@ -716,12 +1030,65 @@ msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__present_count
 msgid "Present Count"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__reject
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reject"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reject this session. Are you sure?"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reload Template Policy"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_user_id
+msgid "Responsible User"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
 msgid "Restart"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Restart Approval Process"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Restart the approval process. Are you sure?"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -786,6 +1153,15 @@ msgid "Status"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__student_id
 msgid "Student"
 msgstr ""
@@ -802,6 +1178,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__teacher_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
 msgid "Teacher"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__monitoring_note
+msgid ""
+"The Monitor's note about this session's verification. Required to approve a "
+"session where Coach Present is not checked. Only editable while this session"
+" is in Confirm state."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
@@ -1010,6 +1394,21 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__sequence
 msgid "Used to order this offering's instructor roster."
 msgstr ""
@@ -1025,6 +1424,21 @@ msgid "User"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__wed
 msgid "Wednesday"
 msgstr ""
@@ -1035,8 +1449,31 @@ msgid "Weekdays"
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_activity
+msgid ""
+"What activity the participants did in this session's meeting. Required "
+"before this session may be confirmed."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_material
+msgid ""
+"What was taught in this session's meeting. Required before this session may "
+"be confirmed."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__location
 msgid "Where this session's meeting takes place."
+msgstr ""
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__is_teacher_present
+msgid ""
+"Whether the Monitor verified that the coach in charge of this session "
+"actually attended the meeting. Only editable while this session is in "
+"Confirm state. Defaults to False so an unchecked box withholds approval "
+"rather than making a false positive claim."
 msgstr ""
 
 #. module: ssi_school_extracurricular_session
