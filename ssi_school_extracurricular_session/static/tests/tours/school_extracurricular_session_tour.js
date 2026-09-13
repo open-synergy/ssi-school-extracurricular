@@ -723,5 +723,235 @@ odoo.define(
                 },
             ]
         );
+
+        // IK: docs/school_extracurricular_session/09-confirm.md
+        tour.register(
+            "ssi_school_extracurricular_session_school_extracurricular_session_confirm",
+            {
+                test: true,
+                url: "/web",
+            },
+            [
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
+                tour.stepUtils.showAppsMenuItem(),
+                {
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                {
+                    content: "Open the Extracurricular Sessions menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session"]',
+                },
+                {
+                    content: "Extracurricular Sessions list is displayed",
+                    trigger:
+                        ".o_control_panel .breadcrumb-item.active:contains(Extracurricular Sessions)",
+                    extra_trigger: ".o_list_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 2 — Open the session to confirm.
+                {
+                    content: "Open the session to confirm",
+                    trigger:
+                        ".o_data_row:contains(TOUR-SESSION-CONFIRM) .o_data_cell:first",
+                    extra_trigger: ".o_list_view",
+                },
+                {
+                    content: "Record form is open",
+                    trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 3 — Fill in the Journal tab's Journal - Material and
+                // Journal - Activity.
+                {
+                    content: "Open the Journal tab",
+                    trigger: ".o_notebook .nav-link:contains(Journal)",
+                    extra_trigger: ".o_form_view",
+                },
+                {
+                    content: "Fill in Journal - Material",
+                    trigger: ".o_field_widget[name='journal_material']",
+                    run: "text Passing drills and small-sided games.",
+                },
+                {
+                    content: "Fill in Journal - Activity",
+                    trigger: ".o_field_widget[name='journal_activity']",
+                    run: "text Warm-up, drills, scrimmage, cool-down.",
+                },
+                {
+                    content: "Save the record",
+                    trigger: ".o_form_button_save",
+                },
+                {
+                    content: "Record is saved",
+                    trigger: ".o_form_view.o_form_readonly",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 4 — Click the Confirm button.
+                {
+                    content: "Click the Confirm button",
+                    trigger: ".o_statusbar_buttons button[name='action_confirm']",
+                    extra_trigger: ".o_form_view",
+                },
+
+                // Flow 5 — Click OK on the confirmation dialog.
+                {
+                    content: "Confirm the dialog",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+                {
+                    content: "Status is Confirm",
+                    trigger:
+                        ".o_statusbar_status .o_arrow_button[data-value='confirm'].btn-primary",
+                    extra_trigger: "body:not(:has(.modal))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+            ]
+        );
+
+        // IK: docs/school_extracurricular_session/10-approve.md
+        tour.register(
+            "ssi_school_extracurricular_session_school_extracurricular_session_approve",
+            {
+                test: true,
+                url: "/web",
+            },
+            [
+                // Flow 1 — Open the School > Extracurricular >
+                // Extracurricular Session > Extracurricular Sessions menu.
+                tour.stepUtils.showAppsMenuItem(),
+                {
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                {
+                    content: "Open the Extracurricular Sessions menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular_session.menu_extracurricular_session"]',
+                },
+                {
+                    content: "Extracurricular Sessions list is displayed",
+                    trigger:
+                        ".o_control_panel .breadcrumb-item.active:contains(Extracurricular Sessions)",
+                    extra_trigger: ".o_list_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 2 — Open the session to verify.
+                {
+                    content: "Open the session to verify",
+                    trigger:
+                        ".o_data_row:contains(TOUR-SESSION-APPROVE) .o_data_cell:first",
+                    extra_trigger: ".o_list_view",
+                },
+                {
+                    content: "Record form is open",
+                    trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 3 — On the Monitoring tab, check Coach Present.
+                {
+                    content: "Open the Monitoring tab",
+                    trigger: ".o_notebook .nav-link:contains(Monitoring)",
+                    extra_trigger: ".o_form_view",
+                },
+                {
+                    content: "Check Coach Present",
+                    trigger:
+                        ".tab-pane.active .o_field_widget[name='is_teacher_present'] input",
+                    run: "click",
+                },
+                {
+                    content: "Save the record",
+                    trigger: ".o_form_button_save",
+                },
+                {
+                    content: "Record is saved",
+                    trigger: ".o_form_view.o_form_readonly",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 4 — Click the Approve button.
+                {
+                    content: "Click the Approve button",
+                    trigger:
+                        ".o_statusbar_buttons button[name='action_approve_approval']",
+                    extra_trigger: ".o_form_view",
+                },
+
+                // Flow 5 — Click OK on the confirmation dialog.
+                {
+                    content: "Confirm the dialog",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+                {
+                    content: "Status is Done",
+                    trigger:
+                        ".o_statusbar_status .o_arrow_button[data-value='done'].btn-primary",
+                    extra_trigger: "body:not(:has(.modal))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+            ]
+        );
     }
 );

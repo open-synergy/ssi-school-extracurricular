@@ -35,3 +35,8 @@
 - Status changes to **Done**.
 - Whichever of the session's attendance the Offering tracks -- participant, instructor,
   both, or neither -- is considered final.
+
+> This is the direct path to Done, and it remains available from **Planned** at any time
+> -- it is not replaced by the Monitor verification path (`09-confirm.md` /
+> `10-approve.md`). A session may instead be submitted for verification, in which case
+> Done is reached only when the Monitor approves it.

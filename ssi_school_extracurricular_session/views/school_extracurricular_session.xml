@@ -75,6 +75,36 @@
         <form>
             <header>
                 <button
+                        name="action_confirm"
+                        type="object"
+                        string="Confirm"
+                        class="oe_highlight"
+                        confirm="Confirm this session's journal. Are you sure?"
+                        attrs="{'invisible': [('confirm_ok', '!=', True)]}"
+                    />
+                <button
+                        name="action_approve_approval"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        confirm="Approve this session. Are you sure?"
+                        attrs="{'invisible': [('approve_ok', '!=', True)]}"
+                    />
+                <button
+                        name="action_reject_approval"
+                        type="object"
+                        string="Reject"
+                        confirm="Reject this session. Are you sure?"
+                        attrs="{'invisible': [('reject_ok', '!=', True)]}"
+                    />
+                <button
+                        name="action_reload_approval_template"
+                        type="object"
+                        string="Restart Approval Process"
+                        confirm="Restart the approval process. Are you sure?"
+                        attrs="{'invisible': [('restart_approval_ok', '!=', True)]}"
+                    />
+                <button
                         name="action_done"
                         type="object"
                         string="Done"
@@ -105,7 +135,7 @@
                 <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="planned,done,cancelled"
+                        statusbar_visible="planned,confirm,done,cancelled"
                     />
             </header>
             <sheet>
@@ -124,6 +154,9 @@
                 </group>
                 <notebook>
                     <page name="attendance" string="Attendance">
+                        <group name="attendance_summary" col="2">
+                            <field name="present_count" />
+                        </group>
                         <field name="attendance_ids">
                             <tree editable="bottom">
                                 <field
@@ -176,8 +209,61 @@
                                 attrs="{'invisible': [('cancel_reason', '=', False)]}"
                             />
                     </page>
+                    <page name="journal" string="Journal">
+                        <group name="journal_group_1" col="1">
+                            <field name="journal_material" />
+                            <field name="journal_activity" />
+                        </group>
+                    </page>
+                    <page name="monitoring" string="Monitoring">
+                        <group name="monitoring_group_1" col="2">
+                            <field
+                                    name="is_teacher_present"
+                                    attrs="{'readonly': [('state', '!=', 'confirm')]}"
+                                />
+                            <field
+                                    name="monitoring_note"
+                                    attrs="{'readonly': [('state', '!=', 'confirm')]}"
+                                />
+                        </group>
+                    </page>
+                    <page name="tier_validation" string="Approvals">
+                        <group>
+                            <field name="approval_template_id" />
+                            <field
+                                    name="active_approver_partner_ids"
+                                    widget="many2many_tags"
+                                />
+                        </group>
+                        <field
+                                name="approval_ids"
+                                attrs="{'invisible':[('approval_ids','=',[])]}"
+                                nolabel="1"
+                            />
+                    </page>
+                    <page name="policy" string="Policies" groups="base.group_system">
+                        <group name="policy_1" colspan="4" col="2">
+                            <field name="policy_template_id" />
+                            <button
+                                    name="action_reload_policy_template"
+                                    type="object"
+                                    string="Reload Template Policy"
+                                    icon="fa-refresh"
+                                    class="oe_highlight"
+                                />
+                            <field name="confirm_ok" />
+                            <field name="approve_ok" />
+                            <field name="reject_ok" />
+                            <field name="restart_approval_ok" />
+                        </group>
+                    </page>
                 </notebook>
             </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user" />
+                <field name="activity_ids" />
+                <field name="message_ids" />
+            </div>
         </form>
     </field>
 </record>

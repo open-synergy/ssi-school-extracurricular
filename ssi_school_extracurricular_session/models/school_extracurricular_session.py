@@ -5,6 +5,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.ssi_decorator import ssi_decorator
+
 
 class SchoolExtracurricularSession(models.Model):
     """Represents one meeting of an extracurricular offering.
@@ -17,16 +19,35 @@ class SchoolExtracurricularSession(models.Model):
     billed to a family actually took place. This model is that
     per-meeting record.
 
-    It is deliberately NOT a full SSI transaction document. It is a
-    high-volume operational record (dozens per offering per term)
-    whose approval already happened at the Offering level, so it
-    uses a plain three-value ``state`` instead of the multi-approval
-    mixins, and has no sequence, approval, or policy template.
+    It is deliberately NOT a full SSI transaction document -- it has
+    no sequence and no document number. It keeps its plain
+    three-value ``state`` (``planned``/``done``/``cancelled``) as the
+    record's lifecycle, but ``mixin.policy`` and
+    ``mixin.multiple_approval`` are layered on top of it (adding
+    ``confirm``/``reject``) to require a second party -- the
+    Monitor -- to verify that the meeting's journal is genuine and
+    the coach actually showed up, before ``done`` is reached through
+    that path. ``action_done`` itself is untouched and may still be
+    called directly, matching the record's high-volume operational
+    nature (dozens per offering per term).
     """
 
     _name = "school_extracurricular_session"
+    _inherit = [
+        "mail.activity.mixin",
+        "mail.thread",
+        "mixin.policy",
+        "mixin.multiple_approval",
+    ]
     _description = "Extracurricular Session"
     _order = "date, time_start, id"
+
+    _approval_from_state = "planned"
+    _approval_state = "confirm"
+    _approval_to_state = "done"
+    _approval_cancel_state = "cancelled"
+    _approval_reject_state = "reject"
+    _after_approved_method = "action_done"
 
     offering_id = fields.Many2one(
         string="Offering",
@@ -126,8 +147,10 @@ class SchoolExtracurricularSession(models.Model):
         string="State",
         selection=[
             ("planned", "Planned"),
+            ("confirm", "Confirm"),
             ("done", "Done"),
             ("cancelled", "Cancelled"),
+            ("reject", "Reject"),
         ],
         required=True,
         default="planned",
@@ -135,10 +158,85 @@ class SchoolExtracurricularSession(models.Model):
         copy=False,
         help=(
             "Planned = the meeting has not happened yet or is being "
-            "recorded. Done = the meeting took place and its "
-            "attendance is final. Cancelled = the meeting did not "
-            "take place."
+            "recorded. Confirm = the journal is filled and is "
+            "awaiting the Monitor's verification. Done = the meeting "
+            "took place and its attendance is final. Cancelled = the "
+            "meeting did not take place. Reject = the Monitor did "
+            "not verify the meeting as claimed."
         ),
+    )
+    journal_material = fields.Text(
+        string="Journal - Material",
+        help=(
+            "What was taught in this session's meeting. Required "
+            "before this session may be confirmed."
+        ),
+    )
+    journal_activity = fields.Text(
+        string="Journal - Activity",
+        help=(
+            "What activity the participants did in this session's "
+            "meeting. Required before this session may be confirmed."
+        ),
+    )
+    is_teacher_present = fields.Boolean(
+        string="Coach Present",
+        default=False,
+        help=(
+            "Whether the Monitor verified that the coach in charge "
+            "of this session actually attended the meeting. Only "
+            "editable while this session is in Confirm state. "
+            "Defaults to False so an unchecked box withholds "
+            "approval rather than making a false positive claim."
+        ),
+    )
+    monitoring_note = fields.Text(
+        string="Monitoring Note",
+        help=(
+            "The Monitor's note about this session's verification. "
+            "Required to approve a session where Coach Present is "
+            "not checked. Only editable while this session is in "
+            "Confirm state."
+        ),
+    )
+    present_count = fields.Integer(
+        string="Present Count",
+        compute="_compute_present_count",
+        store=True,
+        compute_sudo=True,
+        help=("Number of attendance lines whose Attendance is Present " "or Late."),
+    )
+    confirm_ok = fields.Boolean(
+        string="Can Confirm",
+        compute="_compute_policy",
+        compute_sudo=True,
+        help="""Confirm policy
+
+* If active user can see and execute 'Confirm' button""",
+    )
+    approve_ok = fields.Boolean(
+        string="Can Approve",
+        compute="_compute_policy",
+        compute_sudo=True,
+        help="""Approve policy
+
+* If active user can see and execute 'Approve' button""",
+    )
+    reject_ok = fields.Boolean(
+        string="Can Reject",
+        compute="_compute_policy",
+        compute_sudo=True,
+        help="""Reject policy
+
+* If active user can see and execute 'Reject' button""",
+    )
+    restart_approval_ok = fields.Boolean(
+        string="Can Restart Approval",
+        compute="_compute_policy",
+        compute_sudo=True,
+        help="""Restart approval policy
+
+* If active user can see and execute 'Restart Approval' button""",
     )
     cancel_reason = fields.Text(
         string="Cancel Reason",
@@ -162,6 +260,41 @@ class SchoolExtracurricularSession(models.Model):
             "session generator."
         ),
     )
+
+    @api.depends("attendance_ids.attendance_state")
+    def _compute_present_count(self):
+        """Count attendance lines marked Present or Late.
+
+        :return: nothing; assigns ``present_count``
+        """
+        for record in self:
+            result = len(
+                record.attendance_ids.filtered(
+                    lambda line: line.attendance_state in ("present", "late")
+                )
+            )
+            record.present_count = result
+
+    @api.model
+    def _get_policy_field(self):
+        """Return the list of policy boolean fields for this model.
+
+        Extends the base list with the four policy fields controlling
+        the Confirm/Approve/Reject/Restart Approval buttons -- the
+        only actions gated by policy on this model.
+
+        :return: list of policy field names
+        :rtype: list
+        """
+        res = super()._get_policy_field()
+        policy_field = [
+            "confirm_ok",
+            "approve_ok",
+            "reject_ok",
+            "restart_approval_ok",
+        ]
+        res += policy_field
+        return res
 
     @api.onchange("offering_id")
     def onchange_teacher_id(self):
@@ -349,6 +482,75 @@ Date
             "teacher_id": template_line.teacher_id.id,
             "partner_id": template_line.partner_id.id,
         }
+
+    def action_confirm(self):
+        """Submit this session's journal for the Monitor's approval.
+
+        :return: nothing; rejected when the journal is not filled
+        """
+        for record in self.sudo():
+            record._confirm()
+
+    def _confirm(self):
+        """Move this session to ``confirm`` and raise its approval request.
+
+        The gate is that the journal is filled. ``mixin.multiple_approval``
+        does not raise the approval on its own from ``write()`` --
+        ``_compute_need_validation`` evaluates ``state == confirm`` before
+        ``write()`` runs, so it is always False at that point. This method
+        therefore calls ``action_request_approval()`` explicitly, right
+        after ``state`` is written to ``confirm``.
+
+        Side effect: writes ``state`` on this session and creates its
+        approval request.
+
+        :raises UserError: when ``journal_material`` or
+            ``journal_activity`` is empty
+        """
+        self.ensure_one()
+        if not self.journal_material or not self.journal_activity:
+            error_message = (
+                _(
+                    """
+Context: Confirm extracurricular session
+Database ID: %s
+Problem: Journal - Material or Journal - Activity is empty
+Solution: Fill in both journal fields before confirming this session
+"""
+                )
+                % (self.id,)
+            )
+            raise UserError(error_message)
+        self.write({"state": "confirm"})
+        self.action_request_approval()
+
+    @ssi_decorator.pre_approve_check()
+    def _10_check_monitoring(self):
+        """Block approval when the meeting was not verified as held.
+
+        Runs before the approval is recorded, so raising here leaves
+        this session in ``confirm``. A checked Coach Present always
+        passes; an unchecked one requires a Monitoring Note
+        explaining why the meeting still counts as held.
+
+        :raises UserError: when ``is_teacher_present`` is False and
+            ``monitoring_note`` is empty
+        """
+        self.ensure_one()
+        if not self.is_teacher_present and not self.monitoring_note:
+            error_message = (
+                _(
+                    """
+Context: Approve extracurricular session
+Database ID: %s
+Problem: Coach Present is unchecked and Monitoring Note is empty
+Solution: Check Coach Present, or fill in a Monitoring Note
+explaining why the meeting still counts as held
+"""
+                )
+                % (self.id,)
+            )
+            raise UserError(error_message)
 
     def action_done(self):
         """Mark this session's meeting as done.

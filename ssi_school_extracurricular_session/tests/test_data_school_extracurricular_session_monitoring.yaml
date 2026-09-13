@@ -1,0 +1,723 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name:
+      "Confirm gates on the journal, approval creates approval_ids, and approving with
+      the coach present reaches done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sm1"
+        values:
+          name: "Grade Type Session Monitoring SM1"
+          code: "EXTSESSMON-GT-SM1"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sm1"
+        values:
+          name: "School Session Monitoring SM1"
+          code: "EXTSESSMON-SCH-SM1"
+          grade_type_id: "REC: grade_type_sm1.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sm1"
+        values:
+          name: "Category Session Monitoring SM1"
+          code: "EXTSESSMON-CAT-SM1"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sm1"
+        values:
+          name: "Futsal Club Session Monitoring SM1"
+          code: "EXTSESSMON-EXT-SM1"
+          category_id: "REC: category_sm1.id"
+          school_id: "REC: school_sm1.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sm1"
+        values:
+          name: "AY Session Monitoring SM1"
+          code: "EXTSESSMON-AY-SM1"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sm1"
+        values:
+          name: "Term Session Monitoring SM1"
+          code: "EXTSESSMON-TERM-SM1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sm1.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sm1"
+        values:
+          name: "Teacher Employee Session Monitoring SM1"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sm1"
+        values:
+          name: "Teacher Session Monitoring SM1"
+          code: "EXTSESSMON-TCH-SM1"
+          employee_id: "REC: employee_sm1.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sm1"
+        values:
+          name: "Extracurricular Fee Session Monitoring SM1"
+
+      - step: "Setup - create offering with tracking switches off"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sm1"
+        values:
+          extracurricular_id: "REC: extracurricular_sm1.id"
+          academic_year_id: "REC: academic_year_sm1.id"
+          academic_term_id: "REC: academic_term_sm1.id"
+          teacher_id: "REC: teacher_sm1.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sm1.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: false
+
+      - step: "Setup - create a user who is a Session Monitor"
+        action: "create"
+        model: "res.users"
+        save_as: "monitor_user_sm1"
+        values:
+          name: "Session Monitor User SM1"
+          login: "session_monitor_sm1@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular_session.school_extracurricular_session_monitor_group"
+
+      - step: "Create a session in planned state"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sm1"
+        values:
+          offering_id: "REC: offering_sm1.id"
+          teacher_id: "REC: teacher_sm1.id"
+          date: 2026-08-21
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Negative - confirm is rejected while the journal is empty"
+        action: "call"
+        target: "session_sm1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+
+      - step: "Fill in the journal"
+        action: "write"
+        target: "session_sm1"
+        values:
+          journal_material: "Passing drills and small-sided games."
+          journal_activity: "Warm-up, drills, scrimmage, cool-down."
+
+      - step: "Confirm the session"
+        action: "call"
+        target: "session_sm1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert an approval was raised for the Monitor"
+        action: "assert"
+        target: "session_sm1"
+        asserts:
+          approval_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step:
+          "Negative - approve is rejected while Coach Present is unchecked and
+          Monitoring Note is empty"
+        action: "call"
+        target: "session_sm1"
+        method: "action_approve_approval"
+        as_user: "monitor_user_sm1"
+        expect_error:
+          type: "UserError"
+
+      - step: "Check Coach Present"
+        action: "write"
+        target: "session_sm1"
+        values:
+          is_teacher_present: true
+
+      - step: "Approve the session"
+        action: "call"
+        target: "session_sm1"
+        method: "action_approve_approval"
+        as_user: "monitor_user_sm1"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Approving with the coach absent but a monitoring note reaches done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sm2"
+        values:
+          name: "Grade Type Session Monitoring SM2"
+          code: "EXTSESSMON-GT-SM2"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sm2"
+        values:
+          name: "School Session Monitoring SM2"
+          code: "EXTSESSMON-SCH-SM2"
+          grade_type_id: "REC: grade_type_sm2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sm2"
+        values:
+          name: "Category Session Monitoring SM2"
+          code: "EXTSESSMON-CAT-SM2"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sm2"
+        values:
+          name: "Futsal Club Session Monitoring SM2"
+          code: "EXTSESSMON-EXT-SM2"
+          category_id: "REC: category_sm2.id"
+          school_id: "REC: school_sm2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sm2"
+        values:
+          name: "AY Session Monitoring SM2"
+          code: "EXTSESSMON-AY-SM2"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sm2"
+        values:
+          name: "Term Session Monitoring SM2"
+          code: "EXTSESSMON-TERM-SM2"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sm2.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sm2"
+        values:
+          name: "Teacher Employee Session Monitoring SM2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sm2"
+        values:
+          name: "Teacher Session Monitoring SM2"
+          code: "EXTSESSMON-TCH-SM2"
+          employee_id: "REC: employee_sm2.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sm2"
+        values:
+          name: "Extracurricular Fee Session Monitoring SM2"
+
+      - step: "Setup - create offering with tracking switches off"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sm2"
+        values:
+          extracurricular_id: "REC: extracurricular_sm2.id"
+          academic_year_id: "REC: academic_year_sm2.id"
+          academic_term_id: "REC: academic_term_sm2.id"
+          teacher_id: "REC: teacher_sm2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sm2.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: false
+
+      - step: "Setup - create a user who is a Session Monitor"
+        action: "create"
+        model: "res.users"
+        save_as: "monitor_user_sm2"
+        values:
+          name: "Session Monitor User SM2"
+          login: "session_monitor_sm2@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular_session.school_extracurricular_session_monitor_group"
+
+      - step: "Create a confirmed session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sm2"
+        values:
+          offering_id: "REC: offering_sm2.id"
+          teacher_id: "REC: teacher_sm2.id"
+          date: 2026-08-21
+          time_start: 14.0
+          time_end: 15.5
+          journal_material: "Passing drills and small-sided games."
+          journal_activity: "Warm-up, drills, scrimmage, cool-down."
+
+      - step: "Confirm the session"
+        action: "call"
+        target: "session_sm2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Leave Coach Present unchecked, but explain it in the note"
+        action: "write"
+        target: "session_sm2"
+        values:
+          monitoring_note: "Coach was replaced by an assistant instructor."
+
+      - step: "Approve the session"
+        action: "call"
+        target: "session_sm2"
+        method: "action_approve_approval"
+        as_user: "monitor_user_sm2"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Present count sums attendance lines marked Present and Late"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sm3"
+        values:
+          name: "Grade Type Session Monitoring SM3"
+          code: "EXTSESSMON-GT-SM3"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sm3"
+        values:
+          name: "School Session Monitoring SM3"
+          code: "EXTSESSMON-SCH-SM3"
+          grade_type_id: "REC: grade_type_sm3.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sm3"
+        values:
+          name: "Category Session Monitoring SM3"
+          code: "EXTSESSMON-CAT-SM3"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sm3"
+        values:
+          name: "Futsal Club Session Monitoring SM3"
+          code: "EXTSESSMON-EXT-SM3"
+          category_id: "REC: category_sm3.id"
+          school_id: "REC: school_sm3.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sm3"
+        values:
+          name: "AY Session Monitoring SM3"
+          code: "EXTSESSMON-AY-SM3"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sm3"
+        values:
+          name: "Term Session Monitoring SM3"
+          code: "EXTSESSMON-TERM-SM3"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sm3.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sm3"
+        values:
+          name: "Teacher Employee Session Monitoring SM3"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sm3"
+        values:
+          name: "Teacher Session Monitoring SM3"
+          code: "EXTSESSMON-TCH-SM3"
+          employee_id: "REC: employee_sm3.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sm3"
+        values:
+          name: "Extracurricular Fee Session Monitoring SM3"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sm3"
+        values:
+          extracurricular_id: "REC: extracurricular_sm3.id"
+          academic_year_id: "REC: academic_year_sm3.id"
+          academic_term_id: "REC: academic_term_sm3.id"
+          teacher_id: "REC: teacher_sm3.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sm3.id"
+          price_unit: 150000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_sm3"
+        values:
+          name: "Grade Session Monitoring SM3"
+          code: "EXTSESSMON-GR-SM3"
+          type_id: "REC: grade_type_sm3.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_sm3"
+        values:
+          name: "Grade Class Session Monitoring SM3"
+          code: "EXTSESSMON-GC-SM3"
+          school_id: "REC: school_sm3.id"
+          grade_id: "REC: grade_sm3.id"
+
+      - step: "Setup - create the first student's contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sm3a"
+        values:
+          name: "Student Contact Session Monitoring SM3 A"
+
+      - step: "Setup - create the first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sm3a"
+        values:
+          name: "Student Session Monitoring SM3 A"
+          code: "EXTSESSMON-STU-SM3A"
+          contact_id: "REC: contact_sm3a.id"
+          school_id: "REC: school_sm3.id"
+
+      - step: "Setup - create the first student's enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sm3a"
+        values:
+          academic_year_id: "REC: academic_year_sm3.id"
+          academic_term_id: "REC: academic_term_sm3.id"
+          school_id: "REC: school_sm3.id"
+          grade_id: "REC: grade_sm3.id"
+          grade_class_id: "REC: grade_class_sm3.id"
+          student_id: "REC: student_sm3a.id"
+
+      - step: "Setup - create the first participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sm3a"
+        values:
+          offering_id: "REC: offering_sm3.id"
+          student_id: "REC: student_sm3a.id"
+          enrollment_id: "REC: enrollment_sm3a.id"
+          billing_mode: "free"
+          product_id: "REC: product_sm3.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+
+      - step: "Setup - create the second student's contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sm3b"
+        values:
+          name: "Student Contact Session Monitoring SM3 B"
+
+      - step: "Setup - create the second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sm3b"
+        values:
+          name: "Student Session Monitoring SM3 B"
+          code: "EXTSESSMON-STU-SM3B"
+          contact_id: "REC: contact_sm3b.id"
+          school_id: "REC: school_sm3.id"
+
+      - step: "Setup - create the second student's enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sm3b"
+        values:
+          academic_year_id: "REC: academic_year_sm3.id"
+          academic_term_id: "REC: academic_term_sm3.id"
+          school_id: "REC: school_sm3.id"
+          grade_id: "REC: grade_sm3.id"
+          grade_class_id: "REC: grade_class_sm3.id"
+          student_id: "REC: student_sm3b.id"
+
+      - step: "Setup - create the second participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sm3b"
+        values:
+          offering_id: "REC: offering_sm3.id"
+          student_id: "REC: student_sm3b.id"
+          enrollment_id: "REC: enrollment_sm3b.id"
+          billing_mode: "free"
+          product_id: "REC: product_sm3.id"
+          uom_quantity: 1.0
+          price_unit: 0.0
+          date_join: 2026-07-01
+
+      - step: "Create a session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sm3"
+        values:
+          offering_id: "REC: offering_sm3.id"
+          teacher_id: "REC: teacher_sm3.id"
+          date: 2026-08-21
+          time_start: 14.0
+          time_end: 15.5
+
+      - step: "Add a Present attendance line"
+        action: "create"
+        model: "school_extracurricular_session_attendance"
+        save_as: "attendance_sm3a"
+        values:
+          session_id: "REC: session_sm3.id"
+          participant_id: "REC: participant_sm3a.id"
+          attendance_state: "present"
+
+      - step: "Add a Late attendance line"
+        action: "create"
+        model: "school_extracurricular_session_attendance"
+        save_as: "attendance_sm3b"
+        values:
+          session_id: "REC: session_sm3.id"
+          participant_id: "REC: participant_sm3b.id"
+          attendance_state: "late"
+
+      - step: "Assert present_count sums Present and Late"
+        action: "assert"
+        target: "session_sm3"
+        asserts:
+          present_count:
+            type: "value"
+            expected: 2
+
+  - name: "A user outside the Monitor group cannot approve a confirmed session"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sm4"
+        values:
+          name: "Grade Type Session Monitoring SM4"
+          code: "EXTSESSMON-GT-SM4"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sm4"
+        values:
+          name: "School Session Monitoring SM4"
+          code: "EXTSESSMON-SCH-SM4"
+          grade_type_id: "REC: grade_type_sm4.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sm4"
+        values:
+          name: "Category Session Monitoring SM4"
+          code: "EXTSESSMON-CAT-SM4"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sm4"
+        values:
+          name: "Futsal Club Session Monitoring SM4"
+          code: "EXTSESSMON-EXT-SM4"
+          category_id: "REC: category_sm4.id"
+          school_id: "REC: school_sm4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sm4"
+        values:
+          name: "AY Session Monitoring SM4"
+          code: "EXTSESSMON-AY-SM4"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sm4"
+        values:
+          name: "Term Session Monitoring SM4"
+          code: "EXTSESSMON-TERM-SM4"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sm4.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sm4"
+        values:
+          name: "Teacher Employee Session Monitoring SM4"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sm4"
+        values:
+          name: "Teacher Session Monitoring SM4"
+          code: "EXTSESSMON-TCH-SM4"
+          employee_id: "REC: employee_sm4.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sm4"
+        values:
+          name: "Extracurricular Fee Session Monitoring SM4"
+
+      - step: "Setup - create offering with tracking switches off"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sm4"
+        values:
+          extracurricular_id: "REC: extracurricular_sm4.id"
+          academic_year_id: "REC: academic_year_sm4.id"
+          academic_term_id: "REC: academic_term_sm4.id"
+          teacher_id: "REC: teacher_sm4.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sm4.id"
+          price_unit: 150000.0
+          participant_attendance_tracked: false
+          instructor_attendance_tracked: false
+
+      - step: "Setup - create a plain Session User (not a Monitor)"
+        action: "create"
+        model: "res.users"
+        save_as: "plain_user_sm4"
+        values:
+          name: "Session Plain User SM4"
+          login: "session_plain_sm4@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF:
+                  ssi_school_extracurricular_session.school_extracurricular_session_user_group"
+
+      - step: "Create a confirmed session"
+        action: "create"
+        model: "school_extracurricular_session"
+        save_as: "session_sm4"
+        values:
+          offering_id: "REC: offering_sm4.id"
+          teacher_id: "REC: teacher_sm4.id"
+          date: 2026-08-21
+          time_start: 14.0
+          time_end: 15.5
+          journal_material: "Passing drills and small-sided games."
+          journal_activity: "Warm-up, drills, scrimmage, cool-down."
+
+      - step: "Confirm the session"
+        action: "call"
+        target: "session_sm4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Negative - a plain Session User has no approve_ok"
+        action: "assert"
+        target: "session_sm4"
+        as_user: "plain_user_sm4"
+        refresh: true
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: false
+
+      - step: "Negative - a plain Session User cannot approve"
+        action: "call"
+        target: "session_sm4"
+        method: "action_approve_approval"
+        as_user: "plain_user_sm4"
+        expect_error:
+          type: "UserError"
