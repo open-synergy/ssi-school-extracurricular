@@ -99,26 +99,35 @@ Enrollment
 
     @api.constrains("payment_term_id")
     def _check_payment_term_not_invoiced(self):
-        """Validate that the payment term is not already invoiced.
+        """Validate that the payment term is not invoiced or paid.
 
         Rejects an allocation whose ``payment_term_id.state`` is
-        ``invoiced``; a record without a payment term passes.
+        ``invoiced`` or ``paid``; a record without a payment term
+        passes.
 
-        :raises ValidationError: when the payment term is invoiced
+        :raises ValidationError: when the payment term is already
+            invoiced or paid
         :return: None
         """
         for record in self:
-            if record.payment_term_id and record.payment_term_id.state == "invoiced":
+            if record.payment_term_id and record.payment_term_id.state in (
+                "invoiced",
+                "paid",
+            ):
                 error_message = (
                     _(
                         """
 Context: Set extracurricular participant allocation
 Database ID: %s
-Problem: Payment term '%s' is already invoiced
-Solution: Select a Payment Term that has not been invoiced yet
+Problem: Payment term '%s' is already %s
+Solution: Select a Payment Term that has not been invoiced or paid yet
 """
                     )
-                    % (record.id, record.payment_term_id.name)
+                    % (
+                        record.id,
+                        record.payment_term_id.name,
+                        record.payment_term_id.state,
+                    )
                 )
                 raise ValidationError(error_message)
 

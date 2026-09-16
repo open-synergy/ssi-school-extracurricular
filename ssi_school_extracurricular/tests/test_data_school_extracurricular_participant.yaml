@@ -1742,3 +1742,849 @@ scenarios:
           restart_approval_ok:
             type: "value"
             expected: false
+
+  - name:
+      "Extracurricular Participant allocation accepts an uninvoiced payment term and
+      rejects one already invoiced or paid"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_ts"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_ts"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_ts"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_ts"
+        values:
+          name: "Term State Income TS"
+          code: "EXTPAR-TS-INC"
+          user_type_id: "REC: revenue_type_ts.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_ts"
+        values:
+          name: "Term State Receivable TS"
+          code: "EXTPAR-TS-REC"
+          user_type_id: "REC: receivable_type_ts.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_ts"
+        values:
+          name: "Customer Invoice Type TS"
+          code: "EXTPAR-TS-CIT"
+          journal_id: "REC: journal_ts.id"
+          receivable_account_id: "REC: receivable_account_ts.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_ts"
+        values:
+          name: "Grade Type Participant TS"
+          code: "EXTPAR-GT-TS"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_ts"
+        values:
+          name: "School Participant TS"
+          code: "EXTPAR-SCH-TS"
+          grade_type_id: "REC: grade_type_ts.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_ts"
+        values:
+          name: "Category Participant TS"
+          code: "EXTPAR-CAT-TS"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_ts"
+        values:
+          name: "Futsal Club Participant TS"
+          code: "EXTPAR-EXT-TS"
+          category_id: "REC: category_ts.id"
+          school_id: "REC: school_ts.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_ts"
+        values:
+          name: "AY Participant TS"
+          code: "EXTPAR-AY-TS"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_ts"
+        values:
+          name: "Term Participant TS"
+          code: "EXTPAR-TERM-TS"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_ts.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_ts"
+        values:
+          name: "Teacher Employee Participant TS"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_ts"
+        values:
+          name: "Teacher Participant TS"
+          code: "EXTPAR-TCH-TS"
+          employee_id: "REC: employee_ts.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_ts"
+        values:
+          name: "Extracurricular Fee Participant TS"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_ts"
+        values:
+          extracurricular_id: "REC: extracurricular_ts.id"
+          academic_year_id: "REC: academic_year_ts.id"
+          academic_term_id: "REC: academic_term_ts.id"
+          teacher_id: "REC: teacher_ts.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_ts.id"
+          price_unit: 100000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_ts"
+        values:
+          name: "Grade Participant TS"
+          code: "EXTPAR-GR-TS"
+          type_id: "REC: grade_type_ts.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_ts"
+        values:
+          name: "Grade Class Participant TS"
+          code: "EXTPAR-GC-TS"
+          school_id: "REC: school_ts.id"
+          grade_id: "REC: grade_ts.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_ts"
+        values:
+          name: "Student Contact Participant TS"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ts"
+        values:
+          name: "Student Participant TS"
+          code: "EXTPAR-ST-TS"
+          contact_id: "REC: contact_ts.id"
+          school_id: "REC: school_ts.id"
+
+      - step: "Setup - create enrollment with invoicing configured"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_ts"
+        values:
+          academic_year_id: "REC: academic_year_ts.id"
+          academic_term_id: "REC: academic_term_ts.id"
+          school_id: "REC: school_ts.id"
+          grade_id: "REC: grade_ts.id"
+          grade_class_id: "REC: grade_class_ts.id"
+          student_id: "REC: student_ts.id"
+          pricelist_id: "REF: product.list0"
+          receivable_journal_id: "REC: journal_ts.id"
+          receivable_account_id: "REC: receivable_account_ts.id"
+          customer_invoice_type_id: "REC: ci_type_ts.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_ts"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_ts"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create the payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_ts"
+        values:
+          enrollment_id: "REC: enrollment_ts.id"
+          name: "Term Participant TS"
+
+      - step: "Assert the freshly created term is uninvoiced"
+        action: "assert"
+        target: "term_ts"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Create the first participant to hold the allocation"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ts_1"
+        values:
+          offering_id: "REC: offering_ts.id"
+          student_id: "REC: student_ts.id"
+          enrollment_id: "REC: enrollment_ts.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "Positive - allocation to an uninvoiced payment term is accepted"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_ts_1"
+        values:
+          participant_id: "REC: participant_ts_1.id"
+          payment_term_id: "REC: term_ts.id"
+          product_id: "REC: product_ts.id"
+          name: "Extracurricular Fee Participant TS 1"
+          account_id: "REC: income_account_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Confirm the first participant"
+        action: "call"
+        target: "participant_ts_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the first participant, opening it"
+        action: "call"
+        target: "participant_ts_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the customer invoice from the payment term"
+        action: "call"
+        target: "term_ts"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "The term is now invoiced"
+        action: "assert"
+        target: "term_ts"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Create a second participant for the invoiced-term negative case"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ts_2"
+        values:
+          offering_id: "REC: offering_ts.id"
+          student_id: "REC: student_ts.id"
+          enrollment_id: "REC: enrollment_ts.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step:
+          "Negative (a) - allocation to an already invoiced payment term is rejected"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already invoiced"
+        values:
+          participant_id: "REC: participant_ts_2.id"
+          payment_term_id: "REC: term_ts.id"
+          product_id: "REC: product_ts.id"
+          name: "Extracurricular Fee Participant TS 2"
+          account_id: "REC: income_account_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "Find the invoice created on the term"
+        action: "search"
+        model: "customer_invoice"
+        domain:
+          - ["id", "=", "REC: term_ts.customer_invoice_id.id"]
+        save_as: "invoice_ts"
+        expect_count: 1
+
+      - step: "Force the invoice straight to Paid, out of band"
+        action: "write"
+        target: "invoice_ts"
+        values:
+          state: "done"
+
+      - step: "The term is now paid"
+        action: "assert"
+        target: "term_ts"
+        asserts:
+          state:
+            type: "value"
+            expected: "paid"
+
+      - step: "Create a third participant for the paid-term negative case"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_ts_3"
+        values:
+          offering_id: "REC: offering_ts.id"
+          student_id: "REC: student_ts.id"
+          enrollment_id: "REC: enrollment_ts.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "Negative (b) - allocation to an already paid payment term is rejected"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "already paid"
+        values:
+          participant_id: "REC: participant_ts_3.id"
+          payment_term_id: "REC: term_ts.id"
+          product_id: "REC: product_ts.id"
+          name: "Extracurricular Fee Participant TS 3"
+          account_id: "REC: income_account_ts.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+  - name:
+      "Extracurricular Participant opening is rejected once an allocated payment term
+      becomes invoiced after the allocation was created"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_lo"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_lo"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_lo"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_lo"
+        values:
+          name: "Late Open Income LO"
+          code: "EXTPAR-LO-INC"
+          user_type_id: "REC: revenue_type_lo.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_lo"
+        values:
+          name: "Late Open Receivable LO"
+          code: "EXTPAR-LO-REC"
+          user_type_id: "REC: receivable_type_lo.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_lo"
+        values:
+          name: "Customer Invoice Type LO"
+          code: "EXTPAR-LO-CIT"
+          journal_id: "REC: journal_lo.id"
+          receivable_account_id: "REC: receivable_account_lo.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_lo"
+        values:
+          name: "Grade Type Participant LO"
+          code: "EXTPAR-GT-LO"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_lo"
+        values:
+          name: "School Participant LO"
+          code: "EXTPAR-SCH-LO"
+          grade_type_id: "REC: grade_type_lo.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_lo"
+        values:
+          name: "Category Participant LO"
+          code: "EXTPAR-CAT-LO"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_lo"
+        values:
+          name: "Futsal Club Participant LO"
+          code: "EXTPAR-EXT-LO"
+          category_id: "REC: category_lo.id"
+          school_id: "REC: school_lo.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_lo"
+        values:
+          name: "AY Participant LO"
+          code: "EXTPAR-AY-LO"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_lo"
+        values:
+          name: "Term Participant LO"
+          code: "EXTPAR-TERM-LO"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_lo.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_lo"
+        values:
+          name: "Teacher Employee Participant LO"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_lo"
+        values:
+          name: "Teacher Participant LO"
+          code: "EXTPAR-TCH-LO"
+          employee_id: "REC: employee_lo.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_lo"
+        values:
+          name: "Extracurricular Fee Participant LO"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_lo"
+        values:
+          extracurricular_id: "REC: extracurricular_lo.id"
+          academic_year_id: "REC: academic_year_lo.id"
+          academic_term_id: "REC: academic_term_lo.id"
+          teacher_id: "REC: teacher_lo.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_lo.id"
+          price_unit: 100000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_lo"
+        values:
+          name: "Grade Participant LO"
+          code: "EXTPAR-GR-LO"
+          type_id: "REC: grade_type_lo.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_lo"
+        values:
+          name: "Grade Class Participant LO"
+          code: "EXTPAR-GC-LO"
+          school_id: "REC: school_lo.id"
+          grade_id: "REC: grade_lo.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_lo"
+        values:
+          name: "Student Contact Participant LO"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_lo"
+        values:
+          name: "Student Participant LO"
+          code: "EXTPAR-ST-LO"
+          contact_id: "REC: contact_lo.id"
+          school_id: "REC: school_lo.id"
+
+      - step: "Setup - create enrollment with invoicing configured"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_lo"
+        values:
+          academic_year_id: "REC: academic_year_lo.id"
+          academic_term_id: "REC: academic_term_lo.id"
+          school_id: "REC: school_lo.id"
+          grade_id: "REC: grade_lo.id"
+          grade_class_id: "REC: grade_class_lo.id"
+          student_id: "REC: student_lo.id"
+          pricelist_id: "REF: product.list0"
+          receivable_journal_id: "REC: journal_lo.id"
+          receivable_account_id: "REC: receivable_account_lo.id"
+          customer_invoice_type_id: "REC: ci_type_lo.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_lo"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_lo"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create the payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_lo"
+        values:
+          enrollment_id: "REC: enrollment_lo.id"
+          name: "Term Participant LO"
+
+      - step: "Create the participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_lo"
+        values:
+          offering_id: "REC: offering_lo.id"
+          student_id: "REC: student_lo.id"
+          enrollment_id: "REC: enrollment_lo.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_lo.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "Allocate the fee while the payment term is still uninvoiced"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_lo"
+        values:
+          participant_id: "REC: participant_lo.id"
+          payment_term_id: "REC: term_lo.id"
+          product_id: "REC: product_lo.id"
+          name: "Extracurricular Fee Participant LO"
+          account_id: "REC: income_account_lo.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "The payment term becomes invoiced before the participant is opened"
+        action: "call"
+        target: "term_lo"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "The term is now invoiced"
+        action: "assert"
+        target: "term_lo"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_lo"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant, opening it, must fail on the stale allocation"
+        action: "call"
+        target: "participant_lo"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "already invoiced"
+
+      - step: "The participant stays confirm, not open"
+        action: "assert"
+        target: "participant_lo"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+  - name:
+      "Extracurricular Participant with standalone billing and no allocation opens
+      unaffected"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_sb"
+        values:
+          name: "Grade Type Participant SB"
+          code: "EXTPAR-GT-SB"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_sb"
+        values:
+          name: "School Participant SB"
+          code: "EXTPAR-SCH-SB"
+          grade_type_id: "REC: grade_type_sb.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_sb"
+        values:
+          name: "Category Participant SB"
+          code: "EXTPAR-CAT-SB"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_sb"
+        values:
+          name: "Futsal Club Participant SB"
+          code: "EXTPAR-EXT-SB"
+          category_id: "REC: category_sb.id"
+          school_id: "REC: school_sb.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_sb"
+        values:
+          name: "AY Participant SB"
+          code: "EXTPAR-AY-SB"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_sb"
+        values:
+          name: "Term Participant SB"
+          code: "EXTPAR-TERM-SB"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_sb.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_sb"
+        values:
+          name: "Teacher Employee Participant SB"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_sb"
+        values:
+          name: "Teacher Participant SB"
+          code: "EXTPAR-TCH-SB"
+          employee_id: "REC: employee_sb.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_sb"
+        values:
+          name: "Extracurricular Fee Participant SB"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_sb"
+        values:
+          extracurricular_id: "REC: extracurricular_sb.id"
+          academic_year_id: "REC: academic_year_sb.id"
+          academic_term_id: "REC: academic_term_sb.id"
+          teacher_id: "REC: teacher_sb.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_sb.id"
+          price_unit: 100000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_sb"
+        values:
+          name: "Grade Participant SB"
+          code: "EXTPAR-GR-SB"
+          type_id: "REC: grade_type_sb.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_sb"
+        values:
+          name: "Grade Class Participant SB"
+          code: "EXTPAR-GC-SB"
+          school_id: "REC: school_sb.id"
+          grade_id: "REC: grade_sb.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_sb"
+        values:
+          name: "Student Contact Participant SB"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_sb"
+        values:
+          name: "Student Participant SB"
+          code: "EXTPAR-ST-SB"
+          contact_id: "REC: contact_sb.id"
+          school_id: "REC: school_sb.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_sb"
+        values:
+          academic_year_id: "REC: academic_year_sb.id"
+          academic_term_id: "REC: academic_term_sb.id"
+          school_id: "REC: school_sb.id"
+          grade_id: "REC: grade_sb.id"
+          grade_class_id: "REC: grade_class_sb.id"
+          student_id: "REC: student_sb.id"
+
+      - step: "Create participant with standalone billing and no allocation"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_sb"
+        values:
+          offering_id: "REC: offering_sb.id"
+          student_id: "REC: student_sb.id"
+          enrollment_id: "REC: enrollment_sb.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_sb.id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_sb"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant, opening it without any allocation check"
+        action: "call"
+        target: "participant_sb"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
