@@ -1848,6 +1848,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_ts.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1933,6 +1934,7 @@ scenarios:
           grade_id: "REC: grade_ts.id"
           grade_class_id: "REC: grade_class_ts.id"
           student_id: "REC: student_ts.id"
+          pricelist_id: "REF: product.list0"
           receivable_journal_id: "REC: journal_ts.id"
           receivable_account_id: "REC: receivable_account_ts.id"
           customer_invoice_type_id: "REC: ci_type_ts.id"
@@ -2222,6 +2224,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_lo.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -2307,6 +2310,7 @@ scenarios:
           grade_id: "REC: grade_lo.id"
           grade_class_id: "REC: grade_class_lo.id"
           student_id: "REC: student_lo.id"
+          pricelist_id: "REF: product.list0"
           receivable_journal_id: "REC: journal_lo.id"
           receivable_account_id: "REC: receivable_account_lo.id"
           customer_invoice_type_id: "REC: ci_type_lo.id"
