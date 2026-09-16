@@ -15,6 +15,9 @@
   Mode is 'Charged to Enrollment' but no Allocation line is set"_ error otherwise, and
   the record stays **Waiting for Approval**. When Billing Mode is **Separate Invoice**
   or **Free of Charge**, no Allocation line is required.
+- **Record:** None of the Allocation lines' Payment Term may already be in Invoiced or
+  Paid state — Approve fails with a payment-term-state error otherwise, and the record
+  stays **Waiting for Approval**.
 - **Record:** The Offering's **Maximum Quota** (if greater than 0) must not already be
   reached by other participants in **Open** status on the same Offering — Approve fails
   with a quota error otherwise.

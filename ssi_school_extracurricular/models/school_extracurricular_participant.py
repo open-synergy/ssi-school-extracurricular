@@ -735,6 +735,48 @@ payment term before opening
             )
             raise UserError(error_message)
 
+    @ssi_decorator.pre_open_check()
+    def _25_check_allocation_term_state(self):
+        """Block opening this participant if an allocated term billed.
+
+        Runs after the allocation-required check. When
+        ``billing_mode`` is ``enrollment``, rejects opening if any
+        ``allocation_ids.payment_term_id`` has already become
+        ``invoiced`` or ``paid`` since the allocation was created --
+        a state change the create/write-time constraint on the
+        allocation cannot catch. Other billing modes are not
+        affected.
+
+        :raises UserError: when an allocated payment term is already
+            invoiced or paid
+        :return: None
+        """
+        self.ensure_one()
+        if self.billing_mode != "enrollment":
+            return
+        billed_allocations = self.allocation_ids.filtered(
+            lambda allocation: allocation.payment_term_id.state in ("invoiced", "paid")
+        )
+        if billed_allocations:
+            payment_term = billed_allocations[0].payment_term_id
+            error_message = (
+                _(
+                    """
+Context: Open extracurricular participant
+Database ID: %(id)s
+Problem: Allocated Payment Term '%(term)s' is already %(state)s
+Solution: Remove or replace the Allocation line pointing to that
+Payment Term before opening
+"""
+                )
+                % {
+                    "id": self.id,
+                    "term": payment_term.name,
+                    "state": payment_term.state,
+                }
+            )
+            raise UserError(error_message)
+
     @ssi_decorator.post_open_action()
     def _10_create_extra_detail(self):
         """Create one addendum fee line per allocation.
