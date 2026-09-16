@@ -1781,6 +1781,7 @@ scenarios:
           name: "Term State Receivable TS"
           code: "EXTPAR-TS-REC"
           user_type_id: "REC: receivable_type_ts.id"
+          reconcile: true
 
       - step: "Setup - create customer invoice type"
         action: "create"
@@ -2154,6 +2155,7 @@ scenarios:
           name: "Late Open Receivable LO"
           code: "EXTPAR-LO-REC"
           user_type_id: "REC: receivable_type_lo.id"
+          reconcile: true
 
       - step: "Setup - create customer invoice type"
         action: "create"
