@@ -58,6 +58,18 @@ msgid ""
 "\n"
 "Context: Open extracurricular participant\n"
 "Database ID: %(id)s\n"
+"Problem: Allocated Payment Term '%(term)s' is already %(state)s\n"
+"Solution: Remove or replace the Allocation line pointing to that\n"
+"Payment Term before opening\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Open extracurricular participant\n"
+"Database ID: %(id)s\n"
 "Problem: Billing Mode is 'Charged to Enrollment' but no Allocation\n"
 "line is set\n"
 "Solution: Add at least one Allocation line pointing to an enrollment\n"
@@ -193,8 +205,8 @@ msgid ""
 "\n"
 "Context: Set extracurricular participant allocation\n"
 "Database ID: %s\n"
-"Problem: Payment term '%s' is already invoiced\n"
-"Solution: Select a Payment Term that has not been invoiced yet\n"
+"Problem: Payment term '%s' is already %s\n"
+"Solution: Select a Payment Term that has not been invoiced or paid yet\n"
 msgstr ""
 
 #. module: ssi_school_extracurricular
