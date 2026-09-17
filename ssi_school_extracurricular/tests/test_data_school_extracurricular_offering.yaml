@@ -149,6 +149,9 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+          open_ok:
+            type: "value"
+            expected: false
 
       - step: "Assert document number generated"
         action: "assert"

@@ -864,6 +864,7 @@ it can no longer be cancelled through this document
         policy_field = [
             "confirm_ok",
             "approve_ok",
+            "open_ok",
             "done_ok",
             "cancel_ok",
             "reject_ok",

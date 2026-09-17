@@ -622,6 +622,7 @@ or leave it at 0 for no upper limit
         policy_field = [
             "confirm_ok",
             "approve_ok",
+            "open_ok",
             "done_ok",
             "cancel_ok",
             "reject_ok",
