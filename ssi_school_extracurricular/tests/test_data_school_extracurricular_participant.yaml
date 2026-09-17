@@ -261,6 +261,9 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+          open_ok:
+            type: "value"
+            expected: false
 
       - step: "Assert the addendum line was created on the payment term"
         action: "assert"
