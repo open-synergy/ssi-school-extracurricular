@@ -319,6 +319,12 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         cls.participant_terminate = cls._create_participant(
             terminate_student, terminate_enrollment, "free"
         )
+        # Explicit Join Date well before the tour's Leave Date literal
+        # (09/01/2026) -- ``date_join`` defaults to today, and leaving it
+        # unset here would make ``_10_check_date_leave`` reject the tour's
+        # Leave Date as earlier than Join Date whenever today is after
+        # that literal.
+        cls.participant_terminate.write({"date_join": "2026-01-05"})
         cls.participant_terminate.with_user(cls.admin).action_confirm()
         # approve_ok is subject to the same non-stored, confirm-blind
         # compute as above -- invalidate before approving. Same

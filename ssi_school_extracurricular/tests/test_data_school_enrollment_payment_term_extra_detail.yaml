@@ -2505,7 +2505,10 @@ scenarios:
           date_invoice: 2026-11-05
           date_due: 2026-11-20
 
-      - step: "Create participant billed to enrollment across 3 terms"
+      - step:
+          "Create participant billed to enrollment across 3 terms, with all allocation
+          lines created in the same write so the total-match constraint sees the full
+          batch at once"
         action: "create"
         model: "school_extracurricular_participant"
         save_as: "participant_t10"
@@ -2517,45 +2520,38 @@ scenarios:
           product_id: "REC: product_offering_t10.id"
           uom_quantity: 1.0
           price_unit: 900000.0
+          allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term1_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 1"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term2_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 2"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term3_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 3"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
 
-      - step: "Create allocation to term 1"
-        action: "create"
+      - step: "Get the allocation line pointing to term 1"
+        action: "search"
         model: "school_extracurricular_participant_allocation"
+        domain: [["payment_term_id", "=", "REC: term1_t10.id"]]
         save_as: "allocation1_t10"
-        values:
-          participant_id: "REC: participant_t10.id"
-          payment_term_id: "REC: term1_t10.id"
-          product_id: "REC: product_offering_t10.id"
-          name: "Extracurricular Fee Billing T10 - 1"
-          account_id: "REC: income_account_t10.id"
-          uom_quantity: 1.0
-          price_unit: 300000.0
-
-      - step: "Create allocation to term 2"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation2_t10"
-        values:
-          participant_id: "REC: participant_t10.id"
-          payment_term_id: "REC: term2_t10.id"
-          product_id: "REC: product_offering_t10.id"
-          name: "Extracurricular Fee Billing T10 - 2"
-          account_id: "REC: income_account_t10.id"
-          uom_quantity: 1.0
-          price_unit: 300000.0
-
-      - step: "Create allocation to term 3"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation3_t10"
-        values:
-          participant_id: "REC: participant_t10.id"
-          payment_term_id: "REC: term3_t10.id"
-          product_id: "REC: product_offering_t10.id"
-          name: "Extracurricular Fee Billing T10 - 3"
-          account_id: "REC: income_account_t10.id"
-          uom_quantity: 1.0
-          price_unit: 300000.0
+        expect_count: 1
 
       - step: "Confirm participant"
         action: "call"
@@ -3345,7 +3341,10 @@ scenarios:
           date_invoice: 2026-12-05
           date_due: 2026-12-20
 
-      - step: "Create participant billed to enrollment across 2 terms"
+      - step:
+          "Create participant billed to enrollment across 2 terms, with both allocation
+          lines created in the same write so the total-match constraint sees the full
+          batch at once"
         action: "create"
         model: "school_extracurricular_participant"
         save_as: "participant_t13"
@@ -3357,32 +3356,23 @@ scenarios:
           product_id: "REC: product_offering_t13.id"
           uom_quantity: 1.0
           price_unit: 600000.0
-
-      - step: "Create allocation to term A"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation_a_t13"
-        values:
-          participant_id: "REC: participant_t13.id"
-          payment_term_id: "REC: term_a_t13.id"
-          product_id: "REC: product_offering_t13.id"
-          name: "Extracurricular Fee Billing T13 - A"
-          account_id: "REC: income_account_t13.id"
-          uom_quantity: 1.0
-          price_unit: 300000.0
-
-      - step: "Create allocation to term B"
-        action: "create"
-        model: "school_extracurricular_participant_allocation"
-        save_as: "allocation_b_t13"
-        values:
-          participant_id: "REC: participant_t13.id"
-          payment_term_id: "REC: term_b_t13.id"
-          product_id: "REC: product_offering_t13.id"
-          name: "Extracurricular Fee Billing T13 - B"
-          account_id: "REC: income_account_t13.id"
-          uom_quantity: 1.0
-          price_unit: 300000.0
+          allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_a_t13.id"
+                product_id: "REC: product_offering_t13.id"
+                name: "Extracurricular Fee Billing T13 - A"
+                account_id: "REC: income_account_t13.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_b_t13.id"
+                product_id: "REC: product_offering_t13.id"
+                name: "Extracurricular Fee Billing T13 - B"
+                account_id: "REC: income_account_t13.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
 
       - step: "Confirm participant"
         action: "call"
