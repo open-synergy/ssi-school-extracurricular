@@ -68,6 +68,33 @@
     <field name="restrict_additional" eval="0" />
 </record>
 
+<!-- Terminate -->
+<record
+        id="policy_template_school_extracurricular_participant_terminate"
+        model="policy.template_detail"
+    >
+    <field
+            name="template_id"
+            ref="policy_template_school_extracurricular_participant"
+        />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_extracurricular_participant'),('name','=','terminate_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_extracurricular_participant'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_extracurricular_participant_user_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+
 <!-- Cancel -->
 <record
         id="policy_template_school_extracurricular_participant_cancel"
@@ -111,7 +138,7 @@
     <field name="restrict_state" eval="1" />
     <field
             name="state_ids"
-            search="[('field_id.model_id.model','=','school_extracurricular_participant'),('value','in',['cancel','reject'])]"
+            search="[('field_id.model_id.model','=','school_extracurricular_participant'),('value','in',['cancel','reject','terminate'])]"
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>

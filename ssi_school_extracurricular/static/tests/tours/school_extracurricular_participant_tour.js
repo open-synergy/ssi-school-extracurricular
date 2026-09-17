@@ -708,6 +708,133 @@ odoo.define(
             ]
         );
 
+        // IK: docs/school_extracurricular_participant/11-terminate.md
+        tour.register(
+            "ssi_school_extracurricular_school_extracurricular_participant_terminate",
+            {
+                test: true,
+                url: "/web",
+            },
+            [
+                // Flow 1 — Open the School > Extracurricular > Extracurricular Participants menu.
+                tour.stepUtils.showAppsMenuItem(),
+                {
+                    content: "Open the School app",
+                    trigger: '.o_app[data-menu-xmlid="ssi_school.menu_school_root"]',
+                },
+                {
+                    content: "Open the Extracurricular menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_root"]',
+                },
+                {
+                    content: "Open the Extracurricular Participants menu",
+                    trigger:
+                        ".o_menu_sections " +
+                        '[data-menu-xmlid="ssi_school_extracurricular.menu_extracurricular_participant"]',
+                },
+                {
+                    content: "Extracurricular Participants list is displayed",
+                    trigger:
+                        ".o_control_panel .breadcrumb-item.active:contains(Extracurricular Participants)",
+                    extra_trigger: ".o_list_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 2 — Open the record to terminate.
+                {
+                    content: "Open the record to terminate",
+                    trigger:
+                        ".o_data_row:contains(TOUR-PARTICIPANT-TERMINATE) .o_data_cell:first",
+                    extra_trigger: ".o_list_view",
+                },
+                {
+                    content: "Record form is open",
+                    trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 3 — Fill in the Leave Date field.
+                {
+                    content: "Fill in Leave Date",
+                    trigger: ".o_field_widget[name='date_leave'] input",
+                    run: "text 09/01/2026",
+                },
+
+                // Flow 4 — Click Save.
+                {
+                    content: "Save the record",
+                    trigger: ".o_form_button_save",
+                },
+                {
+                    content: "Record is saved",
+                    trigger: ".o_form_view.o_form_readonly",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+
+                // Flow 5 — Click the Terminate button.
+                {
+                    content: "Click the Terminate button",
+                    trigger: ".o_statusbar_buttons button:contains(Terminate)",
+                    extra_trigger: ".o_form_view",
+                },
+
+                // Flow 6 — In the wizard that appears, select the Terminate Reason.
+                {
+                    content: "Wizard is open",
+                    trigger: ".o_form_view",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+                {
+                    content: "Select the terminate reason",
+                    trigger:
+                        ".o_field_widget[name='terminate_reason_id'] .o_radio_item:contains(TOUR-PARTICIPANT-TERMINATE-REASON) input",
+                },
+
+                // Flow 7 — Click Confirm.
+                {
+                    content: "Confirm the wizard",
+                    trigger: ".modal-footer button[name='action_confirm']",
+                },
+
+                // Flow 8 — Click OK on the confirmation dialog.
+                {
+                    content: "Confirm the dialog",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+                {
+                    content: "Status is Terminated",
+                    trigger:
+                        ".o_statusbar_status .o_arrow_button[data-value='terminate'].btn-primary",
+                    extra_trigger: "body:not(:has(.modal))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
+            ]
+        );
+
         // IK: docs/school_extracurricular_participant/12-restart.md
         tour.register(
             "ssi_school_extracurricular_school_extracurricular_participant_restart",

@@ -2279,3 +2279,1921 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "already locked"
+
+  - name: "Terminate removes unbilled addendum lines after the Leave Date"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_t10"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_t10"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_t10"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_t10"
+        values:
+          name: "Extracurricular Billing Income T10"
+          code: "EXTB-T10-INC"
+          user_type_id: "REC: revenue_type_t10.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_t10"
+        values:
+          name: "Extracurricular Billing Receivable T10"
+          code: "EXTB-T10-REC"
+          user_type_id: "REC: receivable_type_t10.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_t10"
+        values:
+          name: "Customer Invoice Type Billing T10"
+          code: "EXTB-T10-CIT"
+          journal_id: "REC: journal_t10.id"
+          receivable_account_id: "REC: receivable_account_t10.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t10"
+        values:
+          name: "Grade Type Billing T10"
+          code: "EXTB-GT-T10"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t10"
+        values:
+          name: "School Billing T10"
+          code: "EXTB-SCH-T10"
+          grade_type_id: "REC: grade_type_t10.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t10"
+        values:
+          name: "Category Billing T10"
+          code: "EXTB-CAT-T10"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t10"
+        values:
+          name: "Futsal Club Billing T10"
+          code: "EXTB-EXT-T10"
+          category_id: "REC: category_t10.id"
+          school_id: "REC: school_t10.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t10"
+        values:
+          name: "AY Billing T10"
+          code: "EXTB-AY-T10"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t10"
+        values:
+          name: "Term Billing T10"
+          code: "EXTB-TERM-T10"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t10.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t10"
+        values:
+          name: "Teacher Employee Billing T10"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t10"
+        values:
+          name: "Teacher Billing T10"
+          code: "EXTB-TCH-T10"
+          employee_id: "REC: employee_t10.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t10"
+        values:
+          name: "Extracurricular Fee Billing T10"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t10"
+        values:
+          extracurricular_id: "REC: extracurricular_t10.id"
+          academic_year_id: "REC: academic_year_t10.id"
+          academic_term_id: "REC: academic_term_t10.id"
+          teacher_id: "REC: teacher_t10.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t10.id"
+          price_unit: 900000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t10"
+        values:
+          name: "Grade Billing T10"
+          code: "EXTB-GR-T10"
+          type_id: "REC: grade_type_t10.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t10"
+        values:
+          name: "Grade Class Billing T10"
+          code: "EXTB-GC-T10"
+          school_id: "REC: school_t10.id"
+          grade_id: "REC: grade_t10.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t10"
+        values:
+          name: "Student Contact Billing T10"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t10"
+        values:
+          name: "Student Billing T10"
+          code: "EXTB-ST-T10"
+          contact_id: "REC: contact_t10.id"
+          school_id: "REC: school_t10.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t10"
+        values:
+          academic_year_id: "REC: academic_year_t10.id"
+          academic_term_id: "REC: academic_term_t10.id"
+          school_id: "REC: school_t10.id"
+          grade_id: "REC: grade_t10.id"
+          grade_class_id: "REC: grade_class_t10.id"
+          student_id: "REC: student_t10.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_t10.id"
+          receivable_account_id: "REC: receivable_account_t10.id"
+          customer_invoice_type_id: "REC: ci_type_t10.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Setup - create payment term 1 (invoiced before Leave Date)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term1_t10"
+        values:
+          enrollment_id: "REC: enrollment_t10.id"
+          name: "Term Billing T10 - 1"
+          date_invoice: 2026-08-05
+          date_due: 2026-08-20
+
+      - step: "Setup - create payment term 2 (uninvoiced, after Leave Date)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term2_t10"
+        values:
+          enrollment_id: "REC: enrollment_t10.id"
+          name: "Term Billing T10 - 2"
+          date_invoice: 2026-10-05
+          date_due: 2026-10-20
+
+      - step: "Setup - create payment term 3 (uninvoiced, after Leave Date)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term3_t10"
+        values:
+          enrollment_id: "REC: enrollment_t10.id"
+          name: "Term Billing T10 - 3"
+          date_invoice: 2026-11-05
+          date_due: 2026-11-20
+
+      - step:
+          "Create participant billed to enrollment across 3 terms, with all allocation
+          lines created in the same write so the total-match constraint sees the full
+          batch at once"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t10"
+        values:
+          offering_id: "REC: offering_t10.id"
+          student_id: "REC: student_t10.id"
+          enrollment_id: "REC: enrollment_t10.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_t10.id"
+          uom_quantity: 1.0
+          price_unit: 900000.0
+          allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term1_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 1"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term2_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 2"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term3_t10.id"
+                product_id: "REC: product_offering_t10.id"
+                name: "Extracurricular Fee Billing T10 - 3"
+                account_id: "REC: income_account_t10.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+
+      - step: "Get the allocation line pointing to term 1"
+        action: "search"
+        model: "school_extracurricular_participant_allocation"
+        domain: [["payment_term_id", "=", "REC: term1_t10.id"]]
+        save_as: "allocation1_t10"
+        expect_count: 1
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t10"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating the addendum lines"
+        action: "call"
+        target: "participant_t10"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_t10"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment, locking the addendum lines"
+        action: "call"
+        target: "enrollment_t10"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice term 1 before the participant leaves"
+        action: "call"
+        target: "term1_t10"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Assert term 2 and term 3 are still uninvoiced"
+        action: "assert"
+        target: "term2_t10"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Set the Leave Date between term 1 and term 2/3"
+        action: "write"
+        target: "participant_t10"
+        values:
+          date_leave: 2026-09-01
+
+      - step: "Terminate the participant"
+        action: "call"
+        target: "participant_t10"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "terminate"
+
+      - step: "Assert term 1's invoiced addendum line survives"
+        action: "assert"
+        target: "term1_t10"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          amount_total:
+            type: "value"
+            expected: 300000.0
+
+      - step: "Assert the surviving line is still linked to its invoice"
+        action: "assert"
+        target: "allocation1_t10"
+        asserts:
+          extra_detail_id.customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term 2's unbilled addendum line was removed"
+        action: "assert"
+        target: "term2_t10"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Assert term 3's unbilled addendum line was removed"
+        action: "assert"
+        target: "term3_t10"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Assert the participant's allocation lines are all kept"
+        action: "assert"
+        target: "participant_t10"
+        asserts:
+          allocation_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 3
+
+  - name: "Terminate before any invoicing removes every addendum line"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_t11"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_t11"
+        values:
+          name: "Extracurricular Billing Income T11"
+          code: "EXTB-T11-INC"
+          user_type_id: "REC: revenue_type_t11.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t11"
+        values:
+          name: "Grade Type Billing T11"
+          code: "EXTB-GT-T11"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t11"
+        values:
+          name: "School Billing T11"
+          code: "EXTB-SCH-T11"
+          grade_type_id: "REC: grade_type_t11.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t11"
+        values:
+          name: "Category Billing T11"
+          code: "EXTB-CAT-T11"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t11"
+        values:
+          name: "Futsal Club Billing T11"
+          code: "EXTB-EXT-T11"
+          category_id: "REC: category_t11.id"
+          school_id: "REC: school_t11.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t11"
+        values:
+          name: "AY Billing T11"
+          code: "EXTB-AY-T11"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t11"
+        values:
+          name: "Term Billing T11"
+          code: "EXTB-TERM-T11"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t11.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t11"
+        values:
+          name: "Teacher Employee Billing T11"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t11"
+        values:
+          name: "Teacher Billing T11"
+          code: "EXTB-TCH-T11"
+          employee_id: "REC: employee_t11.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t11"
+        values:
+          name: "Extracurricular Fee Billing T11"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t11"
+        values:
+          extracurricular_id: "REC: extracurricular_t11.id"
+          academic_year_id: "REC: academic_year_t11.id"
+          academic_term_id: "REC: academic_term_t11.id"
+          teacher_id: "REC: teacher_t11.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t11.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t11"
+        values:
+          name: "Grade Billing T11"
+          code: "EXTB-GR-T11"
+          type_id: "REC: grade_type_t11.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t11"
+        values:
+          name: "Grade Class Billing T11"
+          code: "EXTB-GC-T11"
+          school_id: "REC: school_t11.id"
+          grade_id: "REC: grade_t11.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t11"
+        values:
+          name: "Student Contact Billing T11"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t11"
+        values:
+          name: "Student Billing T11"
+          code: "EXTB-ST-T11"
+          contact_id: "REC: contact_t11.id"
+          school_id: "REC: school_t11.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t11"
+        values:
+          academic_year_id: "REC: academic_year_t11.id"
+          academic_term_id: "REC: academic_term_t11.id"
+          school_id: "REC: school_t11.id"
+          grade_id: "REC: grade_t11.id"
+          grade_class_id: "REC: grade_class_t11.id"
+          student_id: "REC: student_t11.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_t11"
+        values:
+          enrollment_id: "REC: enrollment_t11.id"
+          name: "Term Billing T11"
+          date_invoice: 2026-10-05
+          date_due: 2026-10-20
+
+      - step: "Create participant billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t11"
+        values:
+          offering_id: "REC: offering_t11.id"
+          student_id: "REC: student_t11.id"
+          enrollment_id: "REC: enrollment_t11.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_t11.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create allocation covering the full fee on the term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_t11"
+        values:
+          participant_id: "REC: participant_t11.id"
+          payment_term_id: "REC: term_t11.id"
+          product_id: "REC: product_offering_t11.id"
+          name: "Extracurricular Fee Billing T11"
+          account_id: "REC: income_account_t11.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t11"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant_t11"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_t11"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_t11"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Set a Leave Date before the term's Invoice Date"
+        action: "write"
+        target: "participant_t11"
+        values:
+          date_leave: 2026-08-01
+
+      - step: "Terminate the participant"
+        action: "call"
+        target: "participant_t11"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "terminate"
+
+      - step: "Assert every addendum line was removed"
+        action: "assert"
+        target: "term_t11"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Terminate on a Free of Charge participant only changes the state"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t12"
+        values:
+          name: "Grade Type Billing T12"
+          code: "EXTB-GT-T12"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t12"
+        values:
+          name: "School Billing T12"
+          code: "EXTB-SCH-T12"
+          grade_type_id: "REC: grade_type_t12.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t12"
+        values:
+          name: "Category Billing T12"
+          code: "EXTB-CAT-T12"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t12"
+        values:
+          name: "Futsal Club Billing T12"
+          code: "EXTB-EXT-T12"
+          category_id: "REC: category_t12.id"
+          school_id: "REC: school_t12.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t12"
+        values:
+          name: "AY Billing T12"
+          code: "EXTB-AY-T12"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t12"
+        values:
+          name: "Term Billing T12"
+          code: "EXTB-TERM-T12"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t12.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t12"
+        values:
+          name: "Teacher Employee Billing T12"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t12"
+        values:
+          name: "Teacher Billing T12"
+          code: "EXTB-TCH-T12"
+          employee_id: "REC: employee_t12.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t12"
+        values:
+          name: "Extracurricular Fee Billing T12"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t12"
+        values:
+          extracurricular_id: "REC: extracurricular_t12.id"
+          academic_year_id: "REC: academic_year_t12.id"
+          academic_term_id: "REC: academic_term_t12.id"
+          teacher_id: "REC: teacher_t12.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t12.id"
+          price_unit: 0.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t12"
+        values:
+          name: "Grade Billing T12"
+          code: "EXTB-GR-T12"
+          type_id: "REC: grade_type_t12.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t12"
+        values:
+          name: "Grade Class Billing T12"
+          code: "EXTB-GC-T12"
+          school_id: "REC: school_t12.id"
+          grade_id: "REC: grade_t12.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t12"
+        values:
+          name: "Student Contact Billing T12"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t12"
+        values:
+          name: "Student Billing T12"
+          code: "EXTB-ST-T12"
+          contact_id: "REC: contact_t12.id"
+          school_id: "REC: school_t12.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t12"
+        values:
+          academic_year_id: "REC: academic_year_t12.id"
+          academic_term_id: "REC: academic_term_t12.id"
+          school_id: "REC: school_t12.id"
+          grade_id: "REC: grade_t12.id"
+          grade_class_id: "REC: grade_class_t12.id"
+          student_id: "REC: student_t12.id"
+
+      - step: "Create participant free of charge"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t12"
+        values:
+          offering_id: "REC: offering_t12.id"
+          student_id: "REC: student_t12.id"
+          enrollment_id: "REC: enrollment_t12.id"
+          billing_mode: "free"
+          product_id: "REC: product_offering_t12.id"
+          price_unit: 0.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t12"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it"
+        action: "call"
+        target: "participant_t12"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Set a Leave Date"
+        action: "write"
+        target: "participant_t12"
+        values:
+          date_leave: 2026-09-01
+
+      - step: "Terminate the participant"
+        action: "call"
+        target: "participant_t12"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "terminate"
+
+  - name: "Restart after Terminate does not duplicate the addendum line"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_t13"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_t13"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_t13"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_t13"
+        values:
+          name: "Extracurricular Billing Income T13"
+          code: "EXTB-T13-INC"
+          user_type_id: "REC: revenue_type_t13.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_t13"
+        values:
+          name: "Extracurricular Billing Receivable T13"
+          code: "EXTB-T13-REC"
+          user_type_id: "REC: receivable_type_t13.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_t13"
+        values:
+          name: "Customer Invoice Type Billing T13"
+          code: "EXTB-T13-CIT"
+          journal_id: "REC: journal_t13.id"
+          receivable_account_id: "REC: receivable_account_t13.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t13"
+        values:
+          name: "Grade Type Billing T13"
+          code: "EXTB-GT-T13"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t13"
+        values:
+          name: "School Billing T13"
+          code: "EXTB-SCH-T13"
+          grade_type_id: "REC: grade_type_t13.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t13"
+        values:
+          name: "Category Billing T13"
+          code: "EXTB-CAT-T13"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t13"
+        values:
+          name: "Futsal Club Billing T13"
+          code: "EXTB-EXT-T13"
+          category_id: "REC: category_t13.id"
+          school_id: "REC: school_t13.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t13"
+        values:
+          name: "AY Billing T13"
+          code: "EXTB-AY-T13"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t13"
+        values:
+          name: "Term Billing T13"
+          code: "EXTB-TERM-T13"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t13.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t13"
+        values:
+          name: "Teacher Employee Billing T13"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t13"
+        values:
+          name: "Teacher Billing T13"
+          code: "EXTB-TCH-T13"
+          employee_id: "REC: employee_t13.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t13"
+        values:
+          name: "Extracurricular Fee Billing T13"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t13"
+        values:
+          extracurricular_id: "REC: extracurricular_t13.id"
+          academic_year_id: "REC: academic_year_t13.id"
+          academic_term_id: "REC: academic_term_t13.id"
+          teacher_id: "REC: teacher_t13.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t13.id"
+          price_unit: 600000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t13"
+        values:
+          name: "Grade Billing T13"
+          code: "EXTB-GR-T13"
+          type_id: "REC: grade_type_t13.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t13"
+        values:
+          name: "Grade Class Billing T13"
+          code: "EXTB-GC-T13"
+          school_id: "REC: school_t13.id"
+          grade_id: "REC: grade_t13.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t13"
+        values:
+          name: "Student Contact Billing T13"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t13"
+        values:
+          name: "Student Billing T13"
+          code: "EXTB-ST-T13"
+          contact_id: "REC: contact_t13.id"
+          school_id: "REC: school_t13.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t13"
+        values:
+          academic_year_id: "REC: academic_year_t13.id"
+          academic_term_id: "REC: academic_term_t13.id"
+          school_id: "REC: school_t13.id"
+          grade_id: "REC: grade_t13.id"
+          grade_class_id: "REC: grade_class_t13.id"
+          student_id: "REC: student_t13.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_t13.id"
+          receivable_account_id: "REC: receivable_account_t13.id"
+          customer_invoice_type_id: "REC: ci_type_t13.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Setup - create payment term A (will be invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a_t13"
+        values:
+          enrollment_id: "REC: enrollment_t13.id"
+          name: "Term Billing T13 - A"
+          date_invoice: 2026-08-05
+          date_due: 2026-08-20
+
+      - step: "Setup - create payment term B (stays unbilled, far future)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b_t13"
+        values:
+          enrollment_id: "REC: enrollment_t13.id"
+          name: "Term Billing T13 - B"
+          date_invoice: 2026-12-05
+          date_due: 2026-12-20
+
+      - step:
+          "Create participant billed to enrollment across 2 terms, with both allocation
+          lines created in the same write so the total-match constraint sees the full
+          batch at once"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t13"
+        values:
+          offering_id: "REC: offering_t13.id"
+          student_id: "REC: student_t13.id"
+          enrollment_id: "REC: enrollment_t13.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_t13.id"
+          uom_quantity: 1.0
+          price_unit: 600000.0
+          allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_a_t13.id"
+                product_id: "REC: product_offering_t13.id"
+                name: "Extracurricular Fee Billing T13 - A"
+                account_id: "REC: income_account_t13.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_b_t13.id"
+                product_id: "REC: product_offering_t13.id"
+                name: "Extracurricular Fee Billing T13 - B"
+                account_id: "REC: income_account_t13.id"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t13"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating both addendum lines"
+        action: "call"
+        target: "participant_t13"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_t13"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_t13"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice term A"
+        action: "call"
+        target: "term_a_t13"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Set a Leave Date between term A and term B"
+        action: "write"
+        target: "participant_t13"
+        values:
+          date_leave: 2026-09-01
+
+      - step: "Terminate the participant"
+        action: "call"
+        target: "participant_t13"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "terminate"
+
+      - step: "Assert term A's invoiced line survived and term B's was removed"
+        action: "assert"
+        target: "term_a_t13"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Assert term B has no addendum line after Terminate"
+        action: "assert"
+        target: "term_b_t13"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Restart the participant back to Draft"
+        action: "call"
+        target: "participant_t13"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm the restarted participant"
+        action: "call"
+        target: "participant_t13"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the restarted participant back to Open"
+        action: "call"
+        target: "participant_t13"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert neither allocation was duplicated"
+        action: "assert"
+        target: "participant_t13"
+        asserts:
+          allocation_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Assert term A's already-invoiced line was not duplicated"
+        action: "assert"
+        target: "term_a_t13"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Assert term B has exactly one fresh addendum line again"
+        action: "assert"
+        target: "term_b_t13"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Terminate without a Leave Date must fail"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t14"
+        values:
+          name: "Grade Type Billing T14"
+          code: "EXTB-GT-T14"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t14"
+        values:
+          name: "School Billing T14"
+          code: "EXTB-SCH-T14"
+          grade_type_id: "REC: grade_type_t14.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t14"
+        values:
+          name: "Category Billing T14"
+          code: "EXTB-CAT-T14"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t14"
+        values:
+          name: "Futsal Club Billing T14"
+          code: "EXTB-EXT-T14"
+          category_id: "REC: category_t14.id"
+          school_id: "REC: school_t14.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t14"
+        values:
+          name: "AY Billing T14"
+          code: "EXTB-AY-T14"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t14"
+        values:
+          name: "Term Billing T14"
+          code: "EXTB-TERM-T14"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t14.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t14"
+        values:
+          name: "Teacher Employee Billing T14"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t14"
+        values:
+          name: "Teacher Billing T14"
+          code: "EXTB-TCH-T14"
+          employee_id: "REC: employee_t14.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t14"
+        values:
+          name: "Extracurricular Fee Billing T14"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t14"
+        values:
+          extracurricular_id: "REC: extracurricular_t14.id"
+          academic_year_id: "REC: academic_year_t14.id"
+          academic_term_id: "REC: academic_term_t14.id"
+          teacher_id: "REC: teacher_t14.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t14.id"
+          price_unit: 0.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t14"
+        values:
+          name: "Grade Billing T14"
+          code: "EXTB-GR-T14"
+          type_id: "REC: grade_type_t14.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t14"
+        values:
+          name: "Grade Class Billing T14"
+          code: "EXTB-GC-T14"
+          school_id: "REC: school_t14.id"
+          grade_id: "REC: grade_t14.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t14"
+        values:
+          name: "Student Contact Billing T14"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t14"
+        values:
+          name: "Student Billing T14"
+          code: "EXTB-ST-T14"
+          contact_id: "REC: contact_t14.id"
+          school_id: "REC: school_t14.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t14"
+        values:
+          academic_year_id: "REC: academic_year_t14.id"
+          academic_term_id: "REC: academic_term_t14.id"
+          school_id: "REC: school_t14.id"
+          grade_id: "REC: grade_t14.id"
+          grade_class_id: "REC: grade_class_t14.id"
+          student_id: "REC: student_t14.id"
+
+      - step: "Create participant free of charge"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t14"
+        values:
+          offering_id: "REC: offering_t14.id"
+          student_id: "REC: student_t14.id"
+          enrollment_id: "REC: enrollment_t14.id"
+          billing_mode: "free"
+          product_id: "REC: product_offering_t14.id"
+          price_unit: 0.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t14"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it"
+        action: "call"
+        target: "participant_t14"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Terminate without a Leave Date must fail"
+        action: "call"
+        target: "participant_t14"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Leave Date"
+
+  - name: "Terminate with a Leave Date before Join Date must fail"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t15"
+        values:
+          name: "Grade Type Billing T15"
+          code: "EXTB-GT-T15"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t15"
+        values:
+          name: "School Billing T15"
+          code: "EXTB-SCH-T15"
+          grade_type_id: "REC: grade_type_t15.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t15"
+        values:
+          name: "Category Billing T15"
+          code: "EXTB-CAT-T15"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t15"
+        values:
+          name: "Futsal Club Billing T15"
+          code: "EXTB-EXT-T15"
+          category_id: "REC: category_t15.id"
+          school_id: "REC: school_t15.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t15"
+        values:
+          name: "AY Billing T15"
+          code: "EXTB-AY-T15"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t15"
+        values:
+          name: "Term Billing T15"
+          code: "EXTB-TERM-T15"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t15.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t15"
+        values:
+          name: "Teacher Employee Billing T15"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t15"
+        values:
+          name: "Teacher Billing T15"
+          code: "EXTB-TCH-T15"
+          employee_id: "REC: employee_t15.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t15"
+        values:
+          name: "Extracurricular Fee Billing T15"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t15"
+        values:
+          extracurricular_id: "REC: extracurricular_t15.id"
+          academic_year_id: "REC: academic_year_t15.id"
+          academic_term_id: "REC: academic_term_t15.id"
+          teacher_id: "REC: teacher_t15.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t15.id"
+          price_unit: 0.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t15"
+        values:
+          name: "Grade Billing T15"
+          code: "EXTB-GR-T15"
+          type_id: "REC: grade_type_t15.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t15"
+        values:
+          name: "Grade Class Billing T15"
+          code: "EXTB-GC-T15"
+          school_id: "REC: school_t15.id"
+          grade_id: "REC: grade_t15.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t15"
+        values:
+          name: "Student Contact Billing T15"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t15"
+        values:
+          name: "Student Billing T15"
+          code: "EXTB-ST-T15"
+          contact_id: "REC: contact_t15.id"
+          school_id: "REC: school_t15.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t15"
+        values:
+          academic_year_id: "REC: academic_year_t15.id"
+          academic_term_id: "REC: academic_term_t15.id"
+          school_id: "REC: school_t15.id"
+          grade_id: "REC: grade_t15.id"
+          grade_class_id: "REC: grade_class_t15.id"
+          student_id: "REC: student_t15.id"
+
+      - step: "Create participant free of charge, joining on a fixed date"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t15"
+        values:
+          offering_id: "REC: offering_t15.id"
+          student_id: "REC: student_t15.id"
+          enrollment_id: "REC: enrollment_t15.id"
+          billing_mode: "free"
+          product_id: "REC: product_offering_t15.id"
+          price_unit: 0.0
+          date_join: 2026-09-01
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t15"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it"
+        action: "call"
+        target: "participant_t15"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Set a Leave Date earlier than the Join Date"
+        action: "write"
+        target: "participant_t15"
+        values:
+          date_leave: 2026-08-01
+
+      - step: "Terminate with an invalid Leave Date must fail"
+        action: "call"
+        target: "participant_t15"
+        method: "action_terminate"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Leave Date"
+
+      - step: "Assert the participant is still Open"
+        action: "assert"
+        target: "participant_t15"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Cancel on an already-invoiced addendum line must fail"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_t16"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_t16"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_t16"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_t16"
+        values:
+          name: "Extracurricular Billing Income T16"
+          code: "EXTB-T16-INC"
+          user_type_id: "REC: revenue_type_t16.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_t16"
+        values:
+          name: "Extracurricular Billing Receivable T16"
+          code: "EXTB-T16-REC"
+          user_type_id: "REC: receivable_type_t16.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_t16"
+        values:
+          name: "Customer Invoice Type Billing T16"
+          code: "EXTB-T16-CIT"
+          journal_id: "REC: journal_t16.id"
+          receivable_account_id: "REC: receivable_account_t16.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_t16"
+        values:
+          name: "Grade Type Billing T16"
+          code: "EXTB-GT-T16"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_t16"
+        values:
+          name: "School Billing T16"
+          code: "EXTB-SCH-T16"
+          grade_type_id: "REC: grade_type_t16.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_t16"
+        values:
+          name: "Category Billing T16"
+          code: "EXTB-CAT-T16"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_t16"
+        values:
+          name: "Futsal Club Billing T16"
+          code: "EXTB-EXT-T16"
+          category_id: "REC: category_t16.id"
+          school_id: "REC: school_t16.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_t16"
+        values:
+          name: "AY Billing T16"
+          code: "EXTB-AY-T16"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_t16"
+        values:
+          name: "Term Billing T16"
+          code: "EXTB-TERM-T16"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_t16.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_t16"
+        values:
+          name: "Teacher Employee Billing T16"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_t16"
+        values:
+          name: "Teacher Billing T16"
+          code: "EXTB-TCH-T16"
+          employee_id: "REC: employee_t16.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_offering_t16"
+        values:
+          name: "Extracurricular Fee Billing T16"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_t16"
+        values:
+          extracurricular_id: "REC: extracurricular_t16.id"
+          academic_year_id: "REC: academic_year_t16.id"
+          academic_term_id: "REC: academic_term_t16.id"
+          teacher_id: "REC: teacher_t16.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_offering_t16.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_t16"
+        values:
+          name: "Grade Billing T16"
+          code: "EXTB-GR-T16"
+          type_id: "REC: grade_type_t16.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_t16"
+        values:
+          name: "Grade Class Billing T16"
+          code: "EXTB-GC-T16"
+          school_id: "REC: school_t16.id"
+          grade_id: "REC: grade_t16.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_t16"
+        values:
+          name: "Student Contact Billing T16"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_t16"
+        values:
+          name: "Student Billing T16"
+          code: "EXTB-ST-T16"
+          contact_id: "REC: contact_t16.id"
+          school_id: "REC: school_t16.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_t16"
+        values:
+          academic_year_id: "REC: academic_year_t16.id"
+          academic_term_id: "REC: academic_term_t16.id"
+          school_id: "REC: school_t16.id"
+          grade_id: "REC: grade_t16.id"
+          grade_class_id: "REC: grade_class_t16.id"
+          student_id: "REC: student_t16.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_t16.id"
+          receivable_account_id: "REC: receivable_account_t16.id"
+          customer_invoice_type_id: "REC: ci_type_t16.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Setup - create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_t16"
+        values:
+          enrollment_id: "REC: enrollment_t16.id"
+          name: "Term Billing T16"
+          date_invoice: 2026-07-05
+          date_due: 2026-07-20
+
+      - step: "Create participant billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_t16"
+        values:
+          offering_id: "REC: offering_t16.id"
+          student_id: "REC: student_t16.id"
+          enrollment_id: "REC: enrollment_t16.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_offering_t16.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create allocation covering the full fee on the term"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_t16"
+        values:
+          participant_id: "REC: participant_t16.id"
+          payment_term_id: "REC: term_t16.id"
+          product_id: "REC: product_offering_t16.id"
+          name: "Extracurricular Fee Billing T16"
+          account_id: "REC: income_account_t16.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_t16"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant_t16"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm the enrollment"
+        action: "call"
+        target: "enrollment_t16"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the enrollment"
+        action: "call"
+        target: "enrollment_t16"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term_t16"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Cancelling the invoiced participant must now fail"
+        action: "call"
+        target: "participant_t16"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "already invoiced"
+
+      - step: "Assert the participant is still Open"
+        action: "assert"
+        target: "participant_t16"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
