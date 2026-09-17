@@ -13,8 +13,8 @@ class TestSchoolEnrollmentPaymentTermExtraDetail(YamlTransactionCase):
 
     Covers the addendum fee line created on
     ``school_enrollment_payment_term`` from an extracurricular
-    participant's ``allocation_ids`` -- totals, invoicing, cancel, and
-    the allocation constraints.
+    participant's ``allocation_ids`` -- totals, invoicing, cancel,
+    terminate, restart, and the allocation constraints.
     """
 
     def test_school_enrollment_payment_term_extra_detail(self):

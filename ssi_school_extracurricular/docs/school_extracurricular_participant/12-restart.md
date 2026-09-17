@@ -4,12 +4,12 @@
 > **Model:** `school_extracurricular_participant`\
 > **Menu:** School > Extracurricular > Extracurricular Participants\
 > **Actor:** user in group `Extracurricular Participant - Officer`\
-> **State:** `cancel` | `reject` → `draft`\
+> **State:** `cancel` | `reject` | `terminate` → `draft`\
 > **Requires:** `10-cancel`
 
 ## Pre-Condition
 
-- **Record:** Status is **Cancelled** or **Rejected**.
+- **Record:** Status is **Cancelled**, **Rejected**, or **Terminated**.
 - **Config:** An active `policy.template` grants `restart_ok` for that state to the
   actor's group.
 - **Access:** User is in group `Extracurricular Participant - Officer`.

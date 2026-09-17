@@ -8,8 +8,8 @@
 
 ## Pre-Condition
 
-- **Record:** Status is **Draft**. Editing a record while it is under the approval
-  process is rejected with _"The operation is under approval process."_
+- **Record:** Status is **Draft** or **Open**. Editing a record while it is under the
+  approval process is rejected with _"The operation is under approval process."_
 - **Access:** User is in group `Extracurricular Participant - User`.
 
 ## Flow
@@ -17,7 +17,10 @@
 1. Open the **School > Extracurricular > Extracurricular Participants** menu.
 2. Find and open the record to edit.
 3. Change the required fields.
-   - **Group** may also be changed, to a Group belonging to the same Offering.
+   - **Group** may also be changed, to a Group belonging to the same Offering. Only
+     while Status is **Draft**.
+   - **Leave Date** may also be changed while Status is **Draft** or **Open** -- see
+     `11-terminate.md` for how it is used.
 4. Click **Save**.
 
 ## Post-Condition

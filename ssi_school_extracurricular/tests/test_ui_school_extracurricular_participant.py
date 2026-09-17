@@ -206,6 +206,13 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
                 "global_use": True,
             }
         )
+        cls.env["base.terminate_reason"].create(
+            {
+                "name": "TOUR-PARTICIPANT-TERMINATE-REASON",
+                "code": "/",
+                "global_use": True,
+            }
+        )
 
         cls.offering = cls.env["school_extracurricular_offering"].create(
             {
@@ -306,6 +313,20 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         cls.participant_cancel.invalidate_cache()
         cls.participant_cancel.with_user(cls.admin).action_approve_approval()
         cls.participant_cancel.invalidate_cache()
+
+        terminate_student = cls._create_student("TOUR-PARTICIPANT-TERMINATE")
+        terminate_enrollment = cls._create_enrollment(terminate_student)
+        cls.participant_terminate = cls._create_participant(
+            terminate_student, terminate_enrollment, "free"
+        )
+        cls.participant_terminate.with_user(cls.admin).action_confirm()
+        # approve_ok is subject to the same non-stored, confirm-blind
+        # compute as above -- invalidate before approving. Same
+        # SUPERUSER-is-not-an-approver reasoning as participant_finish
+        # above applies to ``with_user(cls.admin)`` here too.
+        cls.participant_terminate.invalidate_cache()
+        cls.participant_terminate.with_user(cls.admin).action_approve_approval()
+        cls.participant_terminate.invalidate_cache()
 
         restart_student = cls._create_student("TOUR-PARTICIPANT-RESTART")
         restart_enrollment = cls._create_enrollment(restart_student)
@@ -440,6 +461,17 @@ class TestUiSchoolExtracurricularParticipant(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_extracurricular_school_extracurricular_participant_cancel",
+            login="admin",
+        )
+
+    def test_terminate(self):
+        """Run the terminate tour for ``school_extracurricular_participant``.
+
+        IK: docs/school_extracurricular_participant/11-terminate.md
+        """
+        self.start_tour(
+            "/web",
+            "ssi_school_extracurricular_school_extracurricular_participant_terminate",
             login="admin",
         )
 

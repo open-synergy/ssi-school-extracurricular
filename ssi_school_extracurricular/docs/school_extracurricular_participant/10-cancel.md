@@ -10,6 +10,11 @@
 ## Pre-Condition
 
 - **Record:** Status is **Draft**, **Waiting for Approval**, or **Open**.
+- **Record:** When Billing Mode is Charged to Enrollment, none of the addendum fee lines
+  created on the allocated enrollment payment term(s) may already be linked to a
+  customer invoice line — Cancel fails with _"An addendum fee line on the payment term
+  is already invoiced"_ when any of them is already invoiced (use Terminate instead, see
+  `11-terminate.md`).
 - **Record:** When Billing Mode is Charged to Enrollment, every addendum fee line
   created on the allocated enrollment payment term(s) must still be unlocked — Cancel
   fails with _"An addendum fee line on the payment term is already locked"_ when any of

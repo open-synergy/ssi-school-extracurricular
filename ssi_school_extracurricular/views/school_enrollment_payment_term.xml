@@ -31,6 +31,56 @@
             <xpath expr="//field[@name='amount_untaxed']" position="after">
                 <field name="amount_extra" />
             </xpath>
+            <xpath expr="//page[@name='detail']" position="after">
+                <page name="term_extra_detail" string="Extracurricular Addendum">
+                    <field name="extra_detail_ids" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="participant_id" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="uom_quantity" />
+                            <field name="price_unit" />
+                            <field name="price_subtotal" />
+                            <field name="customer_invoice_line_id" />
+                            <field name="locked" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record
+        id="school_enrollment_payment_term_view_form_embedded_inherit"
+        model="ir.ui.view"
+    >
+    <field
+            name="name"
+        >school_enrollment_payment_term - form (embedded) - extracurricular</field>
+    <field name="model">school_enrollment_payment_term</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school.school_enrollment_payment_term_view_form_embedded"
+        />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='term_detail']" position="after">
+                <page name="term_extra_detail" string="Extracurricular Addendum">
+                    <field name="extra_detail_ids" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="participant_id" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="uom_quantity" />
+                            <field name="price_unit" />
+                            <field name="price_subtotal" />
+                            <field name="customer_invoice_line_id" />
+                            <field name="locked" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </data>
     </field>
 </record>

@@ -29,6 +29,7 @@ class SchoolExtracurricularParticipant(models.Model):
 
     _name = "school_extracurricular_participant"
     _inherit = [
+        "mixin.transaction_terminate",
         "mixin.transaction_cancel",
         "mixin.transaction_done",
         "mixin.transaction_open",
@@ -55,6 +56,7 @@ class SchoolExtracurricularParticipant(models.Model):
         "restart_approval_ok",
         "done_ok",
         "cancel_ok",
+        "terminate_ok",
         "restart_ok",
         "manual_number_ok",
     ]
@@ -63,6 +65,7 @@ class SchoolExtracurricularParticipant(models.Model):
         "action_approve_approval",
         "action_reject_approval",
         "%(ssi_transaction_cancel_mixin.base_select_cancel_reason_action)d",
+        "%(ssi_transaction_terminate_mixin.base_select_terminate_reason_action)d",
         "action_done",
         "action_restart",
     ]
@@ -75,6 +78,7 @@ class SchoolExtracurricularParticipant(models.Model):
         "dom_open",
         "dom_done",
         "dom_cancel",
+        "dom_terminate",
     ]
 
     # Sequence attribute
@@ -216,10 +220,16 @@ class SchoolExtracurricularParticipant(models.Model):
             "draft": [
                 ("readonly", False),
             ],
+            "open": [
+                ("readonly", False),
+            ],
         },
         help=(
             "The date this student stopped participating, if "
-            "applicable. Left empty while the student is still active."
+            "applicable. Left empty while the student is still active. "
+            "Also used as the cutoff date for Terminate: addendum fee "
+            "lines billed after this date are removed when the "
+            "participant is terminated."
         ),
     )
     billing_mode = fields.Selection(
@@ -779,13 +789,17 @@ Payment Term before opening
 
     @ssi_decorator.post_open_action()
     def _10_create_extra_detail(self):
-        """Create one addendum fee line per allocation.
+        """Create one addendum fee line per allocation not yet billed.
 
-        Post-open hook: for every ``allocation_ids`` line, creates a
+        Post-open hook: for every ``allocation_ids`` line whose
+        ``extra_detail_id`` is still empty, creates a
         ``school_enrollment_payment_term_extra_detail`` on the
         allocated payment term mirroring the allocation's product line
         values, and writes the created line back onto
-        ``extra_detail_id`` for traceability.
+        ``extra_detail_id`` for traceability. Allocations that already
+        carry an ``extra_detail_id`` are skipped, so re-opening a
+        Terminated participant through Restart does not duplicate the
+        addendum lines that survived termination.
 
         :return: None
         """
@@ -793,7 +807,9 @@ Payment Term before opening
         Detail = self.env[  # pylint: disable=invalid-name
             "school_enrollment_payment_term_extra_detail"
         ]
-        for allocation in self.allocation_ids:
+        for allocation in self.allocation_ids.filtered(
+            lambda line: not line.extra_detail_id
+        ):
             aa = (  # pylint: disable=invalid-name,consider-using-ternary
                 allocation.analytic_account_id
                 and allocation.analytic_account_id.id
@@ -814,6 +830,38 @@ Payment Term before opening
                 }
             )
             allocation.write({"extra_detail_id": detail.id})
+
+    @ssi_decorator.pre_cancel_check()
+    def _10_check_invoiced_extra_detail(self):
+        """Reject cancelling once any addendum fee line is invoiced.
+
+        Pre-cancel hook: raises when any ``allocation_ids`` line has an
+        ``extra_detail_id`` whose ``customer_invoice_line_id`` is set --
+        Cancel would otherwise delete a fee line the customer has
+        already been billed for. Terminate is the correct action once
+        billing has started.
+
+        :raises UserError: when an addendum fee line is invoiced
+        :return: None
+        """
+        self.ensure_one()
+        invoiced = self.allocation_ids.extra_detail_id.filtered(
+            "customer_invoice_line_id"
+        )
+        if invoiced:
+            error_message = (
+                _(
+                    """
+Context: Cancel extracurricular participant
+Database ID: %(id)s
+Problem: An addendum fee line on the payment term is already invoiced
+Solution: Use Terminate instead, so only the not-yet-invoiced fee
+lines after the Leave Date are removed
+"""
+                )
+                % {"id": self.id}
+            )
+            raise UserError(error_message)
 
     @ssi_decorator.post_cancel_action()
     def _10_remove_extra_detail(self):
@@ -848,6 +896,70 @@ it can no longer be cancelled through this document
             raise UserError(error_message)
         extra_details.unlink()
 
+    @ssi_decorator.pre_terminate_check()
+    def _10_check_date_leave(self):
+        """Reject terminating without a valid Leave Date.
+
+        Pre-terminate hook: raises when ``date_leave`` is empty or is
+        earlier than ``date_join`` -- Terminate uses ``date_leave`` as
+        the cutoff for which addendum fee lines survive, so it must be
+        set and cannot predate the day the student joined.
+
+        :raises UserError: when ``date_leave`` is missing or invalid
+        :return: None
+        """
+        self.ensure_one()
+        if not self.date_leave or self.date_leave < self.date_join:
+            error_message = (
+                _(
+                    """
+Context: Terminate extracurricular participant
+Database ID: %(id)s
+Problem: Leave Date is empty or earlier than Join Date
+Solution: Fill in a Leave Date on or after the Join Date before
+terminating
+"""
+                )
+                % {"id": self.id}
+            )
+            raise UserError(error_message)
+
+    @ssi_decorator.post_terminate_action()
+    def _10_remove_unbilled_extra_detail(self):
+        """Remove addendum fee lines not yet billed after the Leave Date.
+
+        Post-terminate hook: only applies when ``billing_mode`` is
+        ``enrollment`` -- other billing modes never created addendum
+        fee lines, so Terminate on them only changes the state.
+        Candidates are the ``allocation_ids.extra_detail_id`` lines
+        that are all of: not yet linked to a
+        ``customer_invoice_line_id``, on a payment term still
+        ``uninvoiced``, and whose term has no ``date_invoice`` or one
+        later than ``date_leave``. They are deleted with
+        ``bypass_addendum_lock`` in the context -- ``locked`` does not
+        exclude a candidate, since it only marks that the enrollment
+        has been opened, not that the fee has been billed. Lines
+        outside the candidate set, including already-invoiced ones,
+        are left untouched. ``allocation_ids`` themselves are kept
+        (``extra_detail_id`` empties itself via ``ondelete="set
+        null"``), so a later Restart back to Open can recreate the fee
+        line if the student rejoins.
+
+        :return: None
+        """
+        self.ensure_one()
+        if self.billing_mode != "enrollment":
+            return
+        candidates = self.allocation_ids.extra_detail_id.filtered(
+            lambda detail: not detail.customer_invoice_line_id
+            and detail.term_id.state == "uninvoiced"
+            and (
+                not detail.term_id.date_invoice
+                or detail.term_id.date_invoice > self.date_leave
+            )
+        )
+        candidates.with_context(bypass_addendum_lock=True).unlink()
+
     @api.model
     def _get_policy_field(self):
         """Return the list of policy boolean fields for this model.
@@ -867,6 +979,7 @@ it can no longer be cancelled through this document
             "open_ok",
             "done_ok",
             "cancel_ok",
+            "terminate_ok",
             "reject_ok",
             "restart_ok",
             "restart_approval_ok",

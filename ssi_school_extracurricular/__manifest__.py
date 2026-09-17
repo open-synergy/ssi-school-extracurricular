@@ -18,6 +18,7 @@
         "ssi_transaction_open_mixin",
         "ssi_transaction_done_mixin",
         "ssi_transaction_cancel_mixin",
+        "ssi_transaction_terminate_mixin",
         "ssi_customer_invoice",
         "ssi_product_line_account_mixin",
         "web_tour",
