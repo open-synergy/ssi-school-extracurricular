@@ -784,8 +784,9 @@ Payment Term before opening
         Post-open hook: for every ``allocation_ids`` line, creates a
         ``school_enrollment_payment_term_extra_detail`` on the
         allocated payment term mirroring the allocation's product line
-        values, and writes the created line back onto
-        ``extra_detail_id`` for traceability.
+        values -- including ``final_usage_id``/``final_account_id`` --
+        and writes the created line back onto ``extra_detail_id`` for
+        traceability.
 
         :return: None
         """
@@ -811,6 +812,8 @@ Payment Term before opening
                     "price_unit": allocation.price_unit,
                     "tax_ids": [(6, 0, allocation.tax_ids.ids)],
                     "analytic_account_id": aa or False,
+                    "final_usage_id": allocation.final_usage_id.id,
+                    "final_account_id": allocation.final_account_id.id,
                 }
             )
             allocation.write({"extra_detail_id": detail.id})
