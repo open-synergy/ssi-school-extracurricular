@@ -52,6 +52,19 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Finish enrollment\n"
+"Database ID: %s\n"
+"Problem: Extracurricular payment term '%s' has a customer invoice\n"
+"that is not yet Unpaid/Paid\n"
+"Solution: Confirm and open the standalone invoice before finishing\n"
+"this enrollment\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant.py:0
 #, python-format
 msgid ""
@@ -254,6 +267,20 @@ msgid ""
 "Database ID: %s\n"
 "Problem: Group '%s' does not belong to Offering '%s'\n"
 "Solution: Select a Group that belongs to the selected Offering\n"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: code:addons/ssi_school_extracurricular/models/school_enrollment_payment_term_extra_detail.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Update payment term extra detail\n"
+"Database ID: %s\n"
+"Problem: Payment term extra detail '%s' is already invoiced and its\n"
+"account classification cannot be changed\n"
+"Solution: The invoiced amount is already booked on the current\n"
+"account; book a correction through the extracurricular participant\n"
+"instead\n"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -795,6 +822,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__display_name
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__display_name
@@ -992,6 +1020,11 @@ msgid "Extracurricular Participants"
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extracurricular_payment_term_detail_id
+msgid "Extracurricular Payment Term Detail"
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.actions.act_window,name:ssi_school_extracurricular.school_extracurricular_action
 #: model:ir.ui.menu,name:ssi_school_extracurricular.school_extracurricular_menu
 msgid "Extracurriculars"
@@ -1006,6 +1039,20 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.ui.menu,name:ssi_school_extracurricular.school_extracurricular_fee_analysis_menu
 msgid "Fee Analysis"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__final_account_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__final_account_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__final_account_id
+msgid "Final Account"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__final_usage_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__final_usage_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__final_usage_id
+msgid "Final Usage"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -1098,6 +1145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category__id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__id
@@ -1190,6 +1238,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_category____last_update
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice____last_update
@@ -1507,6 +1556,7 @@ msgstr ""
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_customer_invoice_line__extra_detail_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extra_detail_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__extra_detail_id
 msgid "Payment Term Extra Detail"
 msgstr ""
@@ -1665,6 +1715,31 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__final_account_id
+msgid ""
+"Revenue account this allocation is recognized to once the enrollment "
+"finishes and Revenue Recognition posts, auto-filled from the product's "
+"account configuration for Final Usage, and copied onto the addendum fee line"
+" this allocation creates. Left empty, that line is never recognized."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__final_account_id
+msgid ""
+"Revenue account this line is recognized to once the enrollment finishes and "
+"Revenue Recognition posts. Copied from the originating allocation when this "
+"line is created. Left empty, this line is never recognized."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__final_account_id
+msgid ""
+"Revenue account this line is recognized to once the owning participant's "
+"enrollment finishes and Revenue Recognition posts. Left empty, this line is "
+"never recognized."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__reviewer_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__reviewer_id
 msgid "Reviewer"
@@ -1695,6 +1770,11 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment_payment_term_extra_detail
 msgid "School Enrollment Payment Term Extra Detail"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment_revenue_recognition_line
+msgid "School Enrollment Revenue Recognition - Line"
 msgstr ""
 
 #. module: ssi_school_extracurricular
@@ -2149,6 +2229,20 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extra_detail_id
+msgid ""
+"The invoiced addendum fee line (Route A, charged to enrollment) this "
+"Recognition Line releases."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extracurricular_payment_term_detail_id
+msgid ""
+"The invoiced standalone detail line (Route B, separate invoice) this "
+"Recognition Line releases."
+msgstr ""
+
+#. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__name
 msgid "The label of this group, e.g. 'Mini Soccer 1'."
 msgstr ""
@@ -2470,6 +2564,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__usage_id
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__usage_id
 msgid "Usage"
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__final_usage_id
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_payment_term_detail__final_usage_id
+msgid ""
+"Usage used to auto-fill Final Account from the product's account "
+"configuration."
+msgstr ""
+
+#. module: ssi_school_extracurricular
+#: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__final_usage_id
+msgid ""
+"Usage used to auto-fill Final Account from the product's account "
+"configuration. Copied from the originating allocation when this line is "
+"created."
 msgstr ""
 
 #. module: ssi_school_extracurricular
