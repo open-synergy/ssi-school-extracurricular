@@ -5,18 +5,12 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
-ADDENDUM_LOCK_ALLOWED_FIELDS = {
-    "customer_invoice_line_id",
-    "locked",
-    "sequence",
-    "final_usage_id",
-    "final_account_id",
-}
-# Writable on a locked line only while it is not yet invoiced -- see
-# ``_check_addendum_lock``. Once ``customer_invoice_line_id`` is set the
-# amount is already billed on that account, so classification can no
-# longer change without desynchronizing the customer invoice line.
-CONDITIONAL_LOCK_ALLOWED_FIELDS = {"usage_id", "account_id"}
+# The only fields ever blocked by the addendum lock -- see
+# ``_check_addendum_lock``. Every other field (including
+# ``final_usage_id``/``final_account_id``) stays freely writable
+# regardless of ``locked``; only the temporary account classification
+# itself is frozen, and only once the line is invoiced.
+CONDITIONAL_LOCK_FIELDS = {"usage_id", "account_id"}
 
 
 class SchoolEnrollmentPaymentTermExtraDetail(models.Model):
@@ -113,49 +107,41 @@ class SchoolEnrollmentPaymentTermExtraDetail(models.Model):
     )
 
     def _check_addendum_lock(self, vals):
-        """Reject writes on a locked addendum fee line.
+        """Reject re-classifying an invoiced, locked addendum fee line.
 
-        Twin of
-        ``school_enrollment_payment_term_detail._check_addendum_lock``
-        (``ssi_school``). The write passes when the context carries
-        ``bypass_addendum_lock``, or when every key of ``vals``
-        belongs to ``ADDENDUM_LOCK_ALLOWED_FIELDS``
-        (``customer_invoice_line_id``, ``locked``, ``sequence``,
-        ``final_usage_id``, ``final_account_id``) -- the bookkeeping
-        and revenue-classification fields that stay writable even
-        after locking. ``CONDITIONAL_LOCK_ALLOWED_FIELDS`` (``usage_id``,
-        ``account_id``) is a second, narrower exception: writable on a
-        locked record only while its own ``customer_invoice_line_id``
-        is still empty, rejected once that record is invoiced. Every
-        other field stays permanently locked.
+        The only thing the addendum lock ever freezes is the
+        temporary account classification (``usage_id``/
+        ``account_id``), and only once the line is already invoiced:
+        an invoice line was generated from that account, so changing
+        it afterwards would desynchronize the two. Every other field
+        -- including ``final_usage_id``/``final_account_id`` -- stays
+        freely writable no matter ``locked``, matching the Design
+        Decision of the issue this guard was written for. The write
+        also passes unconditionally when the context carries
+        ``bypass_addendum_lock``.
 
-        :param vals: write values whose keys are checked against the
-            allowed field sets
-        :raises UserError: when a locked line is written with a field
-            outside the allowed sets, or with a conditional field
-            while already invoiced
+        :param vals: write values whose keys are checked against
+            ``CONDITIONAL_LOCK_FIELDS``
+        :raises UserError: when ``usage_id``/``account_id`` is
+            written on a locked, already invoiced line
         :return: None
         """
         if self.env.context.get("bypass_addendum_lock"):
             return
-        extra_keys = set(vals.keys()) - ADDENDUM_LOCK_ALLOWED_FIELDS
-        if not extra_keys:
+        if not set(vals.keys()) & CONDITIONAL_LOCK_FIELDS:
             return
-        blocking_keys = extra_keys - CONDITIONAL_LOCK_ALLOWED_FIELDS
-        conditional_keys = extra_keys & CONDITIONAL_LOCK_ALLOWED_FIELDS
         for record in self:
-            if not record.locked:
-                continue
-            if blocking_keys or (conditional_keys and record.customer_invoice_line_id):
+            if record.locked and record.customer_invoice_line_id:
                 error_message = (
                     _(
                         """
 Context: Update payment term extra detail
 Database ID: %s
-Problem: Payment term extra detail '%s' is locked and cannot be
-modified
-Solution: Locked addendum fee lines are permanent; the correction has
-to be booked through the extracurricular participant instead
+Problem: Payment term extra detail '%s' is already invoiced and its
+account classification cannot be changed
+Solution: The invoiced amount is already booked on the current
+account; book a correction through the extracurricular participant
+instead
 """
                     )
                     % (record.id, record.name)
@@ -166,8 +152,8 @@ to be booked through the extracurricular participant instead
         """Enforce the addendum lock before writing.
 
         :param vals: values to write
-        :raises UserError: when a locked line is written with a field
-            outside ``ADDENDUM_LOCK_ALLOWED_FIELDS``
+        :raises UserError: when ``usage_id``/``account_id`` is
+            written on a locked, already invoiced line
         :return: ``True``
         """
         self._check_addendum_lock(vals)

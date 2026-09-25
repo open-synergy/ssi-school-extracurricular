@@ -1827,6 +1827,38 @@ scenarios:
           code: "EXRR7-4150"
           user_type_id: "REC: revenue_type_rr7.id"
 
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr7"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr7"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr7"
+        values:
+          name: "School Receivable RR7"
+          code: "EXRR7-1100"
+          user_type_id: "REC: receivable_type_rr7.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr7"
+        values:
+          name: "Customer Invoice Type RR7"
+          code: "CITEXRR7"
+          journal_id: "REC: journal_rr7.id"
+          receivable_account_id: "REC: receivable_account_rr7.id"
+
       - step: "Setup - create grade type"
         action: "create"
         model: "school_grade_type"
@@ -1882,6 +1914,7 @@ scenarios:
           date_start: 2026-07-01
           date_end: 2026-12-31
           year_id: "REC: academic_year_rr7.id"
+          enrollment_state: "open"
 
       - step: "Setup - create employee for teacher"
         action: "create"
@@ -1968,6 +2001,9 @@ scenarios:
           grade_class_id: "REC: grade_class_rr7.id"
           student_id: "REC: student_rr7.id"
           currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr7.id"
+          receivable_account_id: "REC: receivable_account_rr7.id"
+          customer_invoice_type_id: "REC: ci_type_rr7.id"
 
       - step: "Create the enrollment payment term the fee is allocated to"
         action: "create"
@@ -2084,4 +2120,4 @@ scenarios:
           - account_id: "REC: alt_account_rr7.id"
         expect_error:
           type: "UserError"
-          message_contains: "locked and cannot be"
+          message_contains: "account classification cannot be changed"
