@@ -59,6 +59,46 @@ class SchoolExtracurricularParticipantAllocation(models.Model):
         required=False,
         help="The billing currency, automatically taken from the participant.",
     )
+    final_usage_id = fields.Many2one(
+        string="Final Usage",
+        comodel_name="product.usage_type",
+        ondelete="restrict",
+        help=(
+            "Usage used to auto-fill Final Account from the product's "
+            "account configuration."
+        ),
+    )
+    final_account_id = fields.Many2one(
+        string="Final Account",
+        comodel_name="account.account",
+        ondelete="restrict",
+        help=(
+            "Revenue account this allocation is recognized to once the "
+            "enrollment finishes and Revenue Recognition posts, "
+            "auto-filled from the product's account configuration for "
+            "Final Usage, and copied onto the addendum fee line this "
+            "allocation creates. Left empty, that line is never "
+            "recognized."
+        ),
+    )
+
+    @api.onchange("product_id", "final_usage_id")
+    def onchange_final_account_id(self):
+        """Auto-fill ``final_account_id`` from the product's usage account.
+
+        Resolves ``product_id._get_product_account`` for
+        ``final_usage_id.code``; a product/usage combination without a
+        matching account configuration leaves ``final_account_id``
+        empty rather than raising, so the line stays valid and simply
+        never gets recognized.
+
+        :return: None
+        """
+        self.final_account_id = False
+        if self.product_id and self.final_usage_id:
+            self.final_account_id = self.product_id._get_product_account(
+                usage_code=self.final_usage_id.code
+            )
 
     @api.constrains("payment_term_id", "participant_id")
     def _check_payment_term_enrollment(self):

@@ -2,7 +2,7 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolExtracurricularPaymentTermDetail(
@@ -61,6 +61,44 @@ class SchoolExtracurricularPaymentTermDetail(
         help="The customer invoice line linked to this detail, "
         "automatically populated when the customer invoice is generated.",
     )
+    final_usage_id = fields.Many2one(
+        string="Final Usage",
+        comodel_name="product.usage_type",
+        ondelete="restrict",
+        help=(
+            "Usage used to auto-fill Final Account from the product's "
+            "account configuration."
+        ),
+    )
+    final_account_id = fields.Many2one(
+        string="Final Account",
+        comodel_name="account.account",
+        ondelete="restrict",
+        help=(
+            "Revenue account this line is recognized to once the "
+            "owning participant's enrollment finishes and Revenue "
+            "Recognition posts. Left empty, this line is never "
+            "recognized."
+        ),
+    )
+
+    @api.onchange("product_id", "final_usage_id")
+    def onchange_final_account_id(self):
+        """Auto-fill ``final_account_id`` from the product's usage account.
+
+        Resolves ``product_id._get_product_account`` for
+        ``final_usage_id.code``; a product/usage combination without a
+        matching account configuration leaves ``final_account_id``
+        empty rather than raising, so the line stays valid and simply
+        never gets recognized.
+
+        :return: None
+        """
+        self.final_account_id = False
+        if self.product_id and self.final_usage_id:
+            self.final_account_id = self.product_id._get_product_account(
+                usage_code=self.final_usage_id.code
+            )
 
     def _prepare_invoice_line(self):
         """Build the ``customer_invoice.line`` values for this fee line.
@@ -69,7 +107,12 @@ class SchoolExtracurricularPaymentTermDetail(
         values. The link to the parent document
         (``customer_invoice_id``) is intentionally left out -- it is
         added by the create-due-invoice wizard, which owns the newly
-        created header.
+        created header. When the owning participant's enrollment
+        already finished (``done``) with Revenue Recognition enabled
+        and this line carries a Final Account, a due invoice created
+        after the fact bills straight to that Final Account instead
+        of the line's own temporary account -- there is no later
+        Revenue Recognition move to reclass it.
 
         :return: dict of ``customer_invoice.line`` values
         """
@@ -77,10 +120,18 @@ class SchoolExtracurricularPaymentTermDetail(
         aa = (  # pylint: disable=invalid-name,consider-using-ternary
             self.analytic_account_id and self.analytic_account_id.id or False
         )
+        enrollment = self.term_id.participant_id.enrollment_id
+        account = self.account_id
+        if (
+            enrollment.state == "done"
+            and enrollment.revenue_recognition
+            and self.final_account_id
+        ):
+            account = self.final_account_id
         return {
             "product_id": self.product_id.id,
             "name": self.name,
-            "account_id": self.account_id.id,
+            "account_id": account.id,
             "uom_id": self.uom_id.id,
             "uom_quantity": self.uom_quantity,
             "price_unit": self.price_unit,

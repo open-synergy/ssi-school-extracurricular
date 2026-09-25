@@ -1,0 +1,2123 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Onchange Final Account From Product Usage On Allocation"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr1"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account_rr1"
+        values:
+          name: "Extracurricular Final Income RR1"
+          code: "EXRR1-4200"
+          user_type_id: "REC: revenue_type_rr1.id"
+
+      - step: "Setup - create final usage type"
+        action: "create"
+        model: "product.usage_type"
+        save_as: "final_usage_rr1"
+        values:
+          name: "Final Revenue RR1"
+          code: "FINEXRR1"
+          account_id: "REC: final_account_rr1.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr1"
+        values:
+          name: "Extracurricular Fee RR1"
+          type: "service"
+          list_price: 300000.0
+
+      - step:
+          "Selecting Final Usage fills Final Account from the product's usage account"
+        action: form
+        model: "school_extracurricular_participant_allocation"
+        save: false
+        values:
+          product_id: "REC: product_rr1"
+          final_usage_id: "REC: final_usage_rr1"
+        asserts:
+          final_account_id.id:
+            type: "value"
+            expected: "REC: final_account_rr1.id"
+
+      - step: "Without Final Usage selected, Final Account stays empty"
+        action: form
+        model: "school_extracurricular_participant_allocation"
+        save: false
+        values:
+          product_id: "REC: product_rr1"
+        asserts:
+          final_account_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Open Participant Copies Final Usage And Account To Extra Detail"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr2"
+        values:
+          name: "Grade Type RR2"
+          code: "EXRR2-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr2"
+        values:
+          name: "School RR2"
+          code: "EXRR2-SCH"
+          grade_type_id: "REC: grade_type_rr2.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr2"
+        values:
+          name: "Category RR2"
+          code: "EXRR2-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr2"
+        values:
+          name: "Chess Club RR2"
+          code: "EXRR2-EXT"
+          category_id: "REC: category_rr2.id"
+          school_id: "REC: school_rr2.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr2"
+        values:
+          name: "AY RR2"
+          code: "EXRR2-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr2"
+        values:
+          name: "Term RR2"
+          code: "EXRR2-TM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr2.id"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr2"
+        values:
+          name: "Teacher Employee RR2"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr2"
+        values:
+          name: "Teacher RR2"
+          code: "EXRR2-TCH"
+          employee_id: "REC: employee_rr2.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr2"
+        values:
+          name: "Extracurricular Fee RR2"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr2"
+        values:
+          extracurricular_id: "REC: extracurricular_rr2.id"
+          academic_year_id: "REC: academic_year_rr2.id"
+          academic_term_id: "REC: academic_term_rr2.id"
+          teacher_id: "REC: teacher_rr2.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr2.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr2"
+        values:
+          name: "Grade RR2"
+          code: "EXRR2-GR"
+          type_id: "REC: grade_type_rr2.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr2"
+        values:
+          name: "Grade Class RR2"
+          code: "EXRR2-GC"
+          school_id: "REC: school_rr2.id"
+          grade_id: "REC: grade_rr2.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr2"
+        values:
+          name: "Student Contact RR2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr2"
+        values:
+          name: "Student RR2"
+          code: "EXRR2-ST"
+          contact_id: "REC: contact_rr2.id"
+          school_id: "REC: school_rr2.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr2"
+        values:
+          academic_year_id: "REC: academic_year_rr2.id"
+          academic_term_id: "REC: academic_term_rr2.id"
+          school_id: "REC: school_rr2.id"
+          grade_id: "REC: grade_rr2.id"
+          grade_class_id: "REC: grade_class_rr2.id"
+          student_id: "REC: student_rr2.id"
+
+      - step: "Create participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr2"
+        values:
+          offering_id: "REC: offering_rr2.id"
+          student_id: "REC: student_rr2.id"
+          enrollment_id: "REC: enrollment_rr2.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_rr2.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr2"
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr2"
+        values:
+          name: "Extracurricular Income RR2"
+          code: "EXRR2-4100"
+          user_type_id: "REC: revenue_type_rr2.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account_rr2"
+        values:
+          name: "Extracurricular Final Income RR2"
+          code: "EXRR2-4200"
+          user_type_id: "REC: revenue_type_rr2.id"
+
+      - step: "Setup - create final usage type"
+        action: "create"
+        model: "product.usage_type"
+        save_as: "final_usage_rr2"
+        values:
+          name: "Final Revenue RR2"
+          code: "FINEXRR2"
+          account_id: "REC: final_account_rr2.id"
+
+      - step: "Setup - create payment term to allocate the fee to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_rr2"
+        values:
+          enrollment_id: "REC: enrollment_rr2.id"
+          name: "Term RR2"
+
+      - step: "Allocate the participant's fee, with a Final Usage/Account"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_rr2"
+        values:
+          participant_id: "REC: participant_rr2.id"
+          payment_term_id: "REC: term_rr2.id"
+          product_id: "REC: product_rr2.id"
+          name: "Extracurricular Fee RR2"
+          account_id: "REC: income_account_rr2.id"
+          final_usage_id: "REC: final_usage_rr2.id"
+          final_account_id: "REC: final_account_rr2.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm participant"
+        action: "call"
+        target: "participant_rr2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve participant"
+        action: "call"
+        target: "participant_rr2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "The addendum line was created with one extra detail"
+        action: "assert"
+        target: "term_rr2"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Get the created extra detail"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["term_id", "=", "REC: term_rr2.id"]]
+        save_as: "extra_detail_rr2"
+        expect_count: 1
+
+      - step: "Extra detail copied Final Usage and Final Account"
+        action: "assert"
+        target: "extra_detail_rr2"
+        asserts:
+          final_usage_id:
+            type: "m2o"
+            expected: "REC: final_usage_rr2"
+          final_account_id:
+            type: "m2o"
+            expected: "REC: final_account_rr2"
+
+  - name: "Route A Extracurricular Addendum Fee Recognized At Enrollment Done"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr3"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr3"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr3"
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr3"
+        values:
+          name: "Extracurricular Income RR3"
+          code: "EXRR3-4100"
+          user_type_id: "REC: revenue_type_rr3.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account_rr3"
+        values:
+          name: "Extracurricular Final Income RR3"
+          code: "EXRR3-4200"
+          user_type_id: "REC: revenue_type_rr3.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr3"
+        values:
+          name: "School Receivable RR3"
+          code: "EXRR3-1100"
+          user_type_id: "REC: receivable_type_rr3.id"
+          reconcile: true
+
+      - step: "Setup - create final usage type"
+        action: "create"
+        model: "product.usage_type"
+        save_as: "final_usage_rr3"
+        values:
+          name: "Final Revenue RR3"
+          code: "FINEXRR3"
+          account_id: "REC: final_account_rr3.id"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr3"
+        values:
+          name: "Customer Invoice Type RR3"
+          code: "CITEXRR3"
+          journal_id: "REC: journal_rr3.id"
+          receivable_account_id: "REC: receivable_account_rr3.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr3"
+        values:
+          name: "Grade Type RR3"
+          code: "EXRR3-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr3"
+        values:
+          name: "School RR3"
+          code: "EXRR3-SCH"
+          grade_type_id: "REC: grade_type_rr3.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr3"
+        values:
+          name: "Category RR3"
+          code: "EXRR3-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr3"
+        values:
+          name: "Chess Club RR3"
+          code: "EXRR3-EXT"
+          category_id: "REC: category_rr3.id"
+          school_id: "REC: school_rr3.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr3"
+        values:
+          name: "AY RR3"
+          code: "EXRR3-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr3"
+        values:
+          name: "Semester 1 RR3"
+          code: "EXRR3-TM1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr3.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2_rr3"
+        values:
+          name: "Semester 2 RR3"
+          code: "EXRR3-TM2"
+          date_start: 2027-01-01
+          date_end: 2027-06-30
+          year_id: "REC: academic_year_rr3.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr3"
+        values:
+          name: "Teacher Employee RR3"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr3"
+        values:
+          name: "Teacher RR3"
+          code: "EXRR3-TCH"
+          employee_id: "REC: employee_rr3.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr3"
+        values:
+          name: "Extracurricular Fee RR3"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr3"
+        values:
+          extracurricular_id: "REC: extracurricular_rr3.id"
+          academic_year_id: "REC: academic_year_rr3.id"
+          academic_term_id: "REC: academic_term_rr3.id"
+          teacher_id: "REC: teacher_rr3.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr3.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr3"
+        values:
+          name: "Grade RR3"
+          code: "EXRR3-GR"
+          type_id: "REC: grade_type_rr3.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr3"
+        values:
+          name: "Grade Class RR3"
+          code: "EXRR3-GC"
+          school_id: "REC: school_rr3.id"
+          grade_id: "REC: grade_rr3.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr3"
+        values:
+          name: "Student Contact RR3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr3"
+        values:
+          name: "Student RR3"
+          code: "EXRR3-ST"
+          contact_id: "REC: contact_rr3.id"
+          school_id: "REC: school_rr3.id"
+
+      - step: "Setup - create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr3"
+        values:
+          date: 2026-07-01
+          academic_year_id: "REC: academic_year_rr3.id"
+          academic_term_id: "REC: academic_term_rr3.id"
+          school_id: "REC: school_rr3.id"
+          grade_id: "REC: grade_rr3.id"
+          grade_class_id: "REC: grade_class_rr3.id"
+          student_id: "REC: student_rr3.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr3.id"
+          receivable_account_id: "REC: receivable_account_rr3.id"
+          customer_invoice_type_id: "REC: ci_type_rr3.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal_rr3.id"
+
+      - step: "Create the enrollment payment term the fee is allocated to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_rr3"
+        values:
+          enrollment_id: "REC: enrollment_rr3.id"
+          name: "Term RR3"
+
+      - step: "Create participant, billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr3"
+        values:
+          offering_id: "REC: offering_rr3.id"
+          student_id: "REC: student_rr3.id"
+          enrollment_id: "REC: enrollment_rr3.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_rr3.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocate the fee, with a Final Usage/Account"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_rr3"
+        values:
+          participant_id: "REC: participant_rr3.id"
+          payment_term_id: "REC: term_rr3.id"
+          product_id: "REC: product_rr3.id"
+          name: "Extracurricular Fee RR3"
+          account_id: "REC: income_account_rr3.id"
+          final_usage_id: "REC: final_usage_rr3.id"
+          final_account_id: "REC: final_account_rr3.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_rr3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_rr3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment_rr3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_rr3"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment_rr3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term carrying the addendum fee line"
+        action: "call"
+        target: "term_rr3"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_rr3.customer_invoice_id.id"]]
+        save_as: "invoice_rr3"
+        expect_count: 1
+
+      - step: "The invoice has one line, matching the extra detail"
+        action: "assert"
+        target: "invoice_rr3"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice_rr3"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_rr3"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice_rr3"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment_rr3"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment_rr3"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert one Revenue Recognition line was posted for the addendum"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["enrollment_id", "=", "REC: enrollment_rr3.id"]]
+        save_as: "recognition_lines_rr3"
+        expect_count: 1
+
+      - step: "Get the extra detail the line traces back to"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["term_id", "=", "REC: term_rr3.id"]]
+        save_as: "extra_detail_rr3"
+        expect_count: 1
+
+      - step: "Assert the recognition line's trace, accounts, and amount"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["extra_detail_id", "=", "REC: extra_detail_rr3.id"]]
+        save_as: "recognition_line_rr3"
+        expect_count: 1
+
+      - step: "Assert recognition line accounts and amount"
+        action: "assert"
+        target: "recognition_line_rr3"
+        asserts:
+          debit_account_id.id:
+            type: "value"
+            expected: "REC: income_account_rr3.id"
+          credit_account_id.id:
+            type: "value"
+            expected: "REC: final_account_rr3.id"
+          amount:
+            type: "value"
+            expected: 300000.0
+
+  - name: "Route B Standalone Extracurricular Fee Recognized At Enrollment Done"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr4"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr4"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr4"
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr4"
+        values:
+          name: "Extracurricular Income RR4"
+          code: "EXRR4-4100"
+          user_type_id: "REC: revenue_type_rr4.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account_rr4"
+        values:
+          name: "Extracurricular Final Income RR4"
+          code: "EXRR4-4200"
+          user_type_id: "REC: revenue_type_rr4.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr4"
+        values:
+          name: "School Receivable RR4"
+          code: "EXRR4-1100"
+          user_type_id: "REC: receivable_type_rr4.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr4"
+        values:
+          name: "Customer Invoice Type RR4"
+          code: "CITEXRR4"
+          journal_id: "REC: journal_rr4.id"
+          receivable_account_id: "REC: receivable_account_rr4.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr4"
+        values:
+          name: "Grade Type RR4"
+          code: "EXRR4-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr4"
+        values:
+          name: "School RR4"
+          code: "EXRR4-SCH"
+          grade_type_id: "REC: grade_type_rr4.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr4"
+        values:
+          name: "Category RR4"
+          code: "EXRR4-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr4"
+        values:
+          name: "Chess Club RR4"
+          code: "EXRR4-EXT"
+          category_id: "REC: category_rr4.id"
+          school_id: "REC: school_rr4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr4"
+        values:
+          name: "AY RR4"
+          code: "EXRR4-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr4"
+        values:
+          name: "Semester 1 RR4"
+          code: "EXRR4-TM1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr4.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2_rr4"
+        values:
+          name: "Semester 2 RR4"
+          code: "EXRR4-TM2"
+          date_start: 2027-01-01
+          date_end: 2027-06-30
+          year_id: "REC: academic_year_rr4.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr4"
+        values:
+          name: "Teacher Employee RR4"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr4"
+        values:
+          name: "Teacher RR4"
+          code: "EXRR4-TCH"
+          employee_id: "REC: employee_rr4.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr4"
+        values:
+          name: "Extracurricular Fee RR4"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr4"
+        values:
+          extracurricular_id: "REC: extracurricular_rr4.id"
+          academic_year_id: "REC: academic_year_rr4.id"
+          academic_term_id: "REC: academic_term_rr4.id"
+          teacher_id: "REC: teacher_rr4.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr4.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: ci_type_rr4.id"
+          receivable_journal_id: "REC: journal_rr4.id"
+          receivable_account_id: "REC: receivable_account_rr4.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr4"
+        values:
+          name: "Grade RR4"
+          code: "EXRR4-GR"
+          type_id: "REC: grade_type_rr4.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr4"
+        values:
+          name: "Grade Class RR4"
+          code: "EXRR4-GC"
+          school_id: "REC: school_rr4.id"
+          grade_id: "REC: grade_rr4.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr4"
+        values:
+          name: "Student Contact RR4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr4"
+        values:
+          name: "Student RR4"
+          code: "EXRR4-ST"
+          contact_id: "REC: contact_rr4.id"
+          school_id: "REC: school_rr4.id"
+
+      - step: "Setup - create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr4"
+        values:
+          date: 2026-07-01
+          academic_year_id: "REC: academic_year_rr4.id"
+          academic_term_id: "REC: academic_term_rr4.id"
+          school_id: "REC: school_rr4.id"
+          grade_id: "REC: grade_rr4.id"
+          grade_class_id: "REC: grade_class_rr4.id"
+          student_id: "REC: student_rr4.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr4.id"
+          receivable_account_id: "REC: receivable_account_rr4.id"
+          customer_invoice_type_id: "REC: ci_type_rr4.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal_rr4.id"
+
+      - step: "Create participant, billed on its own standalone invoice"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr4"
+        values:
+          offering_id: "REC: offering_rr4.id"
+          student_id: "REC: student_rr4.id"
+          enrollment_id: "REC: enrollment_rr4.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_rr4.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_rr4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_rr4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the standalone payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_rr4"
+        values:
+          participant_id: "REC: participant_rr4.id"
+          name: "Chess Club Term RR4"
+          date_due: 2026-07-20
+
+      - step: "Create the standalone detail line, with a Final Account"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_rr4"
+        values:
+          term_id: "REC: term_rr4.id"
+          product_id: "REC: product_rr4.id"
+          name: "Chess Club Fee RR4"
+          account_id: "REC: income_account_rr4.id"
+          final_account_id: "REC: final_account_rr4.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Invoice the standalone term through the due-invoice wizard"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_rr4"
+        values:
+          student_id: "REC: student_rr4.id"
+          date_invoice: 2026-07-05
+          date_due_max: 2026-07-31
+
+      - step: "Run the wizard"
+        action: "call"
+        target: "wizard_rr4"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated standalone invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_rr4.customer_invoice_id.id"]]
+        save_as: "invoice_rr4"
+        expect_count: 1
+
+      - step: "Confirm the standalone invoice"
+        action: "call"
+        target: "invoice_rr4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_rr4"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the standalone invoice"
+        action: "call"
+        target: "invoice_rr4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment_rr4"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_rr4"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment_rr4"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment_rr4"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment_rr4"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert one Revenue Recognition line was posted for the standalone fee"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["enrollment_id", "=", "REC: enrollment_rr4.id"]]
+        save_as: "recognition_lines_rr4"
+        expect_count: 1
+
+      - step: "Assert the recognition line's trace, accounts, and amount"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["extracurricular_payment_term_detail_id", "=", "REC: detail_rr4.id"]]
+        save_as: "recognition_line_rr4"
+        expect_count: 1
+
+      - step: "Assert recognition line accounts and amount"
+        action: "assert"
+        target: "recognition_line_rr4"
+        asserts:
+          debit_account_id.id:
+            type: "value"
+            expected: "REC: income_account_rr4.id"
+          credit_account_id.id:
+            type: "value"
+            expected: "REC: final_account_rr4.id"
+          amount:
+            type: "value"
+            expected: 300000.0
+
+  - name: "Revenue Recognition Disabled Produces No Extracurricular Line"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr5"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr5"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr5"
+        limit: 1
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr5"
+        values:
+          name: "Extracurricular Income RR5"
+          code: "EXRR5-4100"
+          user_type_id: "REC: revenue_type_rr5.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account_rr5"
+        values:
+          name: "Extracurricular Final Income RR5"
+          code: "EXRR5-4200"
+          user_type_id: "REC: revenue_type_rr5.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr5"
+        values:
+          name: "School Receivable RR5"
+          code: "EXRR5-1100"
+          user_type_id: "REC: receivable_type_rr5.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr5"
+        values:
+          name: "Customer Invoice Type RR5"
+          code: "CITEXRR5"
+          journal_id: "REC: journal_rr5.id"
+          receivable_account_id: "REC: receivable_account_rr5.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr5"
+        values:
+          name: "Grade Type RR5"
+          code: "EXRR5-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr5"
+        values:
+          name: "School RR5"
+          code: "EXRR5-SCH"
+          grade_type_id: "REC: grade_type_rr5.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr5"
+        values:
+          name: "Category RR5"
+          code: "EXRR5-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr5"
+        values:
+          name: "Chess Club RR5"
+          code: "EXRR5-EXT"
+          category_id: "REC: category_rr5.id"
+          school_id: "REC: school_rr5.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr5"
+        values:
+          name: "AY RR5"
+          code: "EXRR5-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr5"
+        values:
+          name: "Semester 1 RR5"
+          code: "EXRR5-TM1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr5.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2_rr5"
+        values:
+          name: "Semester 2 RR5"
+          code: "EXRR5-TM2"
+          date_start: 2027-01-01
+          date_end: 2027-06-30
+          year_id: "REC: academic_year_rr5.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr5"
+        values:
+          name: "Teacher Employee RR5"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr5"
+        values:
+          name: "Teacher RR5"
+          code: "EXRR5-TCH"
+          employee_id: "REC: employee_rr5.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr5"
+        values:
+          name: "Extracurricular Fee RR5"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr5"
+        values:
+          extracurricular_id: "REC: extracurricular_rr5.id"
+          academic_year_id: "REC: academic_year_rr5.id"
+          academic_term_id: "REC: academic_term_rr5.id"
+          teacher_id: "REC: teacher_rr5.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr5.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr5"
+        values:
+          name: "Grade RR5"
+          code: "EXRR5-GR"
+          type_id: "REC: grade_type_rr5.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr5"
+        values:
+          name: "Grade Class RR5"
+          code: "EXRR5-GC"
+          school_id: "REC: school_rr5.id"
+          grade_id: "REC: grade_rr5.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr5"
+        values:
+          name: "Student Contact RR5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr5"
+        values:
+          name: "Student RR5"
+          code: "EXRR5-ST"
+          contact_id: "REC: contact_rr5.id"
+          school_id: "REC: school_rr5.id"
+
+      - step: "Setup - create enrollment, Revenue Recognition disabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr5"
+        values:
+          date: 2026-07-01
+          academic_year_id: "REC: academic_year_rr5.id"
+          academic_term_id: "REC: academic_term_rr5.id"
+          school_id: "REC: school_rr5.id"
+          grade_id: "REC: grade_rr5.id"
+          grade_class_id: "REC: grade_class_rr5.id"
+          student_id: "REC: student_rr5.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr5.id"
+          receivable_account_id: "REC: receivable_account_rr5.id"
+          customer_invoice_type_id: "REC: ci_type_rr5.id"
+          revenue_recognition: false
+
+      - step: "Create the enrollment payment term the fee is allocated to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_rr5"
+        values:
+          enrollment_id: "REC: enrollment_rr5.id"
+          name: "Term RR5"
+
+      - step: "Create participant, billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr5"
+        values:
+          offering_id: "REC: offering_rr5.id"
+          student_id: "REC: student_rr5.id"
+          enrollment_id: "REC: enrollment_rr5.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_rr5.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocate the fee, with a Final Usage/Account"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_rr5"
+        values:
+          participant_id: "REC: participant_rr5.id"
+          payment_term_id: "REC: term_rr5.id"
+          product_id: "REC: product_rr5.id"
+          name: "Extracurricular Fee RR5"
+          account_id: "REC: income_account_rr5.id"
+          final_usage_id: false
+          final_account_id: "REC: final_account_rr5.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_rr5"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_rr5"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term carrying the addendum fee line"
+        action: "call"
+        target: "term_rr5"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_rr5.customer_invoice_id.id"]]
+        save_as: "invoice_rr5"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice_rr5"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_rr5"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice_rr5"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment_rr5"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_rr5"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment_rr5"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment_rr5"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "No Revenue Recognition move was created"
+        action: "assert"
+        target: "enrollment_rr5"
+        asserts:
+          recognition_move_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "No Revenue Recognition line exists for the extracurricular fee"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["enrollment_id", "=", "REC: enrollment_rr5.id"]]
+        save_as: "recognition_lines_rr5"
+        expect_count: 0
+
+  - name: "Enrollment Not Ready When Standalone Invoice Still Draft"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr6"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr6"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr6"
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr6"
+        values:
+          name: "Extracurricular Income RR6"
+          code: "EXRR6-4100"
+          user_type_id: "REC: revenue_type_rr6.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr6"
+        values:
+          name: "School Receivable RR6"
+          code: "EXRR6-1100"
+          user_type_id: "REC: receivable_type_rr6.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr6"
+        values:
+          name: "Customer Invoice Type RR6"
+          code: "CITEXRR6"
+          journal_id: "REC: journal_rr6.id"
+          receivable_account_id: "REC: receivable_account_rr6.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr6"
+        values:
+          name: "Grade Type RR6"
+          code: "EXRR6-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr6"
+        values:
+          name: "School RR6"
+          code: "EXRR6-SCH"
+          grade_type_id: "REC: grade_type_rr6.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr6"
+        values:
+          name: "Category RR6"
+          code: "EXRR6-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr6"
+        values:
+          name: "Chess Club RR6"
+          code: "EXRR6-EXT"
+          category_id: "REC: category_rr6.id"
+          school_id: "REC: school_rr6.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr6"
+        values:
+          name: "AY RR6"
+          code: "EXRR6-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr6"
+        values:
+          name: "Semester 1 RR6"
+          code: "EXRR6-TM1"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr6.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2_rr6"
+        values:
+          name: "Semester 2 RR6"
+          code: "EXRR6-TM2"
+          date_start: 2027-01-01
+          date_end: 2027-06-30
+          year_id: "REC: academic_year_rr6.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr6"
+        values:
+          name: "Teacher Employee RR6"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr6"
+        values:
+          name: "Teacher RR6"
+          code: "EXRR6-TCH"
+          employee_id: "REC: employee_rr6.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr6"
+        values:
+          name: "Extracurricular Fee RR6"
+
+      - step: "Setup - create offering, billing mode standalone"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr6"
+        values:
+          extracurricular_id: "REC: extracurricular_rr6.id"
+          academic_year_id: "REC: academic_year_rr6.id"
+          academic_term_id: "REC: academic_term_rr6.id"
+          teacher_id: "REC: teacher_rr6.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr6.id"
+          price_unit: 300000.0
+          billing_mode: "standalone"
+          customer_invoice_type_id: "REC: ci_type_rr6.id"
+          receivable_journal_id: "REC: journal_rr6.id"
+          receivable_account_id: "REC: receivable_account_rr6.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr6"
+        values:
+          name: "Grade RR6"
+          code: "EXRR6-GR"
+          type_id: "REC: grade_type_rr6.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr6"
+        values:
+          name: "Grade Class RR6"
+          code: "EXRR6-GC"
+          school_id: "REC: school_rr6.id"
+          grade_id: "REC: grade_rr6.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr6"
+        values:
+          name: "Student Contact RR6"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr6"
+        values:
+          name: "Student RR6"
+          code: "EXRR6-ST"
+          contact_id: "REC: contact_rr6.id"
+          school_id: "REC: school_rr6.id"
+
+      - step: "Setup - create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr6"
+        values:
+          date: 2026-07-01
+          academic_year_id: "REC: academic_year_rr6.id"
+          academic_term_id: "REC: academic_term_rr6.id"
+          school_id: "REC: school_rr6.id"
+          grade_id: "REC: grade_rr6.id"
+          grade_class_id: "REC: grade_class_rr6.id"
+          student_id: "REC: student_rr6.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr6.id"
+          receivable_account_id: "REC: receivable_account_rr6.id"
+          customer_invoice_type_id: "REC: ci_type_rr6.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal_rr6.id"
+
+      - step: "Create participant, billed on its own standalone invoice"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr6"
+        values:
+          offering_id: "REC: offering_rr6.id"
+          student_id: "REC: student_rr6.id"
+          enrollment_id: "REC: enrollment_rr6.id"
+          billing_mode: "standalone"
+          product_id: "REC: product_rr6.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_rr6"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_rr6"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the standalone payment term"
+        action: "create"
+        model: "school_extracurricular_payment_term"
+        save_as: "term_rr6"
+        values:
+          participant_id: "REC: participant_rr6.id"
+          name: "Chess Club Term RR6"
+          date_due: 2026-07-20
+
+      - step: "Create the standalone detail line, with a Final Account"
+        action: "create"
+        model: "school_extracurricular_payment_term_detail"
+        save_as: "detail_rr6"
+        values:
+          term_id: "REC: term_rr6.id"
+          product_id: "REC: product_rr6.id"
+          name: "Chess Club Fee RR6"
+          account_id: "REC: income_account_rr6.id"
+          final_account_id: false
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Invoice the standalone term through the due-invoice wizard"
+        action: "create"
+        model: "school_extracurricular_create_due_invoice"
+        save_as: "wizard_rr6"
+        values:
+          student_id: "REC: student_rr6.id"
+          date_invoice: 2026-07-05
+          date_due_max: 2026-07-31
+
+      - step: "Run the wizard"
+        action: "call"
+        target: "wizard_rr6"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "The standalone term is now invoiced, but still draft"
+        action: "assert"
+        target: "term_rr6"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment_rr6"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_rr6"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment_rr6"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finishing the enrollment is rejected: standalone invoice is draft"
+        action: "call"
+        target: "enrollment_rr6"
+        method: "action_done"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "not yet Unpaid/Paid"
+
+  - name: "Locked Invoiced Extra Detail Rejects Account Write"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type_rr7"
+
+      - step: "Setup - create temporary income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account_rr7"
+        values:
+          name: "Extracurricular Income RR7"
+          code: "EXRR7-4100"
+          user_type_id: "REC: revenue_type_rr7.id"
+
+      - step: "Setup - create alternate income account"
+        action: "create"
+        model: "account.account"
+        save_as: "alt_account_rr7"
+        values:
+          name: "Extracurricular Alternate Income RR7"
+          code: "EXRR7-4150"
+          user_type_id: "REC: revenue_type_rr7.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal_rr7"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type_rr7"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account_rr7"
+        values:
+          name: "School Receivable RR7"
+          code: "EXRR7-1100"
+          user_type_id: "REC: receivable_type_rr7.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type_rr7"
+        values:
+          name: "Customer Invoice Type RR7"
+          code: "CITEXRR7"
+          journal_id: "REC: journal_rr7.id"
+          receivable_account_id: "REC: receivable_account_rr7.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type_rr7"
+        values:
+          name: "Grade Type RR7"
+          code: "EXRR7-GT"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school_rr7"
+        values:
+          name: "School RR7"
+          code: "EXRR7-SCH"
+          grade_type_id: "REC: grade_type_rr7.id"
+
+      - step: "Setup - create category"
+        action: "create"
+        model: "school_extracurricular_category"
+        save_as: "category_rr7"
+        values:
+          name: "Category RR7"
+          code: "EXRR7-CAT"
+
+      - step: "Setup - create extracurricular"
+        action: "create"
+        model: "school_extracurricular"
+        save_as: "extracurricular_rr7"
+        values:
+          name: "Chess Club RR7"
+          code: "EXRR7-EXT"
+          category_id: "REC: category_rr7.id"
+          school_id: "REC: school_rr7.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year_rr7"
+        values:
+          name: "AY RR7"
+          code: "EXRR7-AY"
+          date_start: 2026-07-01
+          date_end: 2027-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_rr7"
+        values:
+          name: "Term RR7"
+          code: "EXRR7-TM"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          year_id: "REC: academic_year_rr7.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create employee for teacher"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_rr7"
+        values:
+          name: "Teacher Employee RR7"
+
+      - step: "Setup - create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher_rr7"
+        values:
+          name: "Teacher RR7"
+          code: "EXRR7-TCH"
+          employee_id: "REC: employee_rr7.id"
+
+      - step: "Setup - create offering product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_rr7"
+        values:
+          name: "Extracurricular Fee RR7"
+
+      - step: "Setup - create offering"
+        action: "create"
+        model: "school_extracurricular_offering"
+        save_as: "offering_rr7"
+        values:
+          extracurricular_id: "REC: extracurricular_rr7.id"
+          academic_year_id: "REC: academic_year_rr7.id"
+          academic_term_id: "REC: academic_term_rr7.id"
+          teacher_id: "REC: teacher_rr7.id"
+          date_start: 2026-07-01
+          date_end: 2026-12-31
+          product_id: "REC: product_rr7.id"
+          price_unit: 300000.0
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_rr7"
+        values:
+          name: "Grade RR7"
+          code: "EXRR7-GR"
+          type_id: "REC: grade_type_rr7.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_rr7"
+        values:
+          name: "Grade Class RR7"
+          code: "EXRR7-GC"
+          school_id: "REC: school_rr7.id"
+          grade_id: "REC: grade_rr7.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_rr7"
+        values:
+          name: "Student Contact RR7"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_rr7"
+        values:
+          name: "Student RR7"
+          code: "EXRR7-ST"
+          contact_id: "REC: contact_rr7.id"
+          school_id: "REC: school_rr7.id"
+
+      - step: "Setup - create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_rr7"
+        values:
+          academic_year_id: "REC: academic_year_rr7.id"
+          academic_term_id: "REC: academic_term_rr7.id"
+          school_id: "REC: school_rr7.id"
+          grade_id: "REC: grade_rr7.id"
+          grade_class_id: "REC: grade_class_rr7.id"
+          student_id: "REC: student_rr7.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal_rr7.id"
+          receivable_account_id: "REC: receivable_account_rr7.id"
+          customer_invoice_type_id: "REC: ci_type_rr7.id"
+
+      - step: "Create the enrollment payment term the fee is allocated to"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_rr7"
+        values:
+          enrollment_id: "REC: enrollment_rr7.id"
+          name: "Term RR7"
+
+      - step: "Create participant, billed to enrollment"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant_rr7"
+        values:
+          offering_id: "REC: offering_rr7.id"
+          student_id: "REC: student_rr7.id"
+          enrollment_id: "REC: enrollment_rr7.id"
+          billing_mode: "enrollment"
+          product_id: "REC: product_rr7.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocate the fee"
+        action: "create"
+        model: "school_extracurricular_participant_allocation"
+        save_as: "allocation_rr7"
+        values:
+          participant_id: "REC: participant_rr7.id"
+          payment_term_id: "REC: term_rr7.id"
+          product_id: "REC: product_rr7.id"
+          name: "Extracurricular Fee RR7"
+          account_id: "REC: income_account_rr7.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant_rr7"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant"
+        action: "call"
+        target: "participant_rr7"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get the created extra detail"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["term_id", "=", "REC: term_rr7.id"]]
+        save_as: "extra_detail_rr7"
+        expect_count: 1
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment_rr7"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_rr7"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment, which locks the addendum line"
+        action: "call"
+        target: "enrollment_rr7"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the extra detail is now locked"
+        action: "assert"
+        target: "extra_detail_rr7"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Invoice the term carrying the addendum fee line"
+        action: "call"
+        target: "term_rr7"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the extra detail is now invoiced"
+        action: "assert"
+        target: "extra_detail_rr7"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Writing account_id on a locked, invoiced extra detail is rejected"
+        action: "call"
+        target: "extra_detail_rr7"
+        method: "write"
+        args:
+          - account_id: "REC: alt_account_rr7.id"
+        expect_error:
+          type: "UserError"
+          message_contains: "account classification cannot be changed"
