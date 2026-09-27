@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_payment_term_view_form_embedded" model="ir.ui.view">
+    <field
+            name="name"
+        >school_admission_payment_term - extracurricular - form (embedded)</field>
+    <field name="model">school_admission_payment_term</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school_admission.school_admission_payment_term_view_form_embedded"
+        />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='detail']" position="after">
+                <page name="extracurricular" string="Extracurricular">
+                    <field name="extra_detail_ids" colspan="2" nolabel="1" readonly="1">
+                        <tree>
+                            <field name="sequence" />
+                            <field name="participant_id" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="account_id" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="uom_quantity" string="Quantity" />
+                            <field name="uom_id" />
+                            <field name="price_unit" />
+                            <field name="price_subtotal" />
+                            <field name="tax_ids" widget="many2many_tags" />
+                            <field name="price_tax" />
+                            <field name="price_total" />
+                            <field name="customer_invoice_line_id" />
+                        </tree>
+                        <form>
+                            <header />
+                            <sheet>
+                                <group name="extra_detail_group" colspan="4" col="2">
+                                    <group name="extra_detail_left" colspan="1" col="2">
+                                        <field name="participant_id" />
+                                        <field name="product_id" />
+                                        <field name="name" />
+                                        <field name="account_id" />
+                                    </group>
+                                    <group
+                                            name="extra_detail_right"
+                                            colspan="1"
+                                            col="2"
+                                        >
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="uom_id" />
+                                        <field name="uom_quantity" string="Quantity" />
+                                        <field name="price_unit" />
+                                        <field name="price_subtotal" />
+                                        <field name="tax_ids" widget="many2many_tags" />
+                                        <field name="price_tax" />
+                                        <field name="price_total" />
+                                        <field name="customer_invoice_line_id" />
+                                    </group>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="before">
+                <field name="amount_extra" />
+                <field name="amount_tax_regular" />
+                <field name="amount_tax_extra" />
+            </xpath>
+        </data>
+    </field>
+</record>
+</odoo>

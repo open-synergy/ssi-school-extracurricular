@@ -1,0 +1,204 @@
+# Copyright 2026 OpenSynergy Indonesia
+# Copyright 2026 PT. Simetri Sinergi Indonesia
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
+from odoo import api, fields, models
+
+
+class SchoolAdmissionPaymentTerm(models.Model):
+    """Extends the admission payment term with extracurricular
+    addendum billing.
+
+    Twin of ``school_enrollment_payment_term`` in
+    ``ssi_school_extracurricular``. Adds ``extra_detail_ids`` -- the
+    addendum fee lines coming from extracurricular participant
+    admission allocations -- and folds their amount into the term's
+    totals via ``amount_extra``. ``amount_untaxed`` stays the sum of
+    the regular ``detail_ids`` alone, so it keeps meaning "what the
+    admission's own payment template billed"; ``amount_extra`` is
+    reported and totalled separately, and ``amount_total`` is the sum
+    of both plus tax.
+    """
+
+    _inherit = "school_admission_payment_term"
+
+    extra_detail_ids = fields.One2many(
+        string="Extracurricular Addendum",
+        comodel_name="school_admission_payment_term_extra_detail",
+        inverse_name="term_id",
+        help=(
+            "Addendum fee lines billed through this payment term from "
+            "extracurricular participants."
+        ),
+    )
+    amount_extra = fields.Monetary(
+        string="Extra Amount",
+        compute="_compute_total",
+        store=True,
+        currency_field="currency_id",
+        help=(
+            "Total of the addendum fee lines, before tax, "
+            "automatically computed from extra_detail_ids."
+        ),
+    )
+    amount_tax_regular = fields.Monetary(
+        string="Regular Tax",
+        compute="_compute_total",
+        store=True,
+        currency_field="currency_id",
+        help="Total tax amount of the regular detail lines only.",
+    )
+    amount_tax_extra = fields.Monetary(
+        string="Extra Tax",
+        compute="_compute_total",
+        store=True,
+        currency_field="currency_id",
+        help="Total tax amount of the addendum fee lines only.",
+    )
+
+    @api.depends(
+        "detail_ids",
+        "detail_ids.voided",
+        "detail_ids.price_subtotal",
+        "detail_ids.price_tax",
+        "detail_ids.price_total",
+        "extra_detail_ids",
+        "extra_detail_ids.price_subtotal",
+        "extra_detail_ids.price_tax",
+        "extra_detail_ids.price_total",
+    )
+    def _compute_total(self):
+        """Sum the detail and addendum lines into the term totals.
+
+        ``amount_untaxed`` and ``amount_tax_regular`` are the sums of
+        ``price_subtotal``/``price_tax`` over ``detail_ids`` lines
+        that are **not** ``voided``, mirroring
+        ``school_admission_payment_term._compute_total`` in
+        ``ssi_school_admission``. ``extra_detail_ids`` has no
+        ``voided`` marker of its own, so ``amount_extra``/
+        ``amount_tax_extra`` sum every addendum line. ``amount_tax``
+        is the total of both tax amounts, and ``amount_total`` is
+        ``amount_untaxed + amount_extra + amount_tax``.
+
+        :return: None
+        """
+        for record in self:
+            amount_untaxed = amount_tax_regular = 0.0
+            for detail in record.detail_ids:
+                if detail.voided:
+                    continue
+                amount_untaxed += detail.price_subtotal
+                amount_tax_regular += detail.price_tax
+            amount_extra = amount_tax_extra = 0.0
+            for extra in record.extra_detail_ids:
+                amount_extra += extra.price_subtotal
+                amount_tax_extra += extra.price_tax
+            amount_tax = amount_tax_regular + amount_tax_extra
+            record.amount_untaxed = amount_untaxed
+            record.amount_extra = amount_extra
+            record.amount_tax_regular = amount_tax_regular
+            record.amount_tax_extra = amount_tax_extra
+            record.amount_tax = amount_tax
+            record.amount_total = amount_untaxed + amount_extra + amount_tax
+
+    @api.depends("extra_detail_ids")
+    def _compute_state(self):
+        """Extend the recompute trigger with the addendum line family.
+
+        The base ``_compute_state`` in ``ssi_school_admission``
+        (``school_admission_payment_term.py:36-42``) does not depend on
+        ``extra_detail_ids``, so adding an addendum line after every
+        ``detail_ids`` line has been voided never re-triggers the state
+        recompute -- the term stays reported as ``voided`` even though
+        the overridden ``_is_fully_voided`` above would now return
+        ``False``. Odoo merges ``@api.depends`` declarations from every
+        function in the MRO that implements the same ``compute=``
+        (``fields.py`` ``_setup_regular_full``), so this override only
+        needs to add the missing dependency; the computation itself is
+        unchanged and fully delegated to ``super()``.
+
+        :return: None
+        """
+        super()._compute_state()  # pylint: disable=protected-access
+
+    def _is_fully_voided(self):
+        """Extend the base predicate with the addendum line family.
+
+        A term is only fully voided when the base family agrees
+        (``super()._is_fully_voided()`` -- every ``detail_ids`` line is
+        ``voided``, or empty counts as not-fully-voided there) and
+        this term has no ``extra_detail_ids`` line: a term whose
+        regular lines are all voided but that still carries an
+        extracurricular addendum line still has something to invoice,
+        so it must never be reported as fully voided.
+
+        :return: bool
+        """
+        self.ensure_one()
+        return (
+            super()._is_fully_voided()  # pylint: disable=protected-access
+            and not self.extra_detail_ids
+        )
+
+    def _prepare_invoice_data(self):
+        """Add the addendum fee lines to the invoice header create-vals.
+
+        Extends the base header values with a ``line_ids`` key holding
+        one ``(0, 0, vals)`` command per ``extra_detail_ids`` line, so
+        they are created together with the ``customer_invoice`` header
+        by ``_create_invoice``.
+
+        :return: dict of ``customer_invoice`` values
+        """
+        self.ensure_one()
+        result = super()._prepare_invoice_data()
+        line_commands = [
+            (0, 0, extra._prepare_invoice_line())  # pylint: disable=protected-access
+            for extra in self.extra_detail_ids
+        ]
+        if line_commands:
+            result["line_ids"] = line_commands
+        return result
+
+    def _create_invoice(self):
+        """Create the invoice, then link back the addendum fee lines.
+
+        Runs ``super()._create_invoice()`` first -- which also confirms
+        the invoice when ``auto_confirm_customer_invoice`` is enabled
+        -- then, for each ``extra_detail_ids`` line, finds the invoice
+        line created from it (matched by ``admission_extra_detail_id``)
+        and writes it back onto ``customer_invoice_line_id``.
+
+        :return: None
+        """
+        self.ensure_one()
+        super()._create_invoice()
+        invoice = self.customer_invoice_id
+        for extra in self.extra_detail_ids:
+            line = invoice.line_ids.filtered(
+                lambda candidate, extra=extra: candidate.admission_extra_detail_id
+                == extra
+            )
+            if line:
+                extra.write({"customer_invoice_line_id": line[0].id})
+
+    def _delete_invoice(self):
+        """Delete the invoice, first detaching the addendum fee lines.
+
+        ``customer_invoice_line_id`` on ``extra_detail_ids`` is
+        ``ondelete="restrict"``, so it must be cleared before the base
+        implementation deletes the invoice and its lines -- otherwise
+        the restrict constraint blocks the deletion. The invoice
+        ``state`` is checked first and left to ``super()`` to enforce
+        so the error message stays consistent and no addendum line is
+        touched when the deletion is rejected.
+
+        :raises UserError: when the customer invoice is no longer
+            draft
+        :return: None
+        """
+        self.ensure_one()
+        if self.customer_invoice_id.state != "draft":
+            return super()._delete_invoice()  # pylint: disable=protected-access
+        self.extra_detail_ids.write({"customer_invoice_line_id": False})
+        return super()._delete_invoice()  # pylint: disable=protected-access

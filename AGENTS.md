@@ -11,11 +11,12 @@ participant enrollment, participant fee billing, and related payment terms.
 
 ## Modules in This Repository
 
-| Module                                      | Description                                                                                                                                                           |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ssi_school_extracurricular`                | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities            |
-| `ssi_school_extracurricular_operating_unit` | Adds Operating Unit support to the Offering and Participant, and propagates it to the Route A addendum fee line and the Route B invoice                               |
-| `ssi_school_extracurricular_session`        | Records each meeting (session) of an extracurricular offering, its participant attendance, bulk session generation from a weekly pattern, and attendance rate rollups |
+| Module                                      | Description                                                                                                                                                                          |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ssi_school_extracurricular`                | Master data (category, extracurricular) and transactions (offering, participant, fee analysis, due invoice creation) for school extracurricular activities                           |
+| `ssi_school_extracurricular_operating_unit` | Adds Operating Unit support to the Offering and Participant, and propagates it to the Route A addendum fee line and the Route B invoice                                              |
+| `ssi_school_extracurricular_session`        | Records each meeting (session) of an extracurricular offering, its participant attendance, bulk session generation from a weekly pattern, and attendance rate rollups                |
+| `ssi_school_extracurricular_admission`      | Glue module adding `admission` as a Billing Mode, letting a Participant's fee be billed against a `school_admission` payment term instead of only a `school_enrollment` payment term |
 
 ---
 
@@ -132,6 +133,16 @@ the rest of each Flow).
 | `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_offering/01-create.md`                   | `school_extracurricular_offering` — `01-create.md` (adds Operating Unit)                                                 |
 | `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_participant/01-create.md`                | `school_extracurricular_participant` — `01-create.md` (adds Operating Unit)                                              |
 | `ssi_school_extracurricular_operating_unit/docs/school_extracurricular_create_due_invoice/01-create-invoice.md` | `school_extracurricular_create_due_invoice` — `01-create-invoice.md` (Operating Unit propagation and mismatch rejection) |
+
+### `ssi_school_extracurricular_admission` — Delta Work Instructions
+
+These are **delta** documents: they only describe what changes on top of the base
+module's own Work Instructions above (base module documents are the source of truth for
+the rest of each Flow).
+
+| File                                                                                        | Extends                                                                                                                              |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `ssi_school_extracurricular_admission/docs/school_extracurricular_participant/01-create.md` | `school_extracurricular_participant` — `01-create.md` (adds Admission/Admission Allocation when Billing Mode = Charged to Admission) |
 
 ---
 
