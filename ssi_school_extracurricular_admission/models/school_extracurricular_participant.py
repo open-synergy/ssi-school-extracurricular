@@ -13,17 +13,30 @@ REJECTED_TERM_STATES = ("invoiced", "paid", "voided", "cancelled")
 class SchoolExtracurricularParticipant(models.Model):
     """Extends the participant with the admission billing route.
 
-    Adds ``admission_id``/``admission_allocation_ids`` -- the
-    admission-side twins of ``enrollment_id``/``allocation_ids`` --
-    used when ``billing_mode`` is ``admission``. ``enrollment_id`` is
-    redefined non-required here since a participant billed to
-    admission may not have an enrollment yet; the equivalent
-    requirement is enforced by ``_check_enrollment_required`` instead,
-    conditioned on ``billing_mode``.
+    Adds ``admission`` to ``billing_mode`` -- the same option added to
+    the Offering, so a participant copied from an admission-mode
+    Offering can actually store it -- and
+    ``admission_id``/``admission_allocation_ids``, the admission-side
+    twins of ``enrollment_id``/``allocation_ids``, used when
+    ``billing_mode`` is ``admission``. ``enrollment_id`` is redefined
+    non-required here since a participant billed to admission may not
+    have an enrollment yet; the equivalent requirement is enforced by
+    ``_check_enrollment_required`` instead, conditioned on
+    ``billing_mode``. Unlike the Offering, ``billing_mode`` here has
+    no ``default=``, so its ``ondelete`` policy for ``admission`` is a
+    callable that falls back to ``enrollment`` instead of ``set
+    default`` (a bare ``set default`` would fail module setup: it
+    requires the field to define a default).
     """
 
     _inherit = "school_extracurricular_participant"
 
+    billing_mode = fields.Selection(
+        selection_add=[("admission", "Charged to Admission")],
+        ondelete={
+            "admission": lambda records: records.write({"billing_mode": "enrollment"}),
+        },
+    )
     enrollment_id = fields.Many2one(
         required=False,
         help=(

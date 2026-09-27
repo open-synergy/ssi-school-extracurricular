@@ -127,7 +127,6 @@ setup:
       model: "school_extracurricular_offering"
       save_as: "offering"
       values:
-        name: "Extracurricular Admission Offering"
         extracurricular_id: "REC: extracurricular.id"
         academic_year_id: "REC: academic_year.id"
         academic_term_id: "REC: academic_term.id"
@@ -153,7 +152,7 @@ scenarios:
         model: "school_extracurricular_participant"
         save: false
         values:
-          offering_id: "REC: offering.id"
+          offering_id: "REC: offering"
         asserts:
           billing_mode:
             type: "value"
