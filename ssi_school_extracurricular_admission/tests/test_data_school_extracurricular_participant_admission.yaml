@@ -1,0 +1,1738 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Setup - get revenue account type"
+      action: "ref"
+      xml_id: "account.data_account_type_revenue"
+      save_as: "revenue_type"
+
+    - step: "Setup - get receivable account type"
+      action: "ref"
+      xml_id: "account.data_account_type_receivable"
+      save_as: "receivable_type"
+
+    - step: "Setup - get sale journal"
+      action: "search"
+      model: "account.journal"
+      domain: [["type", "=", "sale"]]
+      save_as: "journal"
+      limit: 1
+
+    - step: "Setup - create pricelist"
+      action: "create"
+      model: "product.pricelist"
+      save_as: "pricelist"
+      values:
+        name: "Extracurricular Admission Pricelist"
+        currency_id: "REC: company.currency_id.id"
+
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Extracurricular Admission Grade Type"
+        code: "/"
+        sequence: 10
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "Extracurricular Admission School"
+        code: "/"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "Extracurricular Admission Grade"
+        code: "/"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "Extracurricular Admission Year"
+        code: "/"
+        date_start: "2026-07-01"
+        date_end: "2027-06-30"
+
+    - step: "Setup - create academic term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "Extracurricular Admission Term"
+        code: "/"
+        date_start: "2026-07-01"
+        date_end: "2027-06-30"
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Setup - create extracurricular category"
+      action: "create"
+      model: "school_extracurricular_category"
+      save_as: "category"
+      values:
+        name: "Extracurricular Admission Category"
+        code: "/"
+
+    - step: "Setup - create teacher employee"
+      action: "create"
+      model: "hr.employee"
+      save_as: "teacher_employee"
+      values:
+        name: "Extracurricular Admission Teacher"
+
+    - step: "Setup - create teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "Extracurricular Admission Teacher"
+        code: "/"
+        employee_id: "REC: teacher_employee.id"
+
+    - step: "Setup - create extracurricular product"
+      action: "create"
+      model: "product.product"
+      save_as: "ekskul_product"
+      values:
+        name: "Extracurricular Admission Fee Product"
+        type: "service"
+        list_price: 300000.0
+
+    - step: "Setup - create extracurricular"
+      action: "create"
+      model: "school_extracurricular"
+      save_as: "extracurricular"
+      values:
+        name: "Extracurricular Admission Activity"
+        code: "/"
+        category_id: "REC: category.id"
+        school_id: "REC: school.id"
+        product_id: "REC: ekskul_product.id"
+
+    - step: "Setup - create offering billed to admission"
+      action: "create"
+      model: "school_extracurricular_offering"
+      save_as: "offering"
+      values:
+        name: "Extracurricular Admission Offering"
+        extracurricular_id: "REC: extracurricular.id"
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        teacher_id: "REC: teacher.id"
+        date_start: "2026-07-01"
+        date_end: "2026-12-31"
+        billing_mode: "admission"
+        product_id: "REC: ekskul_product.id"
+        price_unit: 300000.0
+
+    - step: "Setup - create student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "Extracurricular Admission Student Contact"
+
+scenarios:
+  - name: "Offering Copies Billing Mode Admission To Participant"
+    steps:
+      - step: "Selecting the offering copies Billing Mode Admission"
+        action: "form"
+        model: "school_extracurricular_participant"
+        save: false
+        values:
+          offering_id: "REC: offering.id"
+        asserts:
+          billing_mode:
+            type: "value"
+            expected: "admission"
+
+  - name: "Open Admission Mode Participant With Two Inline Admission Allocations"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income P2"
+          code: "EAI-P2"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable P2"
+          code: "EAR-P2"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type P2"
+          code: "EACIT-P2"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create first admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_1"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term 1 P2"
+          sequence: 10
+
+      - step: "Create second admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_2"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term 2 P2"
+          sequence: 20
+
+      - step:
+          "Create the admission-mode participant with both allocation lines in one write
+          so the total-match constraint sees the full batch at once"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          admission_allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_1.id"
+                product_id: "REC: ekskul_product.id"
+                name: "Extracurricular Fee Allocation 1"
+                account_id: "REC: income_account.id"
+                uom_id: "REF: uom.product_uom_unit"
+                uom_quantity: 1.0
+                price_unit: 150000.0
+            - - 0
+              - 0
+              - payment_term_id: "REC: term_2.id"
+                product_id: "REC: ekskul_product.id"
+                name: "Extracurricular Fee Allocation 2"
+                account_id: "REC: income_account.id"
+                uom_id: "REF: uom.product_uom_unit"
+                uom_quantity: 1.0
+                price_unit: 150000.0
+
+      - step: "Assert enrollment is not set on an admission-mode participant"
+        action: "assert"
+        target: "participant"
+        asserts:
+          enrollment_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant, opening it and creating the addendum lines"
+        action: "call"
+        target: "participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert both admission payment terms carry one addendum line each"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          amount_extra:
+            type: "value"
+            expected: 150000.0
+          amount_total:
+            type: "value"
+            expected: 150000.0
+
+      - step: "Assert the second admission payment term also carries its line"
+        action: "assert"
+        target: "term_2"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          amount_extra:
+            type: "value"
+            expected: 150000.0
+          amount_total:
+            type: "value"
+            expected: 150000.0
+
+      - step: "Assert the admission total rose to the sum of both terms"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 300000.0
+
+      - step: "Assert the product summary carries the extracurricular product"
+        action: "search"
+        model: "school_admission_product_summary"
+        domain:
+          - ["admission_id", "=", "REC: admission.id"]
+          - ["product_id", "=", "REC: ekskul_product.id"]
+        save_as: "summary"
+        expect_count: 1
+
+      - step: "Assert the product summary amount matches both addendum lines"
+        action: "assert"
+        target: "summary"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 300000.0
+
+  - name:
+      "Create Customer Invoice From Admission Payment Term With Extracurricular Addendum"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income P3"
+          code: "EAI-P3"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable P3"
+          code: "EAR-P3"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type P3"
+          code: "EACIT-P3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term P3"
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line directly on the term"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum P3"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the customer invoice from the admission payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is invoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert the invoice carries the addendum line, linked both ways"
+        action: "assert"
+        target: "extra"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_line_id.name:
+            type: "value"
+            expected: "Extracurricular Fee Addendum P3"
+          customer_invoice_line_id.price_unit:
+            type: "value"
+            expected: 300000.0
+          customer_invoice_line_id.admission_extra_detail_id.id:
+            type: "value"
+            expected: "REC: extra.id"
+          customer_invoice_line_id.customer_invoice_id.id:
+            type: "value"
+            expected: "REC: term.customer_invoice_id.id"
+
+  - name: "Admission Payment Term Not Voided When Extracurricular Addendum Remains"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income P4"
+          code: "EAI-P4"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable P4"
+          code: "EAR-P4"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type P4"
+          code: "EACIT-P4"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term P4"
+
+      - step: "Create the regular payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Regular Fee P4"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 500000.0
+
+      - step: "Void the regular payment term detail"
+        action: "write"
+        target: "detail"
+        values:
+          voided: true
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line on the term whose regular detail is voided"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum P4"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Assert the term is not voided while the addendum line remains"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Delete Draft Customer Invoice Of Admission Payment Term With Addendum"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income P5"
+          code: "EAI-P5"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable P5"
+          code: "EAR-P5"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type P5"
+          code: "EACIT-P5"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term P5"
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum P5"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Delete the draft customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert the addendum line is detached from the deleted invoice"
+        action: "assert"
+        target: "extra"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Cancel Admission Mode Participant Before Invoice Removes Addendum"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income P6"
+          code: "EAI-P6"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable P6"
+          code: "EAR-P6"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type P6"
+          code: "EACIT-P6"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term P6"
+
+      - step: "Create the admission-mode participant with its allocation"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          admission_allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term.id"
+                product_id: "REC: ekskul_product.id"
+                name: "Extracurricular Fee Allocation P6"
+                account_id: "REC: income_account.id"
+                uom_id: "REF: uom.product_uom_unit"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term carries the addendum line before cancel"
+        action: "assert"
+        target: "term"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          amount_extra:
+            type: "value"
+            expected: 300000.0
+
+      - step: "Cancel the participant before any invoice is created"
+        action: "call"
+        target: "participant"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Assert the addendum line is removed and the term total falls back"
+        action: "assert"
+        target: "term"
+        asserts:
+          extra_detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+          amount_extra:
+            type: "value"
+            expected: 0.0
+
+  - name: "Enrollment Mode Participant Without Enrollment Is Rejected"
+    steps:
+      - step: "Creating an enrollment-mode participant without an enrollment must fail"
+        action: "create"
+        model: "school_extracurricular_participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: contact.id"
+          billing_mode: "enrollment"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "Enrollment is required"
+
+  - name: "Admission Allocation To Payment Term Of Another Admission Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N9"
+          code: "EAI-N9"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N9"
+          code: "EAR-N9"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N9"
+          code: "EACIT-N9"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create the first admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm the first admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the first admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create a second contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "other_contact"
+        values:
+          name: "Extracurricular Admission Other Student N9"
+
+      - step: "Create the second admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "other_admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: other_contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm the second admission"
+        action: "call"
+        target: "other_admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the second admission"
+        action: "call"
+        target: "other_admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create a payment term on the second admission"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "other_term"
+        values:
+          admission_id: "REC: other_admission.id"
+          name: "Other Admission Term N9"
+
+      - step: "Create the participant on the first admission"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocating to the other admission's term must fail"
+        action: "create"
+        model: "school_extracurricular_participant_admission_allocation"
+        values:
+          participant_id: "REC: participant.id"
+          payment_term_id: "REC: other_term.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Allocation N9"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not belong to the same admission"
+
+  - name: "Admission Allocation To Invoiced Payment Term Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N10"
+          code: "EAI-N10"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N10"
+          code: "EAR-N10"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N10"
+          code: "EACIT-N10"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term N10"
+
+      - step: "Invoice the term directly, before any allocation, to flip it invoiced"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Create the participant on the admission"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocating to the already-invoiced term must fail"
+        action: "create"
+        model: "school_extracurricular_participant_admission_allocation"
+        values:
+          participant_id: "REC: participant.id"
+          payment_term_id: "REC: term.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Allocation N10"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "is already invoiced"
+
+  - name: "Admission Allocation Total Mismatch Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N11"
+          code: "EAI-N11"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N11"
+          code: "EAR-N11"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N11"
+          code: "EACIT-N11"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term N11"
+
+      - step: "Create the participant with a 300000.0 fee"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Allocating only 150000.0 against a 300000.0 fee must fail"
+        action: "create"
+        model: "school_extracurricular_participant_admission_allocation"
+        values:
+          participant_id: "REC: participant.id"
+          payment_term_id: "REC: term.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Allocation N11"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 150000.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not match Participant fee"
+
+  - name: "Admission Allocation Student Mismatch Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N12"
+          code: "EAI-N12"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N12"
+          code: "EAR-N12"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N12"
+          code: "EACIT-N12"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create the admission for the first student"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm the admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create a second contact for a different student"
+        action: "create"
+        model: "res.partner"
+        save_as: "other_contact"
+        values:
+          name: "Extracurricular Admission Other Student N12"
+
+      - step: "Create a school_student for the second contact directly"
+        action: "create"
+        model: "school_student"
+        save_as: "other_student"
+        values:
+          code: "/"
+          contact_id: "REC: other_contact.id"
+          name: "Extracurricular Admission Other Student N12"
+          school_id: "REC: school.id"
+
+      - step:
+          "Creating a participant for a different student than the admission's must fail"
+        action: "create"
+        model: "school_extracurricular_participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: other_student.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+        expect_error:
+          type: "ValidationError"
+          message_contains: "does not belong to Student"
+
+  - name: "Open Admission Mode Participant Without Allocation Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N13"
+          code: "EAI-N13"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N13"
+          code: "EAR-N13"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N13"
+          code: "EACIT-N13"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create the participant without any admission allocation line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approving without any Admission Allocation line must fail"
+        action: "call"
+        target: "participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Allocation line is set"
+
+  - name: "Open Admission Mode Participant When Term Becomes Invoiced Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N14"
+          code: "EAI-N14"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N14"
+          code: "EAR-N14"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N14"
+          code: "EACIT-N14"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term, still uninvoiced"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term N14"
+
+      - step: "Create the participant allocated to the still-uninvoiced term"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          admission_allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term.id"
+                product_id: "REC: ekskul_product.id"
+                name: "Extracurricular Fee Allocation N14"
+                account_id: "REC: income_account.id"
+                uom_id: "REF: uom.product_uom_unit"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+
+      - step: "Confirm the participant while the term is still uninvoiced"
+        action: "call"
+        target: "participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invoice the term directly, out from under the confirmed participant"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Approving the participant now that the term is invoiced must fail"
+        action: "call"
+        target: "participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "is already"
+
+  - name: "Cancel Admission Mode Participant After Invoiced Is Rejected"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income N15"
+          code: "EAI-N15"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable N15"
+          code: "EAR-N15"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type N15"
+          code: "EACIT-N15"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term N15"
+
+      - step: "Create and open the admission-mode participant"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+          admission_allocation_ids:
+            - - 0
+              - 0
+              - payment_term_id: "REC: term.id"
+                product_id: "REC: ekskul_product.id"
+                name: "Extracurricular Fee Allocation N15"
+                account_id: "REC: income_account.id"
+                uom_id: "REF: uom.product_uom_unit"
+                uom_quantity: 1.0
+                price_unit: 300000.0
+
+      - step: "Confirm the participant"
+        action: "call"
+        target: "participant"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the participant, opening it and creating the addendum line"
+        action: "call"
+        target: "participant"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term, billing the addendum line"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Cancelling the participant after its addendum line is invoiced must fail"
+        action: "call"
+        target: "participant"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "is already linked to a"
