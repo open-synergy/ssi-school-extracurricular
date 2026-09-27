@@ -1948,8 +1948,9 @@ msgstr ""
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__enrollment_id
 msgid ""
-"The Student's enrollment for the same academic term as the Offering. Used to"
-" link this participation to the correct billing enrollment."
+"The Student's enrollment for the same academic term as the Offering. "
+"Required unless Billing Mode is Charged to Admission, in which case an "
+"Admission is used instead."
 msgstr ""
 
 #. module: ssi_school_extracurricular
