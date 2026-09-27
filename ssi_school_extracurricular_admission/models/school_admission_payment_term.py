@@ -101,6 +101,26 @@ class SchoolAdmissionPaymentTerm(models.Model):
             record.amount_tax = amount_tax
             record.amount_total = amount_untaxed + amount_extra + amount_tax
 
+    @api.depends("extra_detail_ids")
+    def _compute_state(self):
+        """Extend the recompute trigger with the addendum line family.
+
+        The base ``_compute_state`` in ``ssi_school_admission``
+        (``school_admission_payment_term.py:36-42``) does not depend on
+        ``extra_detail_ids``, so adding an addendum line after every
+        ``detail_ids`` line has been voided never re-triggers the state
+        recompute -- the term stays reported as ``voided`` even though
+        the overridden ``_is_fully_voided`` above would now return
+        ``False``. Odoo merges ``@api.depends`` declarations from every
+        function in the MRO that implements the same ``compute=``
+        (``fields.py`` ``_setup_regular_full``), so this override only
+        needs to add the missing dependency; the computation itself is
+        unchanged and fully delegated to ``super()``.
+
+        :return: None
+        """
+        super()._compute_state()  # pylint: disable=protected-access
+
     def _is_fully_voided(self):
         """Extend the base predicate with the addendum line family.
 

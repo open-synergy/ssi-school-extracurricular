@@ -910,12 +910,22 @@ scenarios:
 
   - name: "Enrollment Mode Participant Without Enrollment Is Rejected"
     steps:
+      - step: "Create a school_student for the enrollment-mode rejection contact"
+        action: "create"
+        model: "school_student"
+        save_as: "enrollment_mode_student"
+        values:
+          code: "/"
+          contact_id: "REC: contact.id"
+          name: "Extracurricular Admission Enrollment Mode Student"
+          school_id: "REC: school.id"
+
       - step: "Creating an enrollment-mode participant without an enrollment must fail"
         action: "create"
         model: "school_extracurricular_participant"
         values:
           offering_id: "REC: offering.id"
-          student_id: "REC: contact.id"
+          student_id: "REC: enrollment_mode_student.id"
           billing_mode: "enrollment"
           product_id: "REC: ekskul_product.id"
           uom_quantity: 1.0
