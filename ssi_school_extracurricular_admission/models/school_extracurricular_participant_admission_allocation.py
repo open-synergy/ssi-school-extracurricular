@@ -54,6 +54,9 @@ class SchoolExtracurricularParticipantAdmissionAllocation(models.Model):
         ),
     )
     product_id = fields.Many2one(required=True)
+    tax_ids = fields.Many2many(
+        relation="rel_school_extracurricular_participant_adm_alloc_2_tax",
+    )
     currency_id = fields.Many2one(
         string="Currency",
         comodel_name="res.currency",
