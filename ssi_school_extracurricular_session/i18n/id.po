@@ -1,0 +1,1584 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_extracurricular_session
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Approve extracurricular session\n"
+"Database ID: %s\n"
+"Problem: Coach Present is unchecked and Monitoring Note is empty\n"
+"Solution: Check Coach Present, or fill in a Monitoring Note\n"
+"explaining why the meeting still counts as held\n"
+msgstr ""
+"\n"
+"Konteks: Setujui sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Pelatih Hadir tidak dicentang dan Catatan Pemantauan kosong\n"
+"Solusi: Centang Pelatih Hadir, atau isi Catatan Pemantauan yang\n"
+"menjelaskan mengapa pertemuan tetap dianggap berlangsung\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/cancel_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Cancel extracurricular session\n"
+"Database ID: %s\n"
+"Problem: Cancel Reason is empty\n"
+"Solution: Fill in a Cancel Reason before cancelling the session\n"
+msgstr ""
+"\n"
+"Konteks: Batalkan sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Alasan Pembatalan kosong\n"
+"Solusi: Isi Alasan Pembatalan sebelum membatalkan sesi\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Confirm extracurricular session\n"
+"Database ID: %s\n"
+"Problem: Journal - Material or Journal - Activity is empty\n"
+"Solution: Fill in both journal fields before confirming this session\n"
+msgstr ""
+"\n"
+"Konteks: Konfirmasi sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Jurnal - Materi atau Jurnal - Aktivitas kosong\n"
+"Solusi: Isi kedua kolom jurnal sebelum mengonfirmasi sesi ini\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Fill extracurricular session attendance\n"
+"Database ID: %s\n"
+"Problem: Session is not in Planned state\n"
+"Solution: Only a session in Planned state may have its attendance\n"
+"filled automatically\n"
+msgstr ""
+"\n"
+"Konteks: Isi kehadiran sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Sesi tidak berstatus Direncanakan\n"
+"Solusi: Hanya sesi berstatus Direncanakan yang kehadirannya dapat diisi\n"
+"otomatis\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: Date range is outside Offering '%s' period\n"
+"Solution: Select a Start Date and End Date within the Offering's\n"
+"period ('%s' - '%s')\n"
+msgstr ""
+"\n"
+"Konteks: Buat sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Rentang tanggal berada di luar periode Penyelenggaraan '%s'\n"
+"Solusi: Pilih Tanggal Mulai dan Tanggal Selesai yang berada dalam\n"
+"periode Penyelenggaraan ('%s' - '%s')\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: No date in the range matches a checked weekday\n"
+"Solution: Widen the date range, or check a weekday that falls\n"
+"within it\n"
+msgstr ""
+"\n"
+"Konteks: Buat sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Tidak ada tanggal dalam rentang yang cocok dengan hari yang\n"
+"dicentang\n"
+"Solusi: Perluas rentang tanggal, atau centang hari yang jatuh dalam\n"
+"rentang tersebut\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/wizards/school_extracurricular_session_generate.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate extracurricular sessions\n"
+"Database ID: %s\n"
+"Problem: No weekday is checked\n"
+"Solution: Check at least one weekday before generating sessions\n"
+msgstr ""
+"\n"
+"Konteks: Buat sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Tidak ada hari yang dicentang\n"
+"Solusi: Centang setidaknya satu hari sebelum membuat sesi\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Mark extracurricular session as done\n"
+"Database ID: %s\n"
+"Problem: An instructor roster line has no Attendance recorded\n"
+"Solution: Record the Attendance of every instructor roster line\n"
+"before marking the session as done\n"
+msgstr ""
+"\n"
+"Konteks: Tandai sesi ekstrakurikuler selesai\n"
+"ID Basis Data: %s\n"
+"Masalah: Ada baris daftar instruktur yang Kehadirannya belum dicatat\n"
+"Solusi: Catat Kehadiran setiap baris daftar instruktur sebelum\n"
+"menandai sesi sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Mark extracurricular session as done\n"
+"Database ID: %s\n"
+"Problem: Session has no attendance line\n"
+"Solution: Record at least one attendance line before marking the\n"
+"session as done\n"
+msgstr ""
+"\n"
+"Konteks: Tandai sesi ekstrakurikuler selesai\n"
+"ID Basis Data: %s\n"
+"Masalah: Sesi tidak memiliki baris kehadiran\n"
+"Solusi: Catat setidaknya satu baris kehadiran sebelum menandai sesi\n"
+"sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Mark extracurricular session as done\n"
+"Database ID: %s\n"
+"Problem: Session has no instructor roster line\n"
+"Solution: Record at least one instructor roster line before marking\n"
+"the session as done\n"
+msgstr ""
+"\n"
+"Konteks: Tandai sesi ekstrakurikuler selesai\n"
+"ID Basis Data: %s\n"
+"Masalah: Sesi tidak memiliki baris daftar instruktur\n"
+"Solusi: Catat setidaknya satu baris daftar instruktur sebelum menandai\n"
+"sesi sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_offering_instructor.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular offering instructor\n"
+"Database ID: %s\n"
+"Problem: Both Teacher and Contact are filled\n"
+"Solution: Select only one of Teacher or Contact\n"
+msgstr ""
+"\n"
+"Konteks: Atur instruktur penyelenggaraan ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Kontak sama-sama terisi\n"
+"Solusi: Pilih hanya salah satu dari Guru atau Kontak\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_offering_instructor.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular offering instructor\n"
+"Database ID: %s\n"
+"Problem: Neither Teacher nor Contact is filled\n"
+"Solution: Select either a Teacher or a Contact\n"
+msgstr ""
+"\n"
+"Konteks: Atur instruktur penyelenggaraan ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Kontak sama-sama kosong\n"
+"Solusi: Pilih salah satu dari Guru atau Kontak\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_attendance.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session attendance participant\n"
+"Database ID: %s\n"
+"Problem: Participant '%s' already has an attendance line on Session\n"
+"'%s'\n"
+"Solution: Select a Participant who does not yet have an attendance\n"
+"line on this Session\n"
+msgstr ""
+"\n"
+"Konteks: Atur peserta kehadiran sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Peserta '%s' sudah memiliki baris kehadiran pada Sesi '%s'\n"
+"Solusi: Pilih Peserta yang belum memiliki baris kehadiran pada Sesi ini\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_attendance.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session attendance participant\n"
+"Database ID: %s\n"
+"Problem: Participant '%s' does not belong to the Offering of Session\n"
+"'%s'\n"
+"Solution: Select a Participant who joined the same Offering as the\n"
+"Session\n"
+msgstr ""
+"\n"
+"Konteks: Atur peserta kehadiran sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Peserta '%s' bukan bagian dari Penyelenggaraan Sesi '%s'\n"
+"Solusi: Pilih Peserta yang bergabung dengan Penyelenggaraan yang sama\n"
+"dengan Sesi\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session coach\n"
+"Database ID: %s\n"
+"Problem: Both Teacher and External Coach are filled\n"
+"Solution: Select only one of Teacher or External Coach\n"
+msgstr ""
+"\n"
+"Konteks: Atur pelatih sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Pelatih Eksternal sama-sama terisi\n"
+"Solusi: Pilih hanya salah satu dari Guru atau Pelatih Eksternal\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session coach\n"
+"Database ID: %s\n"
+"Problem: Neither Teacher nor External Coach is filled\n"
+"Solution: Select either a Teacher or an External Coach\n"
+msgstr ""
+"\n"
+"Konteks: Atur pelatih sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Pelatih Eksternal sama-sama kosong\n"
+"Solusi: Pilih salah satu dari Guru atau Pelatih Eksternal\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session date\n"
+"Database ID: %s\n"
+"Problem: Date '%s' is outside Offering '%s' period ('%s' - '%s')\n"
+"Solution: Select a Date between the Offering's Start Date and End\n"
+"Date\n"
+msgstr ""
+"\n"
+"Konteks: Atur tanggal sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Tanggal '%s' berada di luar periode Penyelenggaraan '%s'\n"
+"('%s' - '%s')\n"
+"Solusi: Pilih Tanggal di antara Tanggal Mulai dan Tanggal Selesai\n"
+"Penyelenggaraan\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_instructor.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session instructor\n"
+"Database ID: %s\n"
+"Problem: Both Teacher and Contact are filled\n"
+"Solution: Select only one of Teacher or Contact\n"
+msgstr ""
+"\n"
+"Konteks: Atur instruktur sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Kontak sama-sama terisi\n"
+"Solusi: Pilih hanya salah satu dari Guru atau Kontak\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_instructor.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session instructor\n"
+"Database ID: %s\n"
+"Problem: Neither Teacher nor Contact is filled\n"
+"Solution: Select either a Teacher or a Contact\n"
+msgstr ""
+"\n"
+"Konteks: Atur instruktur sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Guru dan Kontak sama-sama kosong\n"
+"Solusi: Pilih salah satu dari Guru atau Kontak\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session_instructor.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session instructor\n"
+"Database ID: %s\n"
+"Problem: This person already has an instructor roster line on\n"
+"Session '%s'\n"
+"Solution: Select a person who does not yet have an instructor\n"
+"roster line on this Session\n"
+msgstr ""
+"\n"
+"Konteks: Atur instruktur sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Orang ini sudah memiliki baris daftar instruktur pada Sesi '%s'\n"
+"Solusi: Pilih orang yang belum memiliki baris daftar instruktur pada\n"
+"Sesi ini\n"
+
+#. module: ssi_school_extracurricular_session
+#: code:addons/ssi_school_extracurricular_session/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set extracurricular session time\n"
+"Database ID: %s\n"
+"Problem: End Time '%s' is not later than Start Time '%s'\n"
+"Solution: Select an End Time that is later than the Start Time\n"
+msgstr ""
+"\n"
+"Konteks: Atur waktu sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Waktu Selesai '%s' tidak lebih akhir dari Waktu Mulai '%s'\n"
+"Solusi: Pilih Waktu Selesai yang lebih akhir dari Waktu Mulai\n"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__topic
+msgid "A short label for what this session's meeting covers."
+msgstr "Label singkat tentang apa yang dibahas dalam pertemuan sesi ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__absent
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__attendance_state__absent
+msgid "Absent"
+msgstr "Tidak Hadir"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__academic_term_id
+msgid "Academic Term"
+msgstr "Periode Akademik"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approval_ids
+msgid "Active Approvals"
+msgstr "Persetujuan Aktif"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_partner_ids
+msgid "Active Partners"
+msgstr "Mitra Aktif"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_user_ids
+msgid "Active Users"
+msgstr "Pengguna Aktif"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_ids
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon Jenis Aktivitas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr "Templat Kebijakan yang Diizinkan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_template_id
+msgid "Approval Configuration"
+msgstr "Konfigurasi Persetujuan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_template_id
+msgid "Approval Template"
+msgstr "Templat Persetujuan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approval_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approvals"
+msgstr "Persetujuan"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approve"
+msgstr "Setujui"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr ""
+"Kebijakan persetujuan\n"
+"\n"
+"* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Setujui'"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Approve this session. Are you sure?"
+msgstr "Setujui sesi ini. Apakah Anda yakin?"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approved
+msgid "Approved"
+msgstr "Disetujui"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_offering_instructor__role__assistant
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__role__assistant
+msgid "Assistant Instructor"
+msgstr "Instruktur Pendamping"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_attachment_count
+msgid "Attachment Count"
+msgstr "Jumlah Lampiran"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__attendance_ids
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__attendance_state
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__attendance_state
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Attendance"
+msgstr "Kehadiran"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_rate
+msgid "Attendance Rate"
+msgstr "Tingkat Kehadiran"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_instructor
+msgid "Attendance Tracking"
+msgstr "Pelacakan Kehadiran"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__approve_ok
+msgid "Can Approve"
+msgstr "Dapat Menyetujui"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__confirm_ok
+msgid "Can Confirm"
+msgstr "Dapat Mengonfirmasi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__reject_ok
+msgid "Can Reject"
+msgstr "Dapat Menolak"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__restart_approval_ok
+msgid "Can Restart Approval"
+msgstr "Dapat Memulai Ulang Persetujuan"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.cancel_extracurricular_session_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_cancel_extracurricular_session
+msgid "Cancel Extracurricular Session"
+msgstr "Batalkan Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__cancel_reason
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__cancel_reason
+msgid "Cancel Reason"
+msgstr "Alasan Pembatalan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__cancelled
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__is_teacher_present
+msgid "Coach Present"
+msgstr "Pelatih Hadir"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__confirm
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.cancel_extracurricular_session_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr ""
+"Kebijakan konfirmasi\n"
+"\n"
+"* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Konfirmasi'"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Confirm this session's journal. Are you sure?"
+msgstr "Konfirmasi jurnal sesi ini. Apakah Anda yakin?"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__partner_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__partner_id
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__create_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__create_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__date
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__description
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__done
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Done"
+msgstr "Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_done_count
+msgid "Done Session"
+msgstr "Sesi Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_done_count
+msgid "Done Session Count"
+msgstr "Jumlah Sesi Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
+msgid "Done Sessions"
+msgstr "Sesi Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_end
+msgid "End Date"
+msgstr "Tanggal Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__time_end
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_end
+msgid "End Time"
+msgstr "Waktu Selesai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__excused
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__attendance_state__excused
+msgid "Excused"
+msgstr "Izin"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__coach_partner_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__coach_partner_id
+msgid "External Coach"
+msgstr "Pelatih Eksternal"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__extracurricular_id
+msgid "Extracurricular"
+msgstr "Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_offering
+msgid "Extracurricular Offering"
+msgstr "Penyelenggaraan Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_offering_instructor
+msgid "Extracurricular Offering Instructor"
+msgstr "Instruktur Penyelenggaraan Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_participant
+msgid "Extracurricular Participant"
+msgstr "Peserta Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_configuration
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_report
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_root
+msgid "Extracurricular Session"
+msgstr "Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.module.category,name:ssi_school_extracurricular_session.school_extracurricular_session_workflow_module_category
+msgid "Extracurricular Session - Workflow"
+msgstr "Sesi Ekstrakurikuler - Alur Kerja"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session_attendance
+msgid "Extracurricular Session Attendance"
+msgstr "Kehadiran Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session_instructor
+msgid "Extracurricular Session Instructor"
+msgstr "Instruktur Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.actions.act_window,name:ssi_school_extracurricular_session.school_extracurricular_session_action
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session
+msgid "Extracurricular Sessions"
+msgstr "Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Fill Attendance"
+msgstr "Isi Kehadiran"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pengikut (Saluran)"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Mitra)"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon Font Awesome, mis. fa-tasks"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__note
+msgid "Free-form notes about this instructor's attendance."
+msgstr "Catatan bebas tentang kehadiran instruktur ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__note
+msgid "Free-form notes about this participant's attendance."
+msgstr "Catatan bebas tentang kehadiran peserta ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__description
+msgid "Free-form notes about this session's meeting."
+msgstr "Catatan bebas tentang pertemuan sesi ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__fri
+msgid "Friday"
+msgstr "Jumat"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
+msgid "Generate"
+msgstr "Buat"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model,name:ssi_school_extracurricular_session.model_school_extracurricular_session_generate
+msgid "Generate Extracurricular Sessions"
+msgstr "Buat Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.actions.act_window,name:ssi_school_extracurricular_session.school_extracurricular_session_generate_action
+#: model:ir.ui.menu,name:ssi_school_extracurricular_session.menu_extracurricular_session_generate
+msgid "Generate Sessions"
+msgstr "Buat Sesi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__fri
+msgid "Generate a session on every Friday in the range."
+msgstr "Buat sesi pada setiap hari Jumat dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__mon
+msgid "Generate a session on every Monday in the range."
+msgstr "Buat sesi pada setiap hari Senin dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sat
+msgid "Generate a session on every Saturday in the range."
+msgstr "Buat sesi pada setiap hari Sabtu dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sun
+msgid "Generate a session on every Sunday in the range."
+msgstr "Buat sesi pada setiap hari Minggu dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__thu
+msgid "Generate a session on every Thursday in the range."
+msgstr "Buat sesi pada setiap hari Kamis dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__tue
+msgid "Generate a session on every Tuesday in the range."
+msgstr "Buat sesi pada setiap hari Selasa dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__wed
+msgid "Generate a session on every Wednesday in the range."
+msgstr "Buat sesi pada setiap hari Rabu dalam rentang."
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Group By"
+msgstr "Kelompokkan Menurut"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_offering_instructor__role__head
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__role__head
+msgid "Head Instructor"
+msgstr "Instruktur Utama"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menandai aktivitas pengecualian."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mengalami kesalahan pengiriman."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__participant_attendance_tracked
+msgid "If enabled, a session under this offering may only be marked Done once at least one participant attendance line is recorded on it."
+msgstr "Jika diaktifkan, sesi pada penyelenggaraan ini hanya dapat ditandai Selesai setelah setidaknya satu baris kehadiran peserta dicatat padanya."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__instructor_attendance_tracked
+msgid "If enabled, a session under this offering may only be marked Done once its instructor roster is not empty and every roster line has its Attendance recorded."
+msgstr "Jika diaktifkan, sesi pada penyelenggaraan ini hanya dapat ditandai Selesai setelah daftar instrukturnya tidak kosong dan setiap baris daftar telah dicatat Kehadirannya."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__instructor_ids
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__instructor_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_instructor
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Instructors"
+msgstr "Instruktur"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Pengikut"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_activity
+msgid "Journal - Activity"
+msgstr "Jurnal - Aktivitas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_material
+msgid "Journal - Material"
+msgstr "Jurnal - Materi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__write_uid
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__write_date
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__late
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__attendance_state__late
+msgid "Late"
+msgstr "Terlambat"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__location
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__location
+msgid "Location"
+msgstr "Lokasi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Lampiran Utama"
+
+#. module: ssi_school_extracurricular_session
+#: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_manager_group
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__mon
+msgid "Monday"
+msgstr "Senin"
+
+#. module: ssi_school_extracurricular_session
+#: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_monitor_group
+msgid "Monitor"
+msgstr "Pemantau"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Monitoring"
+msgstr "Pemantauan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__monitoring_note
+msgid "Monitoring Note"
+msgstr "Catatan Pemantauan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Batas Waktu Aktivitas Saya"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__need_validation
+msgid "Need Validation"
+msgstr "Perlu Validasi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_id
+msgid "Next Activity Type"
+msgstr "Jenis Aktivitas Berikutnya"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__next_approval_ids
+msgid "Next Approvals"
+msgstr "Persetujuan Berikutnya"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__note
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__note
+msgid "Note"
+msgstr "Catatan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__present_count
+msgid "Number of attendance lines whose Attendance is Present or Late."
+msgstr "Jumlah baris kehadiran yang Kehadirannya Hadir atau Terlambat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah Kesalahan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_done_count
+msgid "Number of the Offering's sessions currently Done."
+msgstr "Jumlah sesi Penyelenggaraan yang saat ini Selesai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_planned_count
+msgid "Number of the Offering's sessions currently Planned."
+msgstr "Jumlah sesi Penyelenggaraan yang saat ini Direncanakan."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_done_count
+msgid "Number of this offering's sessions currently Done."
+msgstr "Jumlah sesi penyelenggaraan ini yang saat ini Selesai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_count
+msgid "Number of this offering's sessions, in any state."
+msgstr "Jumlah sesi penyelenggaraan ini, dalam status apa pun."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
+msgid "Number of this participant's attendance lines marked Present or Late on a Done session."
+msgstr "Jumlah baris kehadiran peserta ini yang ditandai Hadir atau Terlambat pada sesi yang Selesai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Jumlah pesan yang belum dibaca"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__offering_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__offering_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__offering_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Offering"
+msgstr "Penyelenggaraan"
+
+#. module: ssi_school_extracurricular_session
+#: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_officer_group
+msgid "Officer"
+msgstr "Petugas"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__participant_id
+msgid "Participant"
+msgstr "Peserta"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_rate
+msgid "Percentage of the Offering's Done sessions this participant was Present or Late for. 0 when the Offering has no Done session yet."
+msgstr "Persentase sesi Selesai pada Penyelenggaraan yang dihadiri peserta ini (Hadir atau Terlambat). 0 bila Penyelenggaraan belum memiliki sesi Selesai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__planned
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Planned"
+msgstr "Direncanakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__state
+msgid "Planned = the meeting has not happened yet or is being recorded. Confirm = the journal is filled and is awaiting the Monitor's verification. Done = the meeting took place and its attendance is final. Cancelled = the meeting did not take place. Reject = the Monitor did not verify the meeting as claimed."
+msgstr "Direncanakan = pertemuan belum berlangsung atau sedang dicatat. Konfirmasi = jurnal sudah diisi dan menunggu verifikasi Pemantau. Selesai = pertemuan berlangsung dan kehadirannya final. Dibatalkan = pertemuan tidak berlangsung. Tolak = Pemantau tidak memverifikasi pertemuan sebagaimana diklaim."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__session_planned_count
+msgid "Planned Session"
+msgstr "Sesi Direncanakan"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
+msgid "Planned Sessions"
+msgstr "Sesi Direncanakan"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Policies"
+msgstr "Kebijakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__policy_template_id
+msgid "Policy Template"
+msgstr "Templat Kebijakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_attendance__attendance_state__present
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session_instructor__attendance_state__present
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_participant_view_form_session
+msgid "Present"
+msgstr "Hadir"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_participant__attendance_present_count
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__present_count
+msgid "Present Count"
+msgstr "Jumlah Hadir"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_session__state__reject
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reject"
+msgstr "Tolak"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr ""
+"Kebijakan penolakan\n"
+"\n"
+"* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Tolak'"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reject this session. Are you sure?"
+msgstr "Tolak sesi ini. Apakah Anda yakin?"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__rejected
+msgid "Rejected"
+msgstr "Ditolak"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Reload Template Policy"
+msgstr "Muat Ulang Templat Kebijakan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_user_id
+msgid "Responsible User"
+msgstr "Pengguna Penanggung Jawab"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Restart"
+msgstr "Mulai Ulang"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Restart Approval Process"
+msgstr "Mulai Ulang Proses Persetujuan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr ""
+"Kebijakan mulai ulang persetujuan\n"
+"\n"
+"* Jika pengguna aktif dapat melihat dan menjalankan tombol 'Mulai Ulang Persetujuan'"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_form
+msgid "Restart the approval process. Are you sure?"
+msgstr "Mulai ulang proses persetujuan. Apakah Anda yakin?"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__role
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__role
+msgid "Role"
+msgstr "Peran"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sat
+msgid "Saturday"
+msgstr "Sabtu"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__school_id
+msgid "School"
+msgstr "Sekolah"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__sequence
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_cancel_extracurricular_session__session_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__session_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__session_id
+msgid "Session"
+msgstr "Sesi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_count
+msgid "Session Count"
+msgstr "Jumlah Sesi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_offering_view_form_session
+msgid "Sessions"
+msgstr "Sesi"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_start
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__time_start
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_start
+msgid "Start Time"
+msgstr "Waktu Mulai"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__state
+msgid "State"
+msgstr "Status"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status berdasarkan aktivitas\n"
+"Terlambat: Tanggal jatuh tempo sudah lewat\n"
+"Hari ini: Tanggal aktivitas adalah hari ini\n"
+"Direncanakan: Aktivitas mendatang."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__student_id
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__sun
+msgid "Sunday"
+msgstr "Minggu"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__teacher_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__teacher_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__teacher_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__teacher_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
+msgid "Teacher"
+msgstr "Guru"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__monitoring_note
+msgid "The Monitor's note about this session's verification. Required to approve a session where Coach Present is not checked. Only editable while this session is in Confirm state."
+msgstr "Catatan Pemantau tentang verifikasi sesi ini. Wajib diisi untuk menyetujui sesi yang Pelatih Hadirnya tidak dicentang. Hanya dapat diubah selama sesi ini berstatus Konfirmasi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__academic_term_id
+msgid "The academic term this session belongs to, automatically populated from the selected Offering."
+msgstr "Periode akademik sesi ini, terisi otomatis dari Penyelenggaraan yang dipilih."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__attendance_ids
+msgid "The attendance of each participant at this meeting."
+msgstr "Kehadiran setiap peserta pada pertemuan ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__teacher_id
+msgid "The coach/teacher running this session's meeting. Defaults to the Offering's Teacher when the Offering is selected, but may be changed. Exactly one of Teacher or External Coach must be filled."
+msgstr "Pelatih/guru yang memimpin pertemuan sesi ini. Bawaannya mengikuti Guru Penyelenggaraan saat Penyelenggaraan dipilih, tetapi dapat diubah. Tepat salah satu dari Guru atau Pelatih Eksternal harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__date
+msgid "The date this session's meeting takes place."
+msgstr "Tanggal pertemuan sesi ini berlangsung."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_end
+msgid "The end time applied to every generated session."
+msgstr "Waktu selesai yang diterapkan pada setiap sesi yang dibuat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__coach_partner_id
+msgid "The external coach (person or institution, not a school employee) applied to every generated session. Exactly one of Teacher or External Coach must be filled."
+msgstr "Pelatih eksternal (perorangan atau lembaga, bukan karyawan sekolah) yang diterapkan pada setiap sesi yang dibuat. Tepat salah satu dari Guru atau Pelatih Eksternal harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__coach_partner_id
+msgid "The external coach (person or institution, not a school employee) running this session's meeting. Defaults to the Offering's External Coach when the Offering is selected, but may be changed. Exactly one of Teacher or External Coach must be filled."
+msgstr "Pelatih eksternal (perorangan atau lembaga, bukan karyawan sekolah) yang memimpin pertemuan sesi ini. Bawaannya mengikuti Pelatih Eksternal Penyelenggaraan saat Penyelenggaraan dipilih, tetapi dapat diubah. Tepat salah satu dari Guru atau Pelatih Eksternal harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__extracurricular_id
+msgid "The extracurricular activity being run, automatically populated from the selected Offering."
+msgstr "Kegiatan ekstrakurikuler yang dijalankan, terisi otomatis dari Penyelenggaraan yang dipilih."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_cancel_extracurricular_session__session_id
+msgid "The extracurricular session being cancelled."
+msgstr "Sesi ekstrakurikuler yang dibatalkan."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_start
+msgid "The first date sessions may be generated on."
+msgstr "Tanggal pertama sesi boleh dibuat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__instructor_ids
+msgid "The instructor roster template for this offering, copied onto every session created under it."
+msgstr "Templat daftar instruktur penyelenggaraan ini, disalin ke setiap sesi yang dibuat di bawahnya."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__instructor_ids
+msgid "The instructors staffing this session's meeting, copied from the Offering's Instructor roster when this session is created, either through the form or through the session generator."
+msgstr "Instruktur yang bertugas pada pertemuan sesi ini, disalin dari daftar Instruktur Penyelenggaraan saat sesi ini dibuat, baik melalui formulir maupun melalui pembuat sesi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__date_end
+msgid "The last date sessions may be generated on."
+msgstr "Tanggal terakhir sesi boleh dibuat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__location
+msgid "The location applied to every generated session."
+msgstr "Lokasi yang diterapkan pada setiap sesi yang dibuat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__participant_id
+msgid "The participant this attendance line is for. Must have joined the same Offering as the Session."
+msgstr "Peserta yang dituju baris kehadiran ini. Harus bergabung dengan Penyelenggaraan yang sama dengan Sesi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__partner_id
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__partner_id
+msgid "The person or institution identified by this roster line, when not a school Teacher (e.g. an external coach or assistant). Exactly one of Teacher or Contact must be filled."
+msgstr "Orang atau lembaga yang diidentifikasi baris daftar ini, bila bukan Guru sekolah (mis. pelatih eksternal atau pendamping). Tepat salah satu dari Guru atau Kontak harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__school_id
+msgid "The school running this session, automatically populated from the selected Offering."
+msgstr "Sekolah penyelenggara sesi ini, terisi otomatis dari Penyelenggaraan yang dipilih."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__session_id
+msgid "The session's meeting this attendance line belongs to."
+msgstr "Pertemuan sesi tempat baris kehadiran ini berada."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__session_id
+msgid "The session's meeting this roster line belongs to."
+msgstr "Pertemuan sesi tempat baris daftar ini berada."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__time_start
+msgid "The start time applied to every generated session."
+msgstr "Waktu mulai yang diterapkan pada setiap sesi yang dibuat."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__student_id
+msgid "The student attending, automatically populated from the selected Participant."
+msgstr "Siswa yang hadir, terisi otomatis dari Peserta yang dipilih."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__teacher_id
+msgid "The teacher applied to every generated session. Exactly one of Teacher or External Coach must be filled."
+msgstr "Guru yang diterapkan pada setiap sesi yang dibuat. Tepat salah satu dari Guru atau Pelatih Eksternal harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__teacher_id
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__teacher_id
+msgid "The teacher identified by this roster line. Exactly one of Teacher or Contact must be filled."
+msgstr "Guru yang diidentifikasi baris daftar ini. Tepat salah satu dari Guru atau Kontak harus diisi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__offering_id
+msgid "The term's offering this roster line belongs to."
+msgstr "Penyelenggaraan periode tempat baris daftar ini berada."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__offering_id
+msgid "The term's offering this session is a meeting of."
+msgstr "Penyelenggaraan periode yang pertemuannya adalah sesi ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__offering_id
+msgid "The term's offering to generate sessions for."
+msgstr "Penyelenggaraan periode yang akan dibuatkan sesinya."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__time_end
+msgid "The time this session's meeting ends. Must be later than the Start Time."
+msgstr "Waktu pertemuan sesi ini berakhir. Harus lebih akhir dari Waktu Mulai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__time_start
+msgid "The time this session's meeting starts."
+msgstr "Waktu pertemuan sesi ini dimulai."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering__session_ids
+msgid "This offering's sessions across the term."
+msgstr "Sesi penyelenggaraan ini sepanjang periode."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__thu
+msgid "Thursday"
+msgstr "Kamis"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__topic
+msgid "Topic"
+msgstr "Topik"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__instructor_attendance_tracked
+msgid "Track Instructor Attendance"
+msgstr "Lacak Kehadiran Instruktur"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_offering__participant_attendance_tracked
+msgid "Track Participant Attendance"
+msgstr "Lacak Kehadiran Peserta"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__tue
+msgid "Tuesday"
+msgstr "Selasa"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis aktivitas pengecualian pada rekaman."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread
+msgid "Unread Messages"
+msgstr "Pesan yang Belum Dibaca"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Penghitung Pesan yang Belum Dibaca"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__sequence
+msgid "Used to order this offering's instructor roster."
+msgstr "Dipakai untuk mengurutkan daftar instruktur penyelenggaraan ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__sequence
+msgid "Used to order this session's instructor roster."
+msgstr "Dipakai untuk mengurutkan daftar instruktur sesi ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:res.groups,name:ssi_school_extracurricular_session.school_extracurricular_session_user_group
+msgid "User"
+msgstr "Pengguna"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr "Pengguna yang dapat menyetujui/menolak dokumen"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan Situs Web"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__website_message_ids
+msgid "Website communication history"
+msgstr "Riwayat komunikasi situs web"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session_generate__wed
+msgid "Wednesday"
+msgstr "Rabu"
+
+#. module: ssi_school_extracurricular_session
+#: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_generate_view_form
+msgid "Weekdays"
+msgstr "Hari"
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_activity
+msgid "What activity the participants did in this session's meeting. Required before this session may be confirmed."
+msgstr "Kegiatan yang dilakukan peserta pada pertemuan sesi ini. Wajib diisi sebelum sesi ini dapat dikonfirmasi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__journal_material
+msgid "What was taught in this session's meeting. Required before this session may be confirmed."
+msgstr "Materi yang diajarkan pada pertemuan sesi ini. Wajib diisi sebelum sesi ini dapat dikonfirmasi."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__location
+msgid "Where this session's meeting takes place."
+msgstr "Tempat pertemuan sesi ini berlangsung."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__is_teacher_present
+msgid "Whether the Monitor verified that the coach in charge of this session actually attended the meeting. Only editable while this session is in Confirm state. Defaults to False so an unchecked box withholds approval rather than making a false positive claim."
+msgstr "Apakah Pemantau telah memverifikasi bahwa pelatih yang bertanggung jawab atas sesi ini benar-benar hadir pada pertemuan. Hanya dapat diubah selama sesi ini berstatus Konfirmasi. Bawaannya False sehingga kotak yang tidak dicentang menahan persetujuan alih-alih membuat klaim positif palsu."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_attendance__attendance_state
+msgid "Whether the participant was present at this meeting."
+msgstr "Apakah peserta hadir pada pertemuan ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_offering_instructor__role
+msgid "Whether this person is the head instructor or an assistant instructor for the Offering."
+msgstr "Apakah orang ini instruktur utama atau instruktur pendamping untuk Penyelenggaraan."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__role
+msgid "Whether this person is the head instructor or an assistant instructor for this session's meeting."
+msgstr "Apakah orang ini instruktur utama atau instruktur pendamping untuk pertemuan sesi ini."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__attendance_state
+msgid "Whether this person was present at this meeting. Left blank until recorded -- an empty value means attendance has not been recorded yet, which is what the session's Done gate checks when the Offering tracks instructor attendance."
+msgstr "Apakah orang ini hadir pada pertemuan ini. Dibiarkan kosong hingga dicatat -- nilai kosong berarti kehadiran belum dicatat, yang diperiksa oleh gerbang Selesai sesi bila Penyelenggaraan melacak kehadiran instruktur."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_cancel_extracurricular_session__cancel_reason
+msgid "Why this session's meeting is being cancelled."
+msgstr "Alasan pertemuan sesi ini akan dibatalkan."
+
+#. module: ssi_school_extracurricular_session
+#: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__cancel_reason
+msgid "Why this session's meeting was cancelled."
+msgstr "Alasan pertemuan sesi ini dibatalkan."
