@@ -1,0 +1,194 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_extracurricular_session_outsource_work
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: code:addons/ssi_school_extracurricular_session_outsource_work/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Cancel or restart extracurricular session\n"
+"Database ID: %s\n"
+"Problem: An instructor outsource work log already has an Outstanding\n"
+"Solution: Cancel the Outsource Work Outstanding before cancelling or\n"
+"restarting this session\n"
+msgstr ""
+"\n"
+"Konteks: Batalkan atau mulai ulang sesi ekstrakurikuler\n"
+"ID Basis Data: %s\n"
+"Masalah: Log pekerjaan alih daya instruktur sudah memiliki Outstanding\n"
+"Solusi: Batalkan Outstanding Pekerjaan Alih Daya sebelum membatalkan\n"
+"atau memulai ulang sesi ini\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: code:addons/ssi_school_extracurricular_session_outsource_work/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create instructor outsource work\n"
+"Database ID: %s\n"
+"Problem: Instructor roster line for '%s' has no Outsource Work Type\n"
+"Solution: Set an Outsource Work Type on the roster line before\n"
+"marking the session as done\n"
+msgstr ""
+"\n"
+"Konteks: Buat pekerjaan alih daya instruktur\n"
+"ID Basis Data: %s\n"
+"Masalah: Baris daftar instruktur untuk '%s' tidak memiliki Jenis\n"
+"Pekerjaan Alih Daya\n"
+"Solusi: Atur Jenis Pekerjaan Alih Daya pada baris daftar sebelum\n"
+"menandai sesi sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: code:addons/ssi_school_extracurricular_session_outsource_work/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create instructor outsource work\n"
+"Database ID: %s\n"
+"Problem: Instructor roster line for '%s' has no Outsource Work Usage\n"
+"Solution: Set an Outsource Work Usage on the roster line before\n"
+"marking the session as done\n"
+msgstr ""
+"\n"
+"Konteks: Buat pekerjaan alih daya instruktur\n"
+"ID Basis Data: %s\n"
+"Masalah: Baris daftar instruktur untuk '%s' tidak memiliki Penggunaan\n"
+"Pekerjaan Alih Daya\n"
+"Solusi: Atur Penggunaan Pekerjaan Alih Daya pada baris daftar sebelum\n"
+"menandai sesi sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: code:addons/ssi_school_extracurricular_session_outsource_work/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create instructor outsource work\n"
+"Database ID: %s\n"
+"Problem: No open Outsource Work Rate covers '%s' on '%s'\n"
+"Solution: Create an open Outsource Work Rate for this person that\n"
+"covers the session date\n"
+msgstr ""
+"\n"
+"Konteks: Buat pekerjaan alih daya instruktur\n"
+"ID Basis Data: %s\n"
+"Masalah: Tidak ada Tarif Pekerjaan Alih Daya terbuka yang mencakup '%s'\n"
+"pada '%s'\n"
+"Solusi: Buat Tarif Pekerjaan Alih Daya terbuka untuk orang ini yang\n"
+"mencakup tanggal sesi\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: code:addons/ssi_school_extracurricular_session_outsource_work/models/school_extracurricular_session.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create instructor outsource work\n"
+"Database ID: %s\n"
+"Problem: Offering '%s' has no Analytic Account\n"
+"Solution: Set an Analytic Account on the Offering before marking the\n"
+"session as done\n"
+msgstr ""
+"\n"
+"Konteks: Buat pekerjaan alih daya instruktur\n"
+"ID Basis Data: %s\n"
+"Masalah: Penyelenggaraan '%s' tidak memiliki Akun Analitik\n"
+"Solusi: Atur Akun Analitik pada Penyelenggaraan sebelum menandai sesi\n"
+"sebagai selesai\n"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session__allowed_analytic_account_ids
+msgid "Analytic Accounts"
+msgstr "Akun Analitik"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session__display_name
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model,name:ssi_school_extracurricular_session_outsource_work.model_school_extracurricular_offering
+msgid "Extracurricular Offering"
+msgstr "Penyelenggaraan Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model,name:ssi_school_extracurricular_session_outsource_work.model_school_extracurricular_offering_instructor
+msgid "Extracurricular Offering Instructor"
+msgstr "Instruktur Penyelenggaraan Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model,name:ssi_school_extracurricular_session_outsource_work.model_school_extracurricular_session
+msgid "Extracurricular Session"
+msgstr "Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model,name:ssi_school_extracurricular_session_outsource_work.model_school_extracurricular_session_instructor
+msgid "Extracurricular Session Instructor"
+msgstr "Instruktur Sesi Ekstrakurikuler"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session__id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session____last_update
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session__outsource_work_ids
+msgid "Outsource Work Logs"
+msgstr "Log Pekerjaan Alih Daya"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__outsource_work_type_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__outsource_work_type_id
+msgid "Outsource Work Type"
+msgstr "Jenis Pekerjaan Alih Daya"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__outsource_work_usage_id
+#: model:ir.model.fields,field_description:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__outsource_work_usage_id
+msgid "Outsource Work Usage"
+msgstr "Penggunaan Pekerjaan Alih Daya"
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,help:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__outsource_work_type_id
+msgid "The Outsource Work Type -- and therefore the product -- used to build this person's honor document when this session is marked Done. Required only when this person is recorded present."
+msgstr "Jenis Pekerjaan Alih Daya -- dan karenanya produk -- yang dipakai untuk membuat dokumen honor orang ini saat sesi ini ditandai Selesai. Wajib diisi hanya bila orang ini tercatat hadir."
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,help:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__outsource_work_type_id
+msgid "The Outsource Work Type -- and therefore the product -- used to build this person's honor document. Copied onto every session generated from this offering. Required only when the session is marked Done with this person recorded present."
+msgstr "Jenis Pekerjaan Alih Daya -- dan karenanya produk -- yang dipakai untuk membuat dokumen honor orang ini. Disalin ke setiap sesi yang dibuat dari penyelenggaraan ini. Wajib diisi hanya bila sesi ditandai Selesai dengan orang ini tercatat hadir."
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,help:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_session_instructor__outsource_work_usage_id
+msgid "The Usage resolving the accounting account of this person's honor document when this session is marked Done. Required only when this person is recorded present."
+msgstr "Penggunaan yang menentukan akun akuntansi dokumen honor orang ini saat sesi ini ditandai Selesai. Wajib diisi hanya bila orang ini tercatat hadir."
+
+#. module: ssi_school_extracurricular_session_outsource_work
+#: model:ir.model.fields,help:ssi_school_extracurricular_session_outsource_work.field_school_extracurricular_offering_instructor__outsource_work_usage_id
+msgid "The Usage resolving the accounting account of this person's honor document. Copied onto every session generated from this offering. Required only when the session is marked Done with this person recorded present."
+msgstr "Penggunaan yang menentukan akun akuntansi dokumen honor orang ini. Disalin ke setiap sesi yang dibuat dari penyelenggaraan ini. Wajib diisi hanya bila sesi ditandai Selesai dengan orang ini tercatat hadir."
