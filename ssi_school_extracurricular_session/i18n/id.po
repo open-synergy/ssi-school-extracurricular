@@ -748,7 +748,7 @@ msgstr "Pengikut (Mitra)"
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikon Font Awesome, mis. fa-tasks"
+msgstr "Ikon Font Awesome mis. fa-tasks"
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session_instructor__note
@@ -824,7 +824,7 @@ msgstr "Buat sesi pada setiap hari Rabu dalam rentang."
 #. module: ssi_school_extracurricular_session
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_session.school_extracurricular_session_view_search
 msgid "Group By"
-msgstr "Kelompokkan Menurut"
+msgstr "Kelompokkan Berdasarkan"
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular_session.selection__school_extracurricular_offering_instructor__role__head
@@ -852,7 +852,7 @@ msgstr "Ikon"
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikon untuk menandai aktivitas pengecualian."
+msgstr "Ikon untuk menunjukkan aktivitas pengecualian."
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__message_needaction
@@ -1481,7 +1481,7 @@ msgstr "Selasa"
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,help:ssi_school_extracurricular_session.field_school_extracurricular_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Jenis aktivitas pengecualian pada rekaman."
+msgstr "Jenis aktivitas pengecualian pada catatan."
 
 #. module: ssi_school_extracurricular_session
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_session.field_school_extracurricular_session__message_unread
