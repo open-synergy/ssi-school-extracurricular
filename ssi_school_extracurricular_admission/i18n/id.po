@@ -180,8 +180,8 @@ msgstr ""
 "Konteks: Atur alokasi penerimaan peserta ekstrakurikuler\n"
 "ID Basis Data: %s\n"
 "Masalah: Termin pembayaran '%s' sudah %s\n"
-"Solusi: Pilih Termin Pembayaran yang belum difakturkan, dibayar,\n"
-"dibatalkan, atau dibatalkan secara administratif (void)\n"
+"Solusi: Pilih Termin Pembayaran yang belum difaktur, dibayar,\n"
+"dialihkan, atau dibatalkan\n"
 
 #. module: ssi_school_extracurricular_admission
 #: code:addons/ssi_school_extracurricular_admission/models/school_extracurricular_participant_admission_allocation.py:0
@@ -379,12 +379,12 @@ msgstr "Alokasi Penerimaan Peserta Ekstrakurikuler"
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model.fields,help:ssi_school_extracurricular_admission.field_school_extracurricular_offering__billing_mode
 msgid "How this offering's fee is billed: charged to the student's enrollment, invoiced separately, or free of charge."
-msgstr "Cara biaya penyelenggaraan ini ditagih: dibebankan ke pendaftaran siswa, difakturkan terpisah, atau gratis."
+msgstr "Cara biaya penyelenggaraan ini ditagih: dibebankan ke pendaftaran siswa, difaktur terpisah, atau gratis."
 
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model.fields,help:ssi_school_extracurricular_admission.field_school_extracurricular_participant__billing_mode
 msgid "How this participant's fee is billed: charged to the student's enrollment, invoiced separately, or free of charge. Defaults from the selected Offering."
-msgstr "Cara biaya peserta ini ditagih: dibebankan ke pendaftaran siswa, difakturkan terpisah, atau gratis. Bawaannya mengikuti Penyelenggaraan yang dipilih."
+msgstr "Cara biaya peserta ini ditagih: dibebankan ke pendaftaran siswa, difaktur terpisah, atau gratis. Bawaannya mengikuti Penyelenggaraan yang dipilih."
 
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_admission.field_customer_invoice_line__id
@@ -483,17 +483,17 @@ msgstr "Pajak Reguler"
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model,name:ssi_school_extracurricular_admission.model_school_admission
 msgid "School Admission"
-msgstr "Penerimaan Sekolah"
+msgstr "Penerimaan Siswa"
 
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model,name:ssi_school_extracurricular_admission.model_school_admission_payment_term
 msgid "School Admission Payment Term"
-msgstr "Termin Pembayaran Penerimaan Sekolah"
+msgstr "Termin Pembayaran Penerimaan Siswa"
 
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model,name:ssi_school_extracurricular_admission.model_school_admission_payment_term_extra_detail
 msgid "School Admission Payment Term Extra Detail"
-msgstr "Detail Tambahan Termin Pembayaran Penerimaan Sekolah"
+msgstr "Detail Tambahan Termin Pembayaran Penerimaan Siswa"
 
 #. module: ssi_school_extracurricular_admission
 #: model:ir.model.fields,help:ssi_school_extracurricular_admission.field_school_admission_payment_term_extra_detail__product_category_id
