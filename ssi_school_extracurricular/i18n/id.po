@@ -328,7 +328,7 @@ msgstr ""
 "Konteks: Atur alokasi peserta ekstrakurikuler\n"
 "ID Basis Data: %s\n"
 "Masalah: Termin pembayaran '%s' sudah %s\n"
-"Solusi: Pilih Termin Pembayaran yang belum difaktur atau dibayar\n"
+"Solusi: Pilih Termin Pembayaran yang belum ditagih atau dibayar\n"
 
 #. module: ssi_school_extracurricular
 #: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant_allocation.py:0
