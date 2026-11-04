@@ -66,7 +66,7 @@ msgstr "Peserta Ekstrakurikuler"
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_operating_unit.school_extracurricular_offering_view_search_ou
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular_operating_unit.school_extracurricular_participant_view_search_ou
 msgid "Group By Operating Unit"
-msgstr "Kelompokkan Menurut Unit Operasi"
+msgstr "Kelompokkan Berdasarkan Unit Operasi"
 
 #. module: ssi_school_extracurricular_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_extracurricular_operating_unit.field_school_enrollment_payment_term_extra_detail__id
@@ -97,4 +97,4 @@ msgstr "Unit Operasi"
 #. module: ssi_school_extracurricular_operating_unit
 #: model:ir.model,name:ssi_school_extracurricular_operating_unit.model_school_enrollment_payment_term_extra_detail
 msgid "School Enrollment Payment Term Extra Detail"
-msgstr "Detail Tambahan Termin Pembayaran Pendaftaran Sekolah"
+msgstr "Detail Tambahan Termin Pembayaran Pendaftaran Siswa"
