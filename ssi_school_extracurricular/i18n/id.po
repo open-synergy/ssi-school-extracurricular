@@ -47,7 +47,7 @@ msgstr ""
 "\n"
 "Konteks: Buat faktur jatuh tempo untuk termin pembayaran ekstrakurikuler\n"
 "ID Basis Data: %s\n"
-"Masalah: Tidak ada termin pembayaran Siswa '%s' yang belum difakturkan\n"
+"Masalah: Tidak ada termin pembayaran Siswa '%s' yang belum ditagih\n"
 "dan jatuh tempo pada atau sebelum %s\n"
 "Solusi: Pilih Siswa yang memiliki termin pembayaran jatuh tempo, atau\n"
 "perpanjang Jatuh Tempo Hingga\n"
@@ -207,8 +207,8 @@ msgstr ""
 "\n"
 "Konteks: Atur periode akademik penyelenggaraan ekstrakurikuler\n"
 "ID Basis Data: %s\n"
-"Masalah: Periode Akademik '%s' bukan bagian dari Tahun Akademik '%s'\n"
-"Solusi: Pilih Periode Akademik yang termasuk dalam Tahun Akademik yang\n"
+"Masalah: Periode Akademik '%s' bukan bagian dari Tahun Ajaran '%s'\n"
+"Solusi: Pilih Periode Akademik yang termasuk dalam Tahun Ajaran yang\n"
 "dipilih\n"
 
 #. module: ssi_school_extracurricular
@@ -328,7 +328,7 @@ msgstr ""
 "Konteks: Atur alokasi peserta ekstrakurikuler\n"
 "ID Basis Data: %s\n"
 "Masalah: Termin pembayaran '%s' sudah %s\n"
-"Solusi: Pilih Termin Pembayaran yang belum difakturkan atau dibayar\n"
+"Solusi: Pilih Termin Pembayaran yang belum difaktur atau dibayar\n"
 
 #. module: ssi_school_extracurricular
 #: code:addons/ssi_school_extracurricular/models/school_extracurricular_participant_allocation.py:0
@@ -416,9 +416,9 @@ msgstr ""
 "\n"
 "Konteks: Perbarui detail tambahan termin pembayaran\n"
 "ID Basis Data: %s\n"
-"Masalah: Detail tambahan termin pembayaran '%s' sudah difakturkan dan\n"
+"Masalah: Detail tambahan termin pembayaran '%s' sudah difaktur dan\n"
 "klasifikasi akunnya tidak dapat diubah\n"
-"Solusi: Jumlah yang difakturkan sudah dibukukan pada akun saat ini;\n"
+"Solusi: Jumlah yang difaktur sudah dibukukan pada akun saat ini;\n"
 "bukukan koreksi melalui peserta ekstrakurikuler\n"
 
 #. module: ssi_school_extracurricular
@@ -448,7 +448,7 @@ msgstr "Periode Akademik"
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__academic_year_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_fee_analysis_view_search
 msgid "Academic Year"
-msgstr "Tahun Akademik"
+msgstr "Tahun Ajaran"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_enrollment_payment_term_extra_detail__account_id
@@ -672,7 +672,7 @@ msgstr "Pengaturan Penagihan"
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_payment_term__state
 msgid "Billing status: Draft = participant still draft/confirm, Uninvoiced = participant open/done but no customer invoice yet, Invoiced = customer invoice created, Manually Controlled = managed manually, Cancelled = participant cancelled/rejected."
-msgstr "Status penagihan: Draf = peserta masih draf/konfirmasi, Belum Difakturkan = peserta terbuka/selesai tetapi belum ada faktur pelanggan, Sudah Difakturkan = faktur pelanggan sudah dibuat, Dikendalikan Manual = dikelola secara manual, Dibatalkan = peserta dibatalkan/ditolak."
+msgstr "Status penagihan: Draf = peserta masih draf/konfirmasi, Belum Ditagih = peserta terbuka/selesai tetapi belum ada faktur pelanggan, Difaktur = faktur pelanggan sudah dibuat, Dikendalikan Manual = dikelola secara manual, Dibatalkan = peserta dibatalkan/ditolak."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__approve_ok
@@ -702,7 +702,7 @@ msgstr "Dapat Diselesaikan"
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__manual_number_ok
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_participant__manual_number_ok
 msgid "Can Input Manual Document Number"
-msgstr "Dapat Memasukkan Nomor Dokumen Secara Manual"
+msgstr "Dapat Mengisi Nomor Dokumen Manual"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__reject_ok
@@ -1217,7 +1217,7 @@ msgstr "Pengikut (Mitra)"
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikon Font Awesome, mis. fa-tasks"
+msgstr "Ikon Font Awesome mis. fa-tasks"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular.selection__school_extracurricular_offering__billing_mode__free
@@ -1242,7 +1242,7 @@ msgstr "Kelompok"
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_participant_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_extracurricular.school_extracurricular_view_search
 msgid "Group By"
-msgstr "Kelompokkan Menurut"
+msgstr "Kelompokkan Berdasarkan"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__group_ids
@@ -1258,12 +1258,12 @@ msgstr "Seberapa sering biaya penyelenggaraan ini ditagih: sekali, atau pada set
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__billing_mode
 msgid "How this offering's fee is billed: charged to the student's enrollment, invoiced separately, or free of charge."
-msgstr "Cara biaya penyelenggaraan ini ditagih: dibebankan ke pendaftaran siswa, difakturkan terpisah, atau gratis."
+msgstr "Cara biaya penyelenggaraan ini ditagih: dibebankan ke pendaftaran siswa, difaktur terpisah, atau gratis."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__billing_mode
 msgid "How this participant's fee is billed: charged to the student's enrollment, invoiced separately, or free of charge. Defaults from the selected Offering."
-msgstr "Cara biaya peserta ini ditagih: dibebankan ke pendaftaran siswa, difakturkan terpisah, atau gratis. Bawaannya mengikuti Penyelenggaraan yang dipilih."
+msgstr "Cara biaya peserta ini ditagih: dibebankan ke pendaftaran siswa, difaktur terpisah, atau gratis. Bawaannya mengikuti Penyelenggaraan yang dipilih."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_customer_invoice_line__id
@@ -1298,7 +1298,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikon untuk menandai aktivitas pengecualian."
+msgstr "Ikon untuk menunjukkan aktivitas pengecualian."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular__message_needaction
@@ -1338,7 +1338,7 @@ msgstr "Tanggal Faktur"
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular.selection__school_extracurricular_payment_term__state__invoiced
 msgid "Invoiced"
-msgstr "Sudah Difakturkan"
+msgstr "Difaktur"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular__message_is_follower
@@ -1524,7 +1524,7 @@ msgstr "Nama"
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_payment_term__name
 msgid "Name of the billing period, e.g. 'Term 1 Fee'."
-msgstr "Nama periode penagihan, mis. 'Biaya Semester 1'."
+msgstr "Nama periode penagihan, mis. 'Biaya Periode 1'."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_offering__need_validation
@@ -1641,7 +1641,7 @@ msgstr "Sekali"
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__date_due_max
 msgid "Only payment terms whose Estimated Due Date is on or before this date are invoiced. Also used as the Due Date of the resulting customer invoice."
-msgstr "Hanya termin pembayaran dengan Perkiraan Tanggal Jatuh Tempo pada atau sebelum tanggal ini yang difakturkan. Juga dipakai sebagai Tanggal Jatuh Tempo faktur pelanggan yang dihasilkan."
+msgstr "Hanya termin pembayaran dengan Perkiraan Tanggal Jatuh Tempo pada atau sebelum tanggal ini yang difaktur. Juga dipakai sebagai Tanggal Jatuh Tempo faktur pelanggan yang dihasilkan."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__code
@@ -1887,22 +1887,22 @@ msgstr "Sekolah"
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment
 msgid "School Enrollment"
-msgstr "Pendaftaran Sekolah"
+msgstr "Pendaftaran Siswa"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment_payment_term
 msgid "School Enrollment Payment Term"
-msgstr "Termin Pembayaran Pendaftaran Sekolah"
+msgstr "Termin Pembayaran Pendaftaran Siswa"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment_payment_term_extra_detail
 msgid "School Enrollment Payment Term Extra Detail"
-msgstr "Detail Tambahan Termin Pembayaran Pendaftaran Sekolah"
+msgstr "Detail Tambahan Termin Pembayaran Pendaftaran Siswa"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_enrollment_revenue_recognition_line
 msgid "School Enrollment Revenue Recognition - Line"
-msgstr "Pengakuan Pendapatan Pendaftaran Sekolah - Baris"
+msgstr "Pengakuan Pendapatan Pendaftaran Siswa - Baris"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model,name:ssi_school_extracurricular.model_school_extracurricular_payment_term
@@ -2097,22 +2097,22 @@ msgstr "Periode akademik penyelenggaraan yang diikuti."
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__academic_term_id
 msgid "The academic term this offering is opened for. Must belong to the selected Academic Year."
-msgstr "Periode akademik tempat penyelenggaraan ini dibuka. Harus termasuk dalam Tahun Akademik yang dipilih."
+msgstr "Periode akademik tempat penyelenggaraan ini dibuka. Harus termasuk dalam Tahun Ajaran yang dipilih."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__academic_year_id
 msgid "The academic year of the joined Offering, automatically populated from the selected Offering."
-msgstr "Tahun akademik Penyelenggaraan yang diikuti, terisi otomatis dari Penyelenggaraan yang dipilih."
+msgstr "Tahun ajaran Penyelenggaraan yang diikuti, terisi otomatis dari Penyelenggaraan yang dipilih."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__academic_year_id
 msgid "The academic year of the joined offering."
-msgstr "Tahun akademik penyelenggaraan yang diikuti."
+msgstr "Tahun ajaran penyelenggaraan yang diikuti."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__academic_year_id
 msgid "The academic year this offering is opened for."
-msgstr "Tahun akademik tempat penyelenggaraan ini dibuka."
+msgstr "Tahun ajaran tempat penyelenggaraan ini dibuka."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant_allocation__extra_detail_id
@@ -2325,12 +2325,12 @@ msgstr "Biaya yang dikenakan kepada siswa ini, sebelum pajak. Bawaannya mengikut
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extra_detail_id
 msgid "The invoiced addendum fee line (Route A, charged to enrollment) this Recognition Line releases."
-msgstr "Baris biaya adendum yang sudah difakturkan (Rute A, dibebankan ke pendaftaran) yang dilepaskan oleh Baris Pengakuan ini."
+msgstr "Baris biaya adendum yang sudah difaktur (Rute A, dibebankan ke pendaftaran) yang dilepaskan oleh Baris Pengakuan ini."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_enrollment_revenue_recognition_line__extracurricular_payment_term_detail_id
 msgid "The invoiced standalone detail line (Route B, separate invoice) this Recognition Line releases."
-msgstr "Baris detail mandiri yang sudah difakturkan (Rute B, faktur terpisah) yang dilepaskan oleh Baris Pengakuan ini."
+msgstr "Baris detail mandiri yang sudah difaktur (Rute B, faktur terpisah) yang dilepaskan oleh Baris Pengakuan ini."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering_group__name
@@ -2555,17 +2555,17 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_offering__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_participant__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Jenis aktivitas pengecualian pada rekaman."
+msgstr "Jenis aktivitas pengecualian pada catatan."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields.selection,name:ssi_school_extracurricular.selection__school_extracurricular_payment_term__state__uninvoiced
 msgid "Uninvoiced"
-msgstr "Belum Difakturkan"
+msgstr "Belum Ditagih"
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,help:ssi_school_extracurricular.field_school_extracurricular_create_due_invoice__term_ids
 msgid "Uninvoiced payment terms of the selected Student whose Estimated Due Date is on or before Due Date Until. Automatically recomputed when Student or Due Date Until changes."
-msgstr "Termin pembayaran Siswa yang dipilih yang belum difakturkan dan Perkiraan Tanggal Jatuh Temponya pada atau sebelum Jatuh Tempo Hingga. Dihitung ulang otomatis saat Siswa atau Jatuh Tempo Hingga berubah."
+msgstr "Termin pembayaran Siswa yang dipilih yang belum ditagih dan Perkiraan Tanggal Jatuh Temponya pada atau sebelum Jatuh Tempo Hingga. Dihitung ulang otomatis saat Siswa atau Jatuh Tempo Hingga berubah."
 
 #. module: ssi_school_extracurricular
 #: model:ir.model.fields,field_description:ssi_school_extracurricular.field_school_extracurricular_fee_analysis__price_unit
