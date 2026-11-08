@@ -158,3 +158,20 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             )
             if line:
                 extra.write({"customer_invoice_line_id": line[0].id})
+
+    def _clear_invoice_links_for_force_delete(self):
+        """Clear the invoice line link of the addendum fee lines.
+
+        Extends the force delete hook (contract K2) of ``ssi_school``:
+        empties ``customer_invoice_line_id`` of every
+        ``extra_detail_ids`` row, which is ``ondelete="restrict"``
+        and would otherwise block the invoice deletion. Then calls
+        ``super()`` to clear the regular detail rows. Only
+        ``customer_invoice_line_id`` is written, a field outside the
+        addendum lock, so no lock bypass is needed.
+
+        :return: None
+        """
+        self.ensure_one()
+        self.extra_detail_ids.write({"customer_invoice_line_id": False})
+        super()._clear_invoice_links_for_force_delete()
