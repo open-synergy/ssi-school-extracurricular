@@ -11,6 +11,7 @@ from . import test_school_extracurricular_payment_term
 from . import test_school_extracurricular_create_due_invoice
 from . import test_school_enrollment_payment_term_extra_detail
 from . import test_school_enrollment_payment_term_voided
+from . import test_school_enrollment_payment_term_extra_detail_force_delete
 from . import test_school_extracurricular_fee_analysis
 from . import test_school_enrollment_revenue_recognition_extracurricular
 from . import test_ui_school_extracurricular_category

@@ -1,0 +1,453 @@
+options:
+  auto_refresh: true
+
+# `setup:` replays before every scenario in the same transaction, so every
+# unique value (names and codes) is generated from a record count.
+setup:
+  steps:
+    - step: "Setup - get sale journal"
+      action: "search"
+      model: "account.journal"
+      domain: [["type", "=", "sale"]]
+      limit: 1
+      save_as: "journal"
+    - step: "Setup - get revenue account type"
+      action: "ref"
+      xml_id: "account.data_account_type_revenue"
+      save_as: "revenue_type"
+    - step: "Setup - get receivable account type"
+      action: "ref"
+      xml_id: "account.data_account_type_receivable"
+      save_as: "receivable_type"
+    - step: "Setup - create income account"
+      action: "create"
+      model: "account.account"
+      save_as: "income_account"
+      values:
+        name: "EVAL: 'EXT FD Income %d' % env['account.account'].search_count([])"
+        code: "EVAL: 'EFDI%d' % env['account.account'].search_count([])"
+        user_type_id: "REC: revenue_type.id"
+    - step: "Setup - create receivable account"
+      action: "create"
+      model: "account.account"
+      save_as: "receivable_account"
+      values:
+        name: "EVAL: 'EXT FD Receivable %d' % env['account.account'].search_count([])"
+        code: "EVAL: 'EFDR%d' % env['account.account'].search_count([])"
+        user_type_id: "REC: receivable_type.id"
+        reconcile: true
+    - step: "Setup - create customer invoice type"
+      action: "create"
+      model: "customer_invoice_type"
+      save_as: "ci_type"
+      values:
+        name:
+          "EVAL: 'EXT FD Invoice Type %d' %
+          env['customer_invoice_type'].search_count([])"
+        code: "EVAL: 'EFDT%d' % env['customer_invoice_type'].search_count([])"
+        journal_id: "REC: journal.id"
+        receivable_account_id: "REC: receivable_account.id"
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "EVAL: 'EXT FD Grade Type %d' % env['school_grade_type'].search_count([])"
+        code: "EVAL: 'EFDGT%d' % env['school_grade_type'].search_count([])"
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "EVAL: 'EXT FD School %d' % env['school'].search_count([])"
+        code: "EVAL: 'EFDSCH%d' % env['school'].search_count([])"
+        grade_type_id: "REC: grade_type.id"
+    - step: "Setup - create category"
+      action: "create"
+      model: "school_extracurricular_category"
+      save_as: "category"
+      values:
+        name:
+          "EVAL: 'EXT FD Category %d' %
+          env['school_extracurricular_category'].search_count([])"
+        code:
+          "EVAL: 'EFDCAT%d' % env['school_extracurricular_category'].search_count([])"
+    - step: "Setup - create extracurricular"
+      action: "create"
+      model: "school_extracurricular"
+      save_as: "extracurricular"
+      values:
+        name:
+          "EVAL: 'EXT FD Futsal %d' % env['school_extracurricular'].search_count([])"
+        code: "EVAL: 'EFDEXT%d' % env['school_extracurricular'].search_count([])"
+        category_id: "REC: category.id"
+        school_id: "REC: school.id"
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "EVAL: 'EXT FD Year %d' % env['school_academic_year'].search_count([])"
+        code: "EVAL: 'EFDAY%d' % env['school_academic_year'].search_count([])"
+        date_start: "2026-07-01"
+        date_end: "2027-06-30"
+    - step: "Setup - create academic term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "EVAL: 'EXT FD Term %d' % env['school_academic_term'].search_count([])"
+        code: "EVAL: 'EFDTERM%d' % env['school_academic_term'].search_count([])"
+        date_start: "2026-07-01"
+        date_end: "2026-12-31"
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+    - step: "Setup - create employee for teacher"
+      action: "create"
+      model: "hr.employee"
+      save_as: "employee"
+      values:
+        name: "EVAL: 'EXT FD Employee %d' % env['hr.employee'].search_count([])"
+    - step: "Setup - create teacher"
+      action: "create"
+      model: "school_teacher"
+      save_as: "teacher"
+      values:
+        name: "EVAL: 'EXT FD Teacher %d' % env['school_teacher'].search_count([])"
+        code: "EVAL: 'EFDTCH%d' % env['school_teacher'].search_count([])"
+        employee_id: "REC: employee.id"
+    - step: "Setup - create fee product"
+      action: "create"
+      model: "product.product"
+      save_as: "product"
+      values:
+        name: "EVAL: 'EXT FD Fee %d' % env['product.product'].search_count([])"
+    - step: "Setup - create offering"
+      action: "create"
+      model: "school_extracurricular_offering"
+      save_as: "offering"
+      values:
+        extracurricular_id: "REC: extracurricular.id"
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        teacher_id: "REC: teacher.id"
+        date_start: "2026-07-01"
+        date_end: "2026-12-31"
+        product_id: "REC: product.id"
+        price_unit: 600000.0
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "EVAL: 'EXT FD Grade %d' % env['school_grade'].search_count([])"
+        code: "EVAL: 'EFDGR%d' % env['school_grade'].search_count([])"
+        type_id: "REC: grade_type.id"
+    - step: "Setup - create grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "EVAL: 'EXT FD Class %d' % env['school_grade_class'].search_count([])"
+        code: "EVAL: 'EFDGC%d' % env['school_grade_class'].search_count([])"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+    - step: "Setup - create student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "EVAL: 'EXT FD Contact %d' % env['res.partner'].search_count([])"
+    - step: "Setup - create student"
+      action: "create"
+      model: "school_student"
+      save_as: "student"
+      values:
+        name: "EVAL: 'EXT FD Student %d' % env['school_student'].search_count([])"
+        code: "EVAL: 'EFDST%d' % env['school_student'].search_count([])"
+        contact_id: "REC: contact.id"
+        school_id: "REC: school.id"
+    - step: "Setup - create enrollment"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment"
+      values:
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student.id"
+        currency_id: "REC: company.currency_id.id"
+        receivable_journal_id: "REC: journal.id"
+        receivable_account_id: "REC: receivable_account.id"
+        customer_invoice_type_id: "REC: ci_type.id"
+        auto_confirm_customer_invoice: false
+    - step: "Setup - create payment term"
+      action: "create"
+      model: "school_enrollment_payment_term"
+      save_as: "term"
+      values:
+        enrollment_id: "REC: enrollment.id"
+        name:
+          "EVAL: 'EXT FD Term %d' %
+          env['school_enrollment_payment_term'].search_count([])"
+        date_invoice: "2026-07-05"
+        date_due: "2026-07-20"
+    - step: "Setup - create regular detail line"
+      action: "create"
+      model: "school_enrollment_payment_term_detail"
+      save_as: "detail"
+      values:
+        term_id: "REC: term.id"
+        product_id: "REC: product.id"
+        name: "Registration Fee"
+        account_id: "REC: income_account.id"
+        uom_quantity: 1.0
+        price_unit: 1000000.0
+    - step: "Setup - create participant billed to enrollment"
+      action: "create"
+      model: "school_extracurricular_participant"
+      save_as: "participant"
+      values:
+        offering_id: "REC: offering.id"
+        student_id: "REC: student.id"
+        enrollment_id: "REC: enrollment.id"
+        billing_mode: "enrollment"
+        product_id: "REC: product.id"
+        uom_quantity: 1.0
+        price_unit: 600000.0
+    - step: "Setup - create allocation covering the full fee"
+      action: "create"
+      model: "school_extracurricular_participant_allocation"
+      save_as: "allocation"
+      values:
+        participant_id: "REC: participant.id"
+        payment_term_id: "REC: term.id"
+        product_id: "REC: product.id"
+        name: "Extracurricular Fee"
+        account_id: "REC: income_account.id"
+        uom_quantity: 1.0
+        price_unit: 600000.0
+    - step: "Setup - confirm participant"
+      action: "call"
+      target: "participant"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+    - step: "Setup - approve participant (creates the addendum line)"
+      action: "call"
+      target: "participant"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+    - step: "Setup - confirm enrollment"
+      action: "call"
+      target: "enrollment"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+    - step: "Setup - approve enrollment"
+      action: "call"
+      target: "enrollment"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+    - step: "Setup - create the term invoice"
+      action: "call"
+      target: "term"
+      method: "action_create_invoice"
+      as_user: "base.user_admin"
+    - step: "Setup - get the created customer invoice"
+      action: "search"
+      model: "customer_invoice"
+      domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+      save_as: "invoice"
+      expect_count: 1
+
+    - step: "Setup - assert the addendum line is linked to an invoice line"
+      action: "search"
+      model: "school_enrollment_payment_term_extra_detail"
+      domain:
+        - ["term_id", "=", "REC: term.id"]
+        - ["customer_invoice_line_id", "!=", false]
+      save_as: "_check"
+      expect_count: 1
+
+scenarios:
+  - name: "Force Delete Invoice - Draft Invoice With Addendum Line"
+    steps:
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+      - step: "Assert no addendum line keeps an invoice line link"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the addendum line itself is kept"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["term_id", "=", "REC: term.id"]]
+        save_as: "_check"
+        expect_count: 1
+
+      - step: "Assert no regular detail line keeps an invoice line link"
+        action: "search"
+        model: "school_enrollment_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+  - name: "Force Delete Invoice - Open Invoice With Addendum Line"
+    steps:
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+      - step: "Assert no addendum line keeps an invoice line link"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the addendum line itself is kept"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain: [["term_id", "=", "REC: term.id"]]
+        save_as: "_check"
+        expect_count: 1
+
+      - step: "Assert no regular detail line keeps an invoice line link"
+        action: "search"
+        model: "school_enrollment_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+  - name: "Force Delete Invoice - Rejected Without The Policy"
+    steps:
+      - step: "Create an enrollment user who is not a validator"
+        action: "create"
+        model: "res.users"
+        save_as: "plain_user"
+        values:
+          name: "EVAL: 'EXT FD Plain User %d' % env['res.users'].search_count([])"
+          login:
+            "EVAL: 'ext_fd_plain_%d@example.com' % env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school.school_enrollment_user_group"
+
+      - step: "Calling the action directly without the policy is rejected"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "plain_user"
+        expect_error:
+          type: "UserError"
+          message_contains: "not allowed to force delete"
+
+      - step: "Assert the term still holds its invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Assert the addendum line keeps its invoice line link"
+        action: "search"
+        model: "school_enrollment_payment_term_extra_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 1
