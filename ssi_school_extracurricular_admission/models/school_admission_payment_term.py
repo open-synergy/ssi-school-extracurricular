@@ -202,3 +202,23 @@ class SchoolAdmissionPaymentTerm(models.Model):
             return super()._delete_invoice()  # pylint: disable=protected-access
         self.extra_detail_ids.write({"customer_invoice_line_id": False})
         return super()._delete_invoice()  # pylint: disable=protected-access
+
+    def _clear_invoice_links_for_force_delete(self):
+        """Detach the addendum fee lines before a force delete.
+
+        Contract K2 hook, called only by the force delete flow of
+        ``ssi_school_admission``; ``_delete_invoice`` never calls it.
+        ``customer_invoice_line_id`` on ``extra_detail_ids`` is
+        ``ondelete="restrict"``, so it is emptied here before the
+        invoice and its lines are deleted. The write touches only a
+        field already allowed by the line lock, so no addendum lock
+        bypass is needed. The regular ``detail_ids`` rows are cleared
+        by ``super()``.
+
+        :return: None
+        """
+        self.ensure_one()
+        self.extra_detail_ids.write({"customer_invoice_line_id": False})
+        return (
+            super()._clear_invoice_links_for_force_delete()
+        )  # pylint: disable=protected-access

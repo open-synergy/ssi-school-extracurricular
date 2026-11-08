@@ -1745,3 +1745,488 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "is already linked to a"
+
+  - name: "Force Delete Open Invoice Detaches Addendum Line"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income FD1"
+          code: "EAI-FD1"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable FD1"
+          code: "EAR-FD1"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type FD1"
+          code: "EACIT-FD1"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term FD1"
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum FD1"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert the addendum line is detached from the invoice"
+        action: "assert"
+        target: "extra"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: invoice.id"]]
+        save_as: "gone"
+        expect_count: 0
+
+  - name: "Force Delete Draft Invoice Detaches Addendum Line"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income FD2"
+          code: "EAI-FD2"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable FD2"
+          code: "EAR-FD2"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type FD2"
+          code: "EACIT-FD2"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term FD2"
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum FD2"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert the addendum line is detached from the invoice"
+        action: "assert"
+        target: "extra"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: invoice.id"]]
+        save_as: "gone"
+        expect_count: 0
+
+  - name: "Force Delete Without Policy Keeps Addendum Line"
+    steps:
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Extracurricular Admission Income FD3"
+          code: "EAI-FD3"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Extracurricular Admission Receivable FD3"
+          code: "EAR-FD3"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Extracurricular Admission CI Type FD3"
+          code: "EACIT-FD3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2026-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Create admission payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Admission Term FD3"
+
+      - step: "Create a draft participant to own the addendum line"
+        action: "create"
+        model: "school_extracurricular_participant"
+        save_as: "participant"
+        values:
+          offering_id: "REC: offering.id"
+          student_id: "REC: admission.school_student_id.id"
+          admission_id: "REC: admission.id"
+          billing_mode: "admission"
+          product_id: "REC: ekskul_product.id"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the addendum fee line"
+        action: "create"
+        model: "school_admission_payment_term_extra_detail"
+        save_as: "extra"
+        values:
+          term_id: "REC: term.id"
+          participant_id: "REC: participant.id"
+          product_id: "REC: ekskul_product.id"
+          name: "Extracurricular Fee Addendum FD3"
+          account_id: "REC: income_account.id"
+          uom_id: "REF: uom.product_uom_unit"
+          uom_quantity: 1.0
+          price_unit: 300000.0
+
+      - step: "Create the customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create an admission user without the force delete policy"
+        action: "create"
+        model: "res.users"
+        save_as: "plain_user"
+        values:
+          name:
+            "EVAL: 'Ekskul Force Delete Plain User %d' %
+            env['res.users'].search_count([])"
+          login:
+            "EVAL: 'ekskul_force_delete_plain_%d@example.com' %
+            env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_admission.school_admission_user_group"
+
+      - step: "Force delete without the policy is rejected"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "plain_user"
+        expect_error:
+          type: "UserError"
+          message_contains: "not allowed to force delete"
+
+      - step: "Assert the addendum line keeps its invoice line"
+        action: "assert"
+        target: "extra"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
